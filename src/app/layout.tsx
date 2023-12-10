@@ -3,12 +3,12 @@ import type { Metadata } from 'next'
 import { JetBrains_Mono, Roboto } from 'next/font/google'
 import './globals.css'
 
-const roboto = Roboto({
+export const roboto = Roboto({
   weight: ['400', '700'],
   subsets: ['latin'],
   variable: '--font-roboto',
 })
-const jetBrainsMono = JetBrains_Mono({
+export const jetBrainsMono = JetBrains_Mono({
   weight: '800',
   subsets: ['latin'],
   variable: '--font-jetBrainsMono',
@@ -25,10 +25,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={(roboto.className, jetBrainsMono.className)}>
-        {children}
-      </body>
+    <html className={roboto.className} lang="en">
+      <body>{children}</body>
     </html>
   )
 }
