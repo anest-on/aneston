@@ -1,0 +1,8 @@
+Construir container no docker:
+docker run --name aneston -e MYSQL_ROOT_PASSWORD=docker -p 3306:3306 mysql:latest
+
+Atualizar migration:
+npx prisma migrate dev
+
+Abrir Prisma no Browser:
+npx prisma studio
