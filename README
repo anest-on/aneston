@@ -1,6 +1,9 @@
 Construir container no docker:
 docker run --name aneston -e MYSQL_ROOT_PASSWORD=docker -p 3306:3306 mysql:latest
 
+Colocar no .env:
+DATABASE_URL='mysql://root:docker@localhost:3306/aneston'
+
 Atualizar migration:
 npx prisma migrate dev
 
