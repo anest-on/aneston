@@ -11,7 +11,7 @@ const Register = () => {
           medida em que são agendados.
         </p>
 
-        <MultiStep size={5} currentStep={2} />
+        <MultiStep size={6} currentStep={1} />
       </div>
     </main>
   )
