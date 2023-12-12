@@ -14,6 +14,7 @@ const config: Config = {
   theme: {
     fontFamily: {
       sans: 'var(--font-roboto)',
+      jetBrainsMono: 'var(--font-jetBrainsMono)',
     },
     colors: {
       'green-500': '#00B37E',
