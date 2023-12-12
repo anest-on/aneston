@@ -3,6 +3,8 @@ import { jetBrainsMono, roboto } from './fonts'
 import homeImg from '../images/homeImg.png'
 import formAutomatizado from '../images/formulario-automatizado.svg'
 import rightArrow from '../images/rightArrowVector.svg'
+import wrongVector from '../images/wrongVector.svg'
+import rightVector from '../images/rightVector.svg'
 
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
@@ -13,6 +15,8 @@ export default function Home() {
       <div className="bg-gray-600 w-full h-[80px] absolute">Header</div>
 
       <main className=" h-full w-full justify-center flex flex-col bg-gray-900  text-base text-white">
+        {/* PARTE 1 */}
+
         <div className="flex h-screen self-center justify-center max-w-[80%] p-10">
           <div className="flex flex-row self-center justify-center w-100 ">
             <div className="flex flex-col max-w-[600px] items-center justify-center ">
@@ -48,6 +52,8 @@ export default function Home() {
           </div>
         </div>
 
+        {/* PARTE 2 */}
+
         <div className="flex h-screen self-center items-center justify-center max-w-[80%] p-10 flex-col">
           <h2 className={`${jetBrainsMono.className} flex text-[1.8rem] `}>
             <b>
@@ -57,8 +63,8 @@ export default function Home() {
               </span>
             </b>
           </h2>
-          <div className="pt-10 flex flex-row max-w-[85%] items-center ">
-            <div className="flex w-full">
+          <div className="pt-10 flex flex-row w-full max-w-[85%] items-center ">
+            <div className="flex w-full h-full justify-center ">
               <Button
                 variant={'outline'}
                 className={`${jetBrainsMono.className} text-[1.3rem] flex flex-col h-full rounded-[20px] border-[2px] w-[200px] mr-4`}
@@ -107,7 +113,9 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex h-screen self-center items-center justify-center max-w-[80%] p-10 flex-col">
+        {/* PARTE 3 */}
+
+        <div className="flex h-screen self-center items-center justify-center w-full flex-col">
           <h2 className={`${jetBrainsMono.className} flex text-[1.8rem] `}>
             <b>
               Porque &nbsp;
@@ -117,6 +125,158 @@ export default function Home() {
               o seu trabalho?
             </b>
           </h2>
+
+          <div className="flex flex-row mt-20 w-full justify-center ">
+            <div className="flex w-full p-10 justify-end ">
+              <div className="flex flex-col ">
+                <h3 className={`${jetBrainsMono.className} flex text-[1.4rem]`}>
+                  <b>Médicos convencionais</b>
+                </h3>
+                <div className="flex flex-row items-center mt-10 w-[500px]">
+                  <Image
+                    src={wrongVector}
+                    width={60}
+                    height={10}
+                    className="self-center mr-5"
+                    alt=""
+                  />
+                  <p className="text-gray-100 text-[1.1rem] ">
+                    Está limitado aos meios fisicos para realizar a comunicação
+                    com o paciente
+                  </p>
+                </div>
+                <div className="flex flex-row items-center mt-10 w-[500px]">
+                  <Image
+                    src={wrongVector}
+                    width={60}
+                    height={10}
+                    className="self-center mr-5"
+                    alt=""
+                  />
+                  <p className="text-gray-100 text-[1.1rem]">
+                    Gestão descentralizada, precisa sempre reunir as informações
+                    de diversos locais para cada atendimento
+                  </p>
+                </div>
+                <div className="flex flex-row items-center mt-10 w-[500px]">
+                  <Image
+                    src={wrongVector}
+                    width={60}
+                    height={10}
+                    className="self-center mr-5"
+                    alt=""
+                  />
+                  <p className="text-gray-100 text-[1.1rem]">
+                    Demora para realizar os atendimentos devido as limitações do
+                    meios convencionais
+                  </p>
+                </div>
+                <div className="flex flex-row items-center mt-10 w-[500px]">
+                  <Image
+                    src={wrongVector}
+                    width={60}
+                    height={10}
+                    className="self-center mr-5"
+                    alt=""
+                  />
+                  <p className="text-gray-100 text-[1.1rem]">
+                    Correr o risco de perder pacientes para concorrentes que
+                    oferecem serviços digitais mais convenientes e eficientes
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-start justify-center bg-gray-600 p-10 w-full rounded-l-[50px]">
+              <h3 className={`${jetBrainsMono.className} flex text-[1.4rem] `}>
+                <b>
+                  Médicos{' '}
+                  <span className={`${jetBrainsMono.className} text-green-500`}>
+                    digitais
+                  </span>
+                </b>
+              </h3>
+              <div className="flex flex-row items-center mt-10 w-[500px]">
+                <Image
+                  src={rightVector}
+                  width={60}
+                  height={10}
+                  className="self-center mr-5"
+                  alt=""
+                />
+                <p className="text-gray-100 text-[1.1rem] ">
+                  Está limitado aos meios fisicos para realizar a comunicação
+                  com o paciente
+                </p>
+              </div>
+              <div className="flex flex-row items-center mt-10 w-[500px]">
+                <Image
+                  src={rightVector}
+                  width={60}
+                  height={10}
+                  className="self-center mr-5"
+                  alt=""
+                />
+                <p className="text-gray-100 text-[1.1rem]">
+                  Gestão descentralizada, precisa sempre reunir as informações
+                  de diversos locais para cada atendimento
+                </p>
+              </div>
+              <div className="flex flex-row items-center mt-10 w-[500px]">
+                <Image
+                  src={rightVector}
+                  width={60}
+                  height={10}
+                  className="self-center mr-5"
+                  alt=""
+                />
+                <p className="text-gray-100 text-[1.1rem]">
+                  Demora para realizar os atendimentos devido as limitações do
+                  meios convencionais
+                </p>
+              </div>
+              <div className="flex flex-row items-center mt-10 w-[500px]">
+                <Image
+                  src={rightVector}
+                  width={60}
+                  height={10}
+                  className="self-center mr-5"
+                  alt=""
+                />
+                <p className="text-gray-100 text-[1.1rem]">
+                  Correr o risco de perder pacientes para concorrentes que
+                  oferecem serviços digitais mais convenientes e eficientes
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* PARTE 4 */}
+
+        <div className="flex h-screen self-center items-center justify-center max-w-[80%] p-10 flex-col ">
+          <div className="flex divide-x-[2px] flex-row">
+            <h2 className={`${jetBrainsMono.className} flex text-[1.6rem] `}>
+              <b>
+                Depoimentos de quem&nbsp;
+                <span className={`${jetBrainsMono.className} text-green-500`}>
+                  simplificou os seus atendimentos
+                </span>{' '}
+                com AnestOn
+              </b>
+            </h2>
+            <div className="">
+              <p>
+                “Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Maecenas eu urna tincidunt, ultricies diam vitae, commodo lorem.
+                In non orci in justo gravida ultrices sagittis in ex. Nulla dui
+                ipsum, ornare cursus ipsum eget, scelerisque tincidunt tortor.
+                In semper arcu metus, lobortis finibus ante efficitur id. Sed
+                nec molestie eros. Cras ac lacinia est. Sed vestibulum dui arcu,
+                vestibulum euismod purus molestie id.”
+              </p>
+            </div>
+          </div>
         </div>
       </main>
     </>
