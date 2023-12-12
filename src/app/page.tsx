@@ -58,10 +58,10 @@ export default function Home() {
             </b>
           </h2>
           <div className="pt-10 flex flex-row max-w-[85%] items-center ">
-            <div className="flex w-full justify-between ">
+            <div className="flex w-full">
               <Button
                 variant={'outline'}
-                className={`${jetBrainsMono.className} text-[1.3rem] flex flex-col h-full rounded-[20px] border-[2px] w-[200px]`}
+                className={`${jetBrainsMono.className} text-[1.3rem] flex flex-col h-full rounded-[20px] border-[2px] w-[200px] mr-4`}
               >
                 <Image
                   src={formAutomatizado}
