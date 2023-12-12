@@ -1,5 +1,6 @@
 import { MultiStep } from '@/components/multiStep'
 import { Button } from '@/components/ui/button'
+import { ArrowRight } from 'lucide-react'
 
 const Register = () => {
   return (
@@ -16,10 +17,15 @@ const Register = () => {
       </div>
 
       <div className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6">
-        <div className="flex items-center justify-between border border-solid border-gray-600 py-4 px-16 rounded-md mb-2">
-          oi
+        <div className="flex items-center justify-between border border-solid border-gray-600 py-4 px-6 rounded-md mb-4">
+          <p>Google Calendar</p>
+          <Button variant="outline">
+            Conectar <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
-        <Button>secondary</Button>
+        <Button variant="blocked">
+          Próximo Passo <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
       </div>
     </main>
   )
