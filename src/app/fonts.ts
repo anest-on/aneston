@@ -7,7 +7,7 @@ export const roboto = Roboto({
   variable: '--font-roboto',
 })
 export const jetBrainsMono = JetBrains_Mono({
-  weight: '800',
+  weight: ['500', '800'],
   subsets: ['latin'],
   variable: '--font-jetBrainsMono',
 })
