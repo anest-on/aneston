@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react'
 
 const Register = () => {
   return (
-    <main className="max-w-[572px] mt-20 mb-20 mx-auto mb-4 py-0 px-4">
+    <main className="max-w-[572px] mt-20 mb-20 mx-auto py-0 px-4">
       <div className="py-0 px-6">
         <strong className="text-2xl text-white">
           Atualize suas informações
@@ -24,7 +24,7 @@ const Register = () => {
       <div className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6 gap-4">
         <div className="flex flex-col">
           <Label>Seu Link</Label>
-          <Input prefix="aneston.com/" />
+          <Input prefix="aneston.com/" placeholder="escolha-o-seu-link" />
         </div>
 
         <div className="flex flex-col">
