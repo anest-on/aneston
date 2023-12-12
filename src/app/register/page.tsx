@@ -19,7 +19,7 @@ const Register = () => {
         <div className="flex items-center justify-between border border-solid border-gray-600 py-4 px-16 rounded-md mb-2">
           oi
         </div>
-        <Button variant="blocked">secondary</Button>
+        <Button>secondary</Button>
       </div>
     </main>
   )
