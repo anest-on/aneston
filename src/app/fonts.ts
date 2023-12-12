@@ -2,7 +2,7 @@
 import { JetBrains_Mono, Roboto } from 'next/font/google'
 
 export const roboto = Roboto({
-  weight: ['400', '700'],
+  weight: ['300', '400', '700'],
   subsets: ['latin'],
   variable: '--font-roboto',
 })

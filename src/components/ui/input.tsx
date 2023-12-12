@@ -15,7 +15,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       >
         {!!prefix && <p className="text-gray-400 ">{prefix}</p>}
         <input
-          className="w-full outline-none border-none bg-gray-900 file:border-0 focus-visible:0 "
+          className="font-light w-full outline-none border-none bg-gray-900 file:border-0 focus-visible:0 "
           type={type}
           ref={ref}
           {...props}
