@@ -110,7 +110,7 @@ export default function Home() {
         <div className="flex h-screen self-center items-center justify-center max-w-[80%] p-10 flex-col">
           <h2 className={`${jetBrainsMono.className} flex text-[1.8rem] `}>
             <b>
-              Porque&nbsp;
+              Porque &nbsp;
               <span className={`${jetBrainsMono.className} text-green-500`}>
                 digitalizar
               </span>{' '}
