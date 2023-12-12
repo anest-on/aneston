@@ -1,4 +1,5 @@
 import { MultiStep } from '@/components/multiStep'
+import { Button } from '@/components/ui/button'
 
 const Register = () => {
   return (
@@ -12,6 +13,13 @@ const Register = () => {
         </p>
 
         <MultiStep size={4} currentStep={1} />
+      </div>
+
+      <div className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6">
+        <div className="flex items-center justify-between border border-solid border-gray-600 py-4 px-16 rounded-md mb-2">
+          oi
+        </div>
+        <Button variant="blocked">secondary</Button>
       </div>
     </main>
   )
