@@ -14,8 +14,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html className={`${roboto.className} flex flex-col`} lang="en">
+    <div className={`${roboto.className} flex flex-col`} lang="en">
       <body className="w-full">{children}</body>
-    </html>
+    </div>
   )
 }
