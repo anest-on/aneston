@@ -1,3 +1,7 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+
 import { jetBrainsMono, roboto } from './fonts'
 import { EmblaOptionsType } from 'embla-carousel-react'
 
@@ -10,6 +14,8 @@ import rightVector from '../images/rightVector.svg'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Carousel from '@/components/carousel'
+import { HomeFooter } from '@/components/homeFooter'
+import { HomeHeader } from '@/components/homeHeader'
 
 export default function Home() {
   const recomendations = [
@@ -64,14 +70,31 @@ export default function Home() {
     },
   ]
 
-  const OPTIONS: EmblaOptionsType = { align: 'start', loop: true }
-  const SLIDE_COUNT = 5
-  const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
+  const [sessionTwoText, setSessionTwoText] = useState(
+    'Através da agenda digital você pode gerenciar todas as suas consultas. Lá você tem todas as datas, horários e informações do paciente em um só lugar.',
+  )
+
+  const [formButton, setFormButton] = useState(['bg-green-600 text-white', ''])
+
+  const formActionButton = () => {
+    setFormButton(() => ['bg-green-600 text-white', ''])
+    setSessionTwoText(
+      () =>
+        'Com o formulário automatizado basta enviar um link para os pacientes que eles respondem todas as perguntas pré operatórias e agendam a consulta. Você ainda tem acesso a todas as respostas de forma dinâmica no seu painel de pacientes.',
+    )
+  }
+
+  const agendaActionButton = () => {
+    setFormButton(() => ['', 'bg-green-600 text-white'])
+    setSessionTwoText(
+      () =>
+        'Através da agenda digital você pode gerenciar todas as suas consultas. Lá você tem todas as datas, horários e informações do paciente em um só lugar.',
+    )
+  }
 
   return (
     <>
-      <div className="bg-gray-600 w-full h-[80px] absolute">Header</div>
-
+      <HomeHeader />
       <main className=" h-full w-full justify-center flex flex-col bg-gray-900  text-base text-white">
         {/* PARTE 1 */}
 
@@ -125,7 +148,8 @@ export default function Home() {
             <div className="flex w-full h-full justify-center ">
               <Button
                 variant={'outline'}
-                className={`${jetBrainsMono.className} text-[1.3rem] flex flex-col h-full rounded-[20px] border-[2px] w-[200px] mr-4`}
+                onClick={() => formActionButton()}
+                className={`${jetBrainsMono.className} text-[1.3rem] flex flex-col h-full rounded-[20px] border-[2px] w-[200px] mr-4 ${formButton[0]}`}
               >
                 <Image
                   src={formAutomatizado}
@@ -139,7 +163,8 @@ export default function Home() {
               </Button>
               <Button
                 variant={'outline'}
-                className={`${jetBrainsMono.className} text-[1.3rem] flex flex-col h-full rounded-[20px] border-[2px] w-[200px] `}
+                onClick={() => agendaActionButton()}
+                className={`${jetBrainsMono.className} text-[1.3rem] flex flex-col h-full rounded-[20px] border-[2px] w-[200px] ${formButton[1]}`}
               >
                 <Image
                   src={formAutomatizado}
@@ -148,14 +173,12 @@ export default function Home() {
                   className="self-center"
                   alt=""
                 />
-                Formulário <br /> automatizado
+                Agenda <br /> digital
               </Button>
             </div>
             <div className="ml-10">
               <p className={`${roboto.className} text-gray-100`}>
-                Através da agenda digital você pode gerenciar todas as suas
-                consultas. Lá você tem todas as datas, horários e informações do
-                paciente em um só lugar.
+                {sessionTwoText}
               </p>
               <Button className="mt-[15px]">
                 Começar a usar&nbsp;&nbsp;&nbsp;
@@ -332,11 +355,11 @@ export default function Home() {
                     className="flex flex-col w-[480px] mr-[10px] ml-[10px] mb-[100px] "
                     key={index}
                   >
-                    <p className=" w-[400px] ">{i.text}</p>
-                    <h4 className=" w-full mt-[20px] ">
+                    <p className=" w-[400px] text-gray-100">{i.text}</p>
+                    <h4 className=" w-full mt-[20px] text-white">
                       <b>{i.name}</b>
                     </h4>
-                    <span className=" w-full ">
+                    <span className=" w-full text-white">
                       {i.role} - {i.city}/{i.state}
                     </span>
                   </div>
@@ -345,7 +368,10 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* FOOTER */}
       </main>
+      <HomeFooter />
     </>
   )
 }
