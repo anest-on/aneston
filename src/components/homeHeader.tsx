@@ -14,8 +14,8 @@ export function HomeHeader() {
   const [homeButton, setHomeButton] = useState('')
   const [aboutUsButton, setaboutUsButton] = useState('')
   const path = usePathname()
+
   useEffect(() => {
-    console.log(path)
     if (path === '/') {
       setHomeButton(
         () =>
@@ -29,7 +29,7 @@ export function HomeHeader() {
           ' text-green-500 font-bold border-solid border-b-2 border-green-500 h-full',
       )
     }
-  }, [])
+  }, [path])
 
   return (
     <div className="flex bg-gray-600 items-center justify-center h-[70px] w-full">
