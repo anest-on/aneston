@@ -13,10 +13,55 @@ import Carousel from '@/components/carousel'
 
 export default function Home() {
   const recomendations = [
-    'recomendation1',
-    'recomendation2',
-    'recomendation3',
-    'recomendation4',
+    {
+      text: '“Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu urna tincidunt, ultricies diam vitae, commodo lorem. In non orci in justo gravida ultrices sagittis in ex. Nulla dui ipsum, ornare cursus ipsum eget, scelerisque tincidunt tortor. In semper arcu metus, lobortis finibus ante efficitur id. Sed nec molestie eros. Cras ac lacinia est. Sed vestibulum dui arcu, vestibulum euismod purus molestie id.”',
+      name: 'Ricardo Alvorada',
+      role: 'Anestesista',
+      city: 'Sao Paulo',
+      state: 'SP',
+    },
+    {
+      text: '“Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu urna tincidunt, ultricies diam vitae, commodo lorem. In non orci in justo gravida ultrices sagittis in ex. Nulla dui ipsum, ornare cursus ipsum eget, scelerisque tincidunt tortor. In semper arcu metus, lobortis finibus ante efficitur id. Sed nec molestie eros. Cras ac lacinia est. Sed vestibulum dui arcu, vestibulum euismod purus molestie id.”',
+      name: 'Ricardo Alvorada',
+      role: 'Anestesista',
+      city: 'Sao Paulo',
+      state: 'SP',
+    },
+    {
+      text: '“Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu urna tincidunt, ultricies diam vitae, commodo lorem. In non orci in justo gravida ultrices sagittis in ex. Nulla dui ipsum, ornare cursus ipsum eget, scelerisque tincidunt tortor. In semper arcu metus, lobortis finibus ante efficitur id. Sed nec molestie eros. Cras ac lacinia est. Sed vestibulum dui arcu, vestibulum euismod purus molestie id.”',
+      name: 'Ricardo Alvorada',
+      role: 'Anestesista',
+      city: 'Sao Paulo',
+      state: 'SP',
+    },
+    {
+      text: '“Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu urna tincidunt, ultricies diam vitae, commodo lorem. In non orci in justo gravida ultrices sagittis in ex. Nulla dui ipsum, ornare cursus ipsum eget, scelerisque tincidunt tortor. In semper arcu metus, lobortis finibus ante efficitur id. Sed nec molestie eros. Cras ac lacinia est. Sed vestibulum dui arcu, vestibulum euismod purus molestie id.”',
+      name: 'Ricardo Alvorada',
+      role: 'Anestesista',
+      city: 'Sao Paulo',
+      state: 'SP',
+    },
+    {
+      text: '“Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu urna tincidunt, ultricies diam vitae, commodo lorem. In non orci in justo gravida ultrices sagittis in ex. Nulla dui ipsum, ornare cursus ipsum eget, scelerisque tincidunt tortor. In semper arcu metus, lobortis finibus ante efficitur id. Sed nec molestie eros. Cras ac lacinia est. Sed vestibulum dui arcu, vestibulum euismod purus molestie id.”',
+      name: 'Ricardo Alvorada',
+      role: 'Anestesista',
+      city: 'Sao Paulo',
+      state: 'SP',
+    },
+    {
+      text: '“Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu urna tincidunt, ultricies diam vitae, commodo lorem. In non orci in justo gravida ultrices sagittis in ex. Nulla dui ipsum, ornare cursus ipsum eget, scelerisque tincidunt tortor. In semper arcu metus, lobortis finibus ante efficitur id. Sed nec molestie eros. Cras ac lacinia est. Sed vestibulum dui arcu, vestibulum euismod purus molestie id.”',
+      name: 'Ricardo Alvorada',
+      role: 'Anestesista',
+      city: 'Sao Paulo',
+      state: 'SP',
+    },
+    {
+      text: '“Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu urna tincidunt, ultricies diam vitae, commodo lorem. In non orci in justo gravida ultrices sagittis in ex. Nulla dui ipsum, ornare cursus ipsum eget, scelerisque tincidunt tortor. In semper arcu metus, lobortis finibus ante efficitur id. Sed nec molestie eros. Cras ac lacinia est. Sed vestibulum dui arcu, vestibulum euismod purus molestie id.”',
+      name: 'Ricardo Alvorada',
+      role: 'Anestesista',
+      city: 'Sao Paulo',
+      state: 'SP',
+    },
   ]
 
   const OPTIONS: EmblaOptionsType = { align: 'start', loop: true }
@@ -268,22 +313,33 @@ export default function Home() {
         {/* PARTE 4 */}
 
         <div className="flex h-screen self-center items-center justify-center max-w-[80%] p-10 flex-col ">
-          <div className="flex divide-x-[2px] flex-row">
-            <h2 className={`${jetBrainsMono.className} flex text-[1.6rem] `}>
+          <div className="flex divide-x-[2px] items-center  flex-row">
+            <h2
+              className={`${jetBrainsMono.className} flex text-[1.5rem] max-w-[330px] text-right pr-10`}
+            >
               <b>
                 Depoimentos de quem&nbsp;
                 <span className={`${jetBrainsMono.className} text-green-500`}>
                   simplificou os seus atendimentos
                 </span>{' '}
-                com AnestOn
+                com a AnestOn
               </b>
             </h2>
-            <div className="max-w-[135px] ">
+            <div className="max-w-[924px] pl-10 pr-10 pt-10  ">
               <Carousel>
                 {recomendations.map((i, index) => (
-                  <p className="ml-5" key={index}>
-                    {i}
-                  </p>
+                  <div
+                    className="flex flex-col w-[480px] mr-[10px] ml-[10px] mb-[100px] "
+                    key={index}
+                  >
+                    <p className=" w-[400px] ">{i.text}</p>
+                    <h4 className=" w-full mt-[20px] ">
+                      <b>{i.name}</b>
+                    </h4>
+                    <span className=" w-full ">
+                      {i.role} - {i.city}/{i.state}
+                    </span>
+                  </div>
                 ))}
               </Carousel>
             </div>
