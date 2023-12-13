@@ -19,14 +19,14 @@ export function HomeHeader() {
     if (path === '/') {
       setHomeButton(
         () =>
-          'flex text-green-500 items-center font-bold border-solid border-b-2 border-green-500 h-full',
+          ' text-green-500 font-bold border-solid border-b-2 border-green-500 h-full',
       )
       setaboutUsButton(() => '')
     } else {
       setHomeButton(() => '')
       setaboutUsButton(
         () =>
-          'flex text-green-500 items-center font-bold border-solid border-b-2 border-green-500 h-full',
+          ' text-green-500 font-bold border-solid border-b-2 border-green-500 h-full',
       )
     }
   }, [])
@@ -42,10 +42,13 @@ export function HomeHeader() {
           alt=""
         />
         <div className="text-white  flex  h-full items-center">
-          <Link href={'/'} className={`${homeButton}`}>
+          <Link href={'/'} className={`${homeButton} h-full flex items-center`}>
             Produto
           </Link>
-          <Link href={'/aboutus'} className={`ml-10 ${aboutUsButton}`}>
+          <Link
+            href={'/aboutus'}
+            className={`ml-10 ${aboutUsButton} h-full flex items-center`}
+          >
             Sobre nós
           </Link>
         </div>

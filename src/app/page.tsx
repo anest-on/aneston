@@ -1,9 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { jetBrainsMono, roboto } from './fonts'
-import { EmblaOptionsType } from 'embla-carousel-react'
 
 import homeImg from '../images/homeImg.png'
 import formAutomatizado from '../images/formulario-automatizado.svg'
