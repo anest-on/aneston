@@ -70,7 +70,7 @@ export default function Home() {
   ]
 
   const [sessionTwoText, setSessionTwoText] = useState(
-    'Através da agenda digital você pode gerenciar todas as suas consultas. Lá você tem todas as datas, horários e informações do paciente em um só lugar.',
+    'Com o formulário automatizado basta enviar um link para os pacientes que eles respondem todas as perguntas pré operatórias e agendam a consulta. Você ainda tem acesso a todas as respostas de forma dinâmica no seu painel de pacientes.',
   )
 
   const [formButton, setFormButton] = useState(['bg-green-600 text-white', ''])
