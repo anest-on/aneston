@@ -17,6 +17,7 @@ const buttonVariants = cva(
         destructiveOutline:
           'border border-red-500 text-red-500 hover:bg-red-500 hover:text-white',
         ghost: 'hover:text-white',
+        circle: 'p-[5px] rounded-full bg-gray-200 text-gray-800 hover:bg-white',
       },
       size: {
         default: 'h-10 px-4 py-2',
@@ -34,7 +35,8 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  // eslint-disable-next-line prettier/prettier
+  VariantProps<typeof buttonVariants> {
   asChild?: boolean
 }
 

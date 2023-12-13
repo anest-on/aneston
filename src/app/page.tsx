@@ -1,4 +1,5 @@
 import { jetBrainsMono, roboto } from './fonts'
+import { EmblaOptionsType } from 'embla-carousel-react'
 
 import homeImg from '../images/homeImg.png'
 import formAutomatizado from '../images/formulario-automatizado.svg'
@@ -8,8 +9,20 @@ import rightVector from '../images/rightVector.svg'
 
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
+import Carousel from '@/components/carousel'
 
 export default function Home() {
+  const recomendations = [
+    'recomendation1',
+    'recomendation2',
+    'recomendation3',
+    'recomendation4',
+  ]
+
+  const OPTIONS: EmblaOptionsType = { align: 'start', loop: true }
+  const SLIDE_COUNT = 5
+  const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
+
   return (
     <>
       <div className="bg-gray-600 w-full h-[80px] absolute">Header</div>
@@ -265,16 +278,14 @@ export default function Home() {
                 com AnestOn
               </b>
             </h2>
-            <div className="">
-              <p>
-                “Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Maecenas eu urna tincidunt, ultricies diam vitae, commodo lorem.
-                In non orci in justo gravida ultrices sagittis in ex. Nulla dui
-                ipsum, ornare cursus ipsum eget, scelerisque tincidunt tortor.
-                In semper arcu metus, lobortis finibus ante efficitur id. Sed
-                nec molestie eros. Cras ac lacinia est. Sed vestibulum dui arcu,
-                vestibulum euismod purus molestie id.”
-              </p>
+            <div className="max-w-[135px] ">
+              <Carousel>
+                {recomendations.map((i, index) => (
+                  <p className="ml-5" key={index}>
+                    {i}
+                  </p>
+                ))}
+              </Carousel>
             </div>
           </div>
         </div>
