@@ -1,6 +1,9 @@
+'use client'
+
 import { MultiStep } from '@/components/multiStep'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
+import { signIn } from 'next-auth/react'
 
 const Register = () => {
   return (
@@ -19,7 +22,7 @@ const Register = () => {
       <div className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6">
         <div className="flex items-center justify-between border border-solid border-gray-600 py-4 px-6 rounded-md mb-4">
           <p>Google Calendar</p>
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => signIn('google')}>
             Conectar <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>

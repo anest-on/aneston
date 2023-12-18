@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 
 import { roboto } from './fonts'
 import './globals.css'
+import { NextAuthProvider } from './provider'
 
 export const metadata: Metadata = {
   title: 'AnestOn',
@@ -15,7 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html className={`${roboto.className} flex flex-col`} lang="en">
-      <body className="w-full">{children}</body>
+      <NextAuthProvider>
+        <body className="w-full">{children}</body>
+      </NextAuthProvider>
     </html>
   )
 }
