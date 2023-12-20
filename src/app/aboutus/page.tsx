@@ -11,12 +11,7 @@ const AboutUs = () => {
     <>
       <HomeHeader />
       <main className="h-screen w-full flex flex-col bg-gray-900  text-base text-white items-center">
-        <Button onClick={() => setModalState(() => true)}>Open</Button>
-        {modalState ? (
-          <SliderModal display="hidden" />
-        ) : (
-          <SliderModal display="fixed" />
-        )}
+        <SliderModal />
       </main>
       <HomeFooter />
     </>
