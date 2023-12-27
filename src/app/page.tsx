@@ -12,7 +12,14 @@ import rightVector from '../images/rightVector.svg'
 
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import Carousel from '@/components/carousel'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel'
+
 import { HomeFooter } from '@/components/homeFooter'
 import { HomeHeader } from '@/components/homeHeader'
 
@@ -97,11 +104,13 @@ export default function Home() {
       <main className=" h-full w-full justify-center flex flex-col bg-gray-900  text-base text-white">
         {/* PARTE 1 */}
 
-        <div className="flex h-screen self-center justify-center max-w-[80%] p-10">
-          <div className="flex flex-row self-center justify-center w-100 ">
-            <div className="flex flex-col max-w-[600px] items-center justify-center ">
-              <div className="flex w-full items-center justify-center">
-                <h1 className={`${jetBrainsMono.className} flex text-[2.5rem]`}>
+        <div className="flex h-screen self-center justify-center p-10 max-w-[80%]">
+          <div className="flex flex-row self-center justify-center">
+            <div className="flex flex-col max-w-[60%] items-center justify-center ">
+              <div className="flex flex-col items-start">
+                <h1
+                  className={`${jetBrainsMono.className} flex text-[3rem] leading-10`}
+                >
                   <b>
                     Bem vindo ao&nbsp;
                     <span
@@ -111,22 +120,23 @@ export default function Home() {
                     </span>
                   </b>
                 </h1>
+
+                <p className="text-gray-100 text-[1.2rem] mt-5">
+                  Uma plataforma para ajudar você, anestesista, a melhor atender
+                  seus pacientes. Através de um formulário automatizado e um
+                  sistema de gestão de agenda vamos facilitar seu dia a dia de
+                  trabalho!
+                </p>
               </div>
-              <p className="text-gray-100 mt-5 w-5/6">
-                Uma plataforma para ajudar você, anestesista, a melhor atender
-                seus pacientes. Através de um formulário automatizado e um
-                sistema de gestão de agenda vamos facilitar seu dia a dia de
-                trabalho!
-              </p>
               <Button className="mt-[40px] w-[250px]">
                 <b>Vamos lá!</b>
               </Button>
             </div>
             <Image
               src={homeImg}
-              width={500}
+              width={700}
               height={10}
-              className="self-center"
+              className="self-center max-lg:hidden xl:max-w-[600px] md:max-w-[500px]"
               alt=""
             />
           </div>
@@ -134,8 +144,10 @@ export default function Home() {
 
         {/* PARTE 2 */}
 
-        <div className="flex h-screen self-center items-center justify-center max-w-[80%] p-10 flex-col">
-          <h2 className={`${jetBrainsMono.className} flex text-[1.8rem] `}>
+        <div className="flex h-screen self-center items-center justify-center max-w-[80%] max-lg:max-w-[100%] max-lg:p-[10px] flex-col">
+          <h2
+            className={`${jetBrainsMono.className} flex text-[1.8rem] text-center `}
+          >
             <b>
               Agilize seus atendimentos de consulta&nbsp;
               <span className={`${jetBrainsMono.className} text-green-500`}>
@@ -143,8 +155,8 @@ export default function Home() {
               </span>
             </b>
           </h2>
-          <div className="pt-10 flex flex-row w-full max-w-[85%] items-center ">
-            <div className="flex w-full h-full justify-center ">
+          <div className="pt-10 flex flex-row w-full items-center justify-center max-lg:flex-col">
+            <div className="flex w-full h-full justify-center max-lg:mb-[40px] ">
               <Button
                 variant={'outline'}
                 onClick={() => formActionButton()}
@@ -152,7 +164,7 @@ export default function Home() {
               >
                 <Image
                   src={formAutomatizado}
-                  width={150}
+                  width={120}
                   height={10}
                   className="self-center"
                   alt=""
@@ -167,7 +179,7 @@ export default function Home() {
               >
                 <Image
                   src={formAutomatizado}
-                  width={150}
+                  width={120}
                   height={10}
                   className="self-center"
                   alt=""
@@ -175,8 +187,10 @@ export default function Home() {
                 Agenda <br /> digital
               </Button>
             </div>
-            <div className="ml-10">
-              <p className={`${roboto.className} text-gray-100`}>
+            <div className="flex flex-col items-center ml-10 max-lg:ml-0 ">
+              <p
+                className={`${roboto.className} max-lg:text-center text-gray-100`}
+              >
                 {sessionTwoText}
               </p>
               <Button className="mt-[15px]">
@@ -195,8 +209,10 @@ export default function Home() {
 
         {/* PARTE 3 */}
 
-        <div className="flex h-screen self-center items-center justify-center w-full flex-col">
-          <h2 className={`${jetBrainsMono.className} flex text-[1.8rem] `}>
+        <div className="flex lg:h-screen self-center items-center justify-center w-full flex-col ">
+          <h2
+            className={`${jetBrainsMono.className} flex text-[1.8rem] text-center`}
+          >
             <b>
               Porque &nbsp;
               <span className={`${jetBrainsMono.className} text-green-500`}>
@@ -206,18 +222,20 @@ export default function Home() {
             </b>
           </h2>
 
-          <div className="flex flex-row mt-20 w-full justify-center ">
-            <div className="flex w-full p-10 justify-end ">
+          <div className="flex flex-row max-lg:flex-col mt-20 w-full justify-center ">
+            <div className="flex w-full lg:p-10 lg:justify-end max-lg:pl-5 max-lg:pr-5 ">
               <div className="flex flex-col ">
-                <h3 className={`${jetBrainsMono.className} flex text-[1.4rem]`}>
+                <h3
+                  className={`${jetBrainsMono.className} flex text-[1.4rem] max-lg:text-center max-lg:justify-center`}
+                >
                   <b>Médicos convencionais</b>
                 </h3>
-                <div className="flex flex-row items-center mt-10 w-[500px]">
+                <div className="flex flex-row items-center mt-10 lg:w-[500px]">
                   <Image
                     src={wrongVector}
                     width={60}
                     height={10}
-                    className="self-center mr-5"
+                    className="self-center mr-5 max-lg:max-w-[30px]"
                     alt=""
                   />
                   <p className="text-gray-100 text-[1.1rem] ">
@@ -225,12 +243,12 @@ export default function Home() {
                     com o paciente
                   </p>
                 </div>
-                <div className="flex flex-row items-center mt-10 w-[500px]">
+                <div className="flex flex-row items-center mt-10 lg:w-[500px]">
                   <Image
                     src={wrongVector}
                     width={60}
                     height={10}
-                    className="self-center mr-5"
+                    className="self-center mr-5 max-lg:max-w-[30px]"
                     alt=""
                   />
                   <p className="text-gray-100 text-[1.1rem]">
@@ -238,12 +256,12 @@ export default function Home() {
                     de diversos locais para cada atendimento
                   </p>
                 </div>
-                <div className="flex flex-row items-center mt-10 w-[500px]">
+                <div className="flex flex-row items-center mt-10 lg:w-[500px]">
                   <Image
                     src={wrongVector}
                     width={60}
                     height={10}
-                    className="self-center mr-5"
+                    className="self-center mr-5 max-lg:max-w-[30px]"
                     alt=""
                   />
                   <p className="text-gray-100 text-[1.1rem]">
@@ -251,12 +269,12 @@ export default function Home() {
                     meios convencionais
                   </p>
                 </div>
-                <div className="flex flex-row items-center mt-10 w-[500px]">
+                <div className="flex flex-row items-center mt-10 lg:w-[500px]">
                   <Image
                     src={wrongVector}
                     width={60}
                     height={10}
-                    className="self-center mr-5"
+                    className="self-center mr-5 max-lg:max-w-[30px]"
                     alt=""
                   />
                   <p className="text-gray-100 text-[1.1rem]">
@@ -267,8 +285,10 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex flex-col items-start justify-center bg-gray-600 p-10 w-full rounded-l-[50px]">
-              <h3 className={`${jetBrainsMono.className} flex text-[1.4rem] `}>
+            <div className="flex flex-col justify-center bg-gray-600 max-lg:pl-5 max-lg:pr-5 lg:p-10 max-lg:pt-10 max-lg:pb-10 w-full lg:rounded-l-[50px] max-lg:mt-[40px]">
+              <h3
+                className={`${jetBrainsMono.className} flex text-[1.4rem] max-lg:text-center max-lg:justify-center`}
+              >
                 <b>
                   Médicos{' '}
                   <span className={`${jetBrainsMono.className} text-green-500`}>
@@ -276,12 +296,12 @@ export default function Home() {
                   </span>
                 </b>
               </h3>
-              <div className="flex flex-row items-center mt-10 w-[500px]">
+              <div className="flex flex-row items-center mt-10 lg:w-[500px] ">
                 <Image
                   src={rightVector}
                   width={60}
                   height={10}
-                  className="self-center mr-5"
+                  className="self-center mr-5 max-lg:max-w-[30px]"
                   alt=""
                 />
                 <p className="text-gray-100 text-[1.1rem] ">
@@ -289,12 +309,12 @@ export default function Home() {
                   com o paciente
                 </p>
               </div>
-              <div className="flex flex-row items-center mt-10 w-[500px]">
+              <div className="flex flex-row items-center mt-10 lg:w-[500px]">
                 <Image
                   src={rightVector}
                   width={60}
                   height={10}
-                  className="self-center mr-5"
+                  className="self-center mr-5 max-lg:max-w-[30px]"
                   alt=""
                 />
                 <p className="text-gray-100 text-[1.1rem]">
@@ -302,12 +322,12 @@ export default function Home() {
                   de diversos locais para cada atendimento
                 </p>
               </div>
-              <div className="flex flex-row items-center mt-10 w-[500px]">
+              <div className="flex flex-row items-center mt-10 lg:w-[500px]">
                 <Image
                   src={rightVector}
                   width={60}
                   height={10}
-                  className="self-center mr-5"
+                  className="self-center mr-5 max-lg:max-w-[30px]"
                   alt=""
                 />
                 <p className="text-gray-100 text-[1.1rem]">
@@ -315,12 +335,12 @@ export default function Home() {
                   meios convencionais
                 </p>
               </div>
-              <div className="flex flex-row items-center mt-10 w-[500px]">
+              <div className="flex flex-row items-center mt-10 lg:w-[500px]">
                 <Image
                   src={rightVector}
                   width={60}
                   height={10}
-                  className="self-center mr-5"
+                  className="self-center mr-5 max-lg:max-w-[30px]"
                   alt=""
                 />
                 <p className="text-gray-100 text-[1.1rem]">
@@ -334,38 +354,38 @@ export default function Home() {
 
         {/* PARTE 4 */}
 
-        <div className="flex h-screen self-center items-center justify-center max-w-[80%] p-10 flex-col ">
-          <div className="flex divide-x-[2px] items-center  flex-row">
-            <h2
-              className={`${jetBrainsMono.className} flex text-[1.5rem] max-w-[330px] text-right pr-10`}
-            >
-              <b>
-                Depoimentos de quem&nbsp;
-                <span className={`${jetBrainsMono.className} text-green-500`}>
-                  simplificou os seus atendimentos
-                </span>{' '}
-                com a AnestOn
-              </b>
-            </h2>
-            <div className="max-w-[924px] pl-10 pr-10 pt-10  ">
-              <Carousel>
-                {recomendations.map((i, index) => (
-                  <div
-                    className="flex flex-col w-[480px] mr-[10px] ml-[10px] mb-[100px] "
-                    key={index}
-                  >
-                    <p className=" w-[400px] text-gray-100">{i.text}</p>
-                    <h4 className=" w-full mt-[20px] text-white">
-                      <b>{i.name}</b>
-                    </h4>
-                    <span className=" w-full text-white">
-                      {i.role} - {i.city}/{i.state}
-                    </span>
-                  </div>
-                ))}
-              </Carousel>
-            </div>
-          </div>
+        <div className="flex h-screen self-center justify-center max-w-[70%] p-10 lg:divide-x-[2px] items-center max-lg:flex-col lg:flex-row">
+          <h2
+            className={`${jetBrainsMono.className} flex text-[1.5rem] max-w-[330px] lg:text-right max-lg:text-center pr-10`}
+          >
+            <b>
+              Depoimentos de quem&nbsp;
+              <span className={`${jetBrainsMono.className} text-green-500`}>
+                simplificou os seus atendimentos
+              </span>{' '}
+              com a AnestOn
+            </b>
+          </h2>
+          <Carousel className="w-full p-10 max-w-sms ">
+            <CarouselContent>
+              {recomendations.map((i, index) => (
+                <CarouselItem
+                  className="flex flex-col max-w-[400px] xl:basis-1/2 lg:basis-1/1 "
+                  key={index}
+                >
+                  <p className=" w-[350px] text-gray-100">{i.text}</p>
+                  <h4 className=" w-full mt-[20px] text-white">
+                    <b>{i.name}</b>
+                  </h4>
+                  <span className=" w-full text-white">
+                    {i.role} - {i.city}/{i.state}
+                  </span>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious variant={'circle'} />
+            <CarouselNext variant={'circle'} />
+          </Carousel>
         </div>
 
         {/* FOOTER */}

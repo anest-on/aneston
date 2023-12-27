@@ -32,7 +32,7 @@ export function HomeHeader() {
   }, [path])
 
   return (
-    <div className="flex bg-gray-600 items-center justify-center h-[70px] w-full">
+    <div className="flex bg-gray-600 items-center justify-center h-[70px] w-full max-lg:hidden">
       <div className="flex flex-row items-center justify-between max-w-[60%] w-full h-full ">
         <Image
           src={logo}
