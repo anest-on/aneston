@@ -1,4 +1,5 @@
 import { MultiStep } from '@/components/multiStep'
+import SliderModal from '@/components/sliderModal'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 
@@ -20,7 +21,7 @@ const Register = () => {
       <div className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6 gap-4">
         <div className="flex items-center justify-between border border-solid border-gray-600 py-4 px-6 rounded-md mb-4">
           <p>Possui intervalos ao longo do dia?</p>
-          <Button variant="outline">Personalizar horários</Button>
+          <SliderModal variant="outline">Personalizar horários</SliderModal>
         </div>
         <Button>
           Próximo Passo <ArrowRight className="ml-2 h-4 w-4" />
