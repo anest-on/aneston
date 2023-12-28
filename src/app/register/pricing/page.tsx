@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 
 const Register = () => {
   return (
-    <main className="max-w-[800px] mt-20 mb-20 mx-auto py-0 px-4">
+    <main className="max-w-[800px] h-full mt-20 mb-20 mx-auto py-0 px-4">
       <div className="flex w-full justify-center">
         <div className="max-w-[572px] py-0 px-6">
           <strong className="text-2xl text-white">
@@ -20,7 +20,7 @@ const Register = () => {
         </div>
       </div>
 
-      <div className="flex items-start justify-center gap-10 mt-6">
+      <div className="flex max-lg:flex-col items-start justify-center gap-10 mt-6">
         <div className="flex flex-col w-full items-center gap-8 py-11 px-6 rounded-lg bg-gray-800 border  border-gray-600">
           <p className="font-bold text-2xl text-white">Plano Mensal</p>
           <div className="flex items-start text-white font-bold">

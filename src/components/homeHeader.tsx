@@ -56,7 +56,7 @@ export function HomeHeader() {
               <Menu color="white" />
             </Button>
           </SheetTrigger>
-          <SheetContent className="bg-gray-600">
+          <SheetContent className="bg-gray-800 border-gray-600">
             <SheetHeader>
               <SheetTitle className="text-white">Menu</SheetTitle>
             </SheetHeader>
