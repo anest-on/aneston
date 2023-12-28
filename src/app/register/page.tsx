@@ -4,7 +4,7 @@ import { MultiStep } from '@/components/multiStep'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Check } from 'lucide-react'
 import { signIn, useSession } from 'next-auth/react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 
 const Register = () => {
   const session = useSession()
@@ -13,12 +13,11 @@ const Register = () => {
   const hasAuthError = !!pathName.get('error')
   const isSignedIn = session.status === 'authenticated'
 
+  const router = useRouter()
+
   async function handleConnectCalendar() {
     await signIn('google')
   }
-
-  // TODO: Remover a linha abaixo
-  console.log(session)
 
   return (
     <main className="max-w-[572px] mt-20 mx-auto mb-4 py-0 px-4">
@@ -46,14 +45,14 @@ const Register = () => {
             </Button>
           )}
         </div>
-        {hasAuthError && (
+        {hasAuthError && !isSignedIn && (
           <p className="text-sm text-[#F75A68] mb-4">
             Falha ao se conectar ao Google, verifique se você habilitou as
             permissões de acesso ao Google Calendar
           </p>
         )}
         {isSignedIn ? (
-          <Button>
+          <Button onClick={() => router.push('/register/update-informations')}>
             Próximo Passo <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         ) : (
