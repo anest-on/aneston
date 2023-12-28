@@ -11,8 +11,8 @@ import Link from 'next/link'
 
 export function HomeFooter() {
   return (
-    <div className="flex flex-col w-full text-white bg-gray-600 items-center justify-center p-[40px]">
-      <div className="flex flex-row justify-between max-w-[50%] w-full">
+    <div className="flex flex-col w-full text-white bg-gray-600 lg:items-center justify-center p-[40px]">
+      <div className="flex lg:flex-row max-lg:flex-col justify-between max-w-[50%] w-full">
         <div className="divide-y-2 w-[150px]">
           <h3 className={`${jetBrainsMono.className} text-[1.1rem]`}>
             Páginas
@@ -27,7 +27,7 @@ export function HomeFooter() {
           </div>
         </div>
 
-        <div className="divide-y-2 w-[150px]">
+        <div className="divide-y-2 w-[150px] max-lg:mt-[20px]">
           <h3 className={`${jetBrainsMono.className} text-[1.1rem]`}>
             Acessos
           </h3>
@@ -37,7 +37,7 @@ export function HomeFooter() {
           </div>
         </div>
 
-        <div className="">
+        <div className="max-lg:mt-[40px]">
           <div className="text-[0.9rem] text-gray-200">
             <p className="">Políticas de privacidade</p>
             <p className="mt-[5px]">Termos de uso</p>
@@ -76,15 +76,15 @@ export function HomeFooter() {
         </div>
       </div>
 
-      <div className="flex flex-row mt-10">
+      <div className="flex lg:flex-row max-lg:flex-col mt-10 ">
         <Image
           src={logo}
           width={180}
           height={10}
-          className="self-center mr-5"
+          className="self-center lg:mr-5 "
           alt=""
         />
-        <div className="text-gray-100 text-[0.8rem] ml-[15px]">
+        <div className="text-gray-100 text-[0.8rem] lg:ml-[15px] max-lg:mt-[30px]">
           <p>contato@aneston.com.br - (xx) 99999-9999</p>
           <p>
             Rua Pais Leme, 136 | salas 1407 e 1408 - Pinheiros, São Paulo - SP,

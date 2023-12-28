@@ -104,12 +104,12 @@ export default function Home() {
       <main className=" h-full w-full justify-center flex flex-col bg-gray-900  text-base text-white">
         {/* PARTE 1 */}
 
-        <div className="flex h-screen self-center justify-center p-10 max-w-[80%]">
+        <div className="flex h-screen self-center justify-center lg:p-10 max-w-[80%] ">
           <div className="flex flex-row self-center justify-center">
-            <div className="flex flex-col max-w-[60%] items-center justify-center ">
+            <div className="flex flex-col lg:max-w-[60%] max-lg:max-w- items-center justify-center ">
               <div className="flex flex-col items-start">
                 <h1
-                  className={`${jetBrainsMono.className} flex text-[3rem] leading-10`}
+                  className={`${jetBrainsMono.className} flex lg:text-[3rem] max-lg:text-[2.5rem] max-lg:leading-10 lg:leading-10`}
                 >
                   <b>
                     Bem vindo ao&nbsp;
@@ -121,7 +121,7 @@ export default function Home() {
                   </b>
                 </h1>
 
-                <p className="text-gray-100 text-[1.2rem] mt-5">
+                <p className="text-gray-100 lg:text-[1.2rem] max-lg:text[0.5rem] mt-5">
                   Uma plataforma para ajudar você, anestesista, a melhor atender
                   seus pacientes. Através de um formulário automatizado e um
                   sistema de gestão de agenda vamos facilitar seu dia a dia de
@@ -144,9 +144,9 @@ export default function Home() {
 
         {/* PARTE 2 */}
 
-        <div className="flex h-screen self-center items-center justify-center max-w-[80%] max-lg:max-w-[100%] max-lg:p-[10px] flex-col">
+        <div className="flex h-screen self-center items-center justify-center max-w-[80%] max-lg:pr-[10px] max-lg:pl-[10px] flex-col">
           <h2
-            className={`${jetBrainsMono.className} flex text-[1.8rem] text-center `}
+            className={`${jetBrainsMono.className} flex lg:text-[1.8rem] max-lg:text-[1.5rem] text-center `}
           >
             <b>
               Agilize seus atendimentos de consulta&nbsp;
@@ -160,13 +160,13 @@ export default function Home() {
               <Button
                 variant={'outline'}
                 onClick={() => formActionButton()}
-                className={`${jetBrainsMono.className} text-[1.3rem] flex flex-col h-full rounded-[20px] border-[2px] w-[200px] mr-4 ${formButton[0]}`}
+                className={`${jetBrainsMono.className} lg:text-[1.3rem] flex flex-col h-full rounded-[20px] border-[2px] lg:w-[200px] mr-4 ${formButton[0]}`}
               >
                 <Image
                   src={formAutomatizado}
                   width={120}
                   height={10}
-                  className="self-center"
+                  className="self-center max-lg:max-w-[80px]"
                   alt=""
                 />
                 Formulário <br />
@@ -175,13 +175,13 @@ export default function Home() {
               <Button
                 variant={'outline'}
                 onClick={() => agendaActionButton()}
-                className={`${jetBrainsMono.className} text-[1.3rem] flex flex-col h-full rounded-[20px] border-[2px] w-[200px] ${formButton[1]}`}
+                className={`${jetBrainsMono.className} lg:text-[1.3rem] flex flex-col h-full rounded-[20px] border-[2px] lg:w-[200px] ${formButton[1]}`}
               >
                 <Image
                   src={formAutomatizado}
                   width={120}
                   height={10}
-                  className="self-center"
+                  className="self-center max-lg:max-w-[80px]"
                   alt=""
                 />
                 Agenda <br /> digital
@@ -211,7 +211,7 @@ export default function Home() {
 
         <div className="flex lg:h-screen self-center items-center justify-center w-full flex-col ">
           <h2
-            className={`${jetBrainsMono.className} flex text-[1.8rem] text-center`}
+            className={`${jetBrainsMono.className} flex max-w-[80%] lg:text-[1.8rem] max-lg:text-[1.5rem] text-center`}
           >
             <b>
               Porque &nbsp;
@@ -354,9 +354,9 @@ export default function Home() {
 
         {/* PARTE 4 */}
 
-        <div className="flex h-screen self-center justify-center max-w-[70%] p-10 lg:divide-x-[2px] items-center max-lg:flex-col lg:flex-row">
+        <div className="flex h-screen self-center justify-center lg:max-w-[70%] max-lg:max-w-[100%] p-10 lg:divide-x-[2px] items-center max-lg:flex-col lg:flex-row ">
           <h2
-            className={`${jetBrainsMono.className} flex text-[1.5rem] max-w-[330px] lg:text-right max-lg:text-center pr-10`}
+            className={`${jetBrainsMono.className} flex max-w-[80%] lg:text-[1.5rem] max-lg:text-[1.5rem] lg:text-right max-lg:text-center pr-10`}
           >
             <b>
               Depoimentos de quem&nbsp;
@@ -370,10 +370,10 @@ export default function Home() {
             <CarouselContent>
               {recomendations.map((i, index) => (
                 <CarouselItem
-                  className="flex flex-col max-w-[400px] xl:basis-1/2 lg:basis-1/1 "
+                  className="flex flex-col max-w-[400px] mb-[50px] max-lg:mr-[100px] xl:basis-1/2 lg:basis-1/1 "
                   key={index}
                 >
-                  <p className=" w-[350px] text-gray-100">{i.text}</p>
+                  <p className=" lg:w-[350px] text-gray-100">{i.text}</p>
                   <h4 className=" w-full mt-[20px] text-white">
                     <b>{i.name}</b>
                   </h4>
@@ -383,8 +383,8 @@ export default function Home() {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious variant={'circle'} />
-            <CarouselNext variant={'circle'} />
+            <CarouselPrevious variant={'circle'} className="static mr-[80px]" />
+            <CarouselNext variant={'circle'} className="static" />
           </Carousel>
         </div>
 
