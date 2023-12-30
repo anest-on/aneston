@@ -192,7 +192,6 @@ const Register = () => {
                         type="time"
                         step={60}
                         disabled={intervals[index].enabled === false}
-                        className="accent-red-500"
                         {...form.register(`intervals.${index}.startTime`)}
                       />
 
