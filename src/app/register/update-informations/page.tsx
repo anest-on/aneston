@@ -55,7 +55,7 @@ const Register = () => {
     },
   })
 
-  const { isSubmitting, isValid } = form.formState
+  const { isSubmitting } = form.formState
 
   const [userLinkAlredyTakenMessage, setUserLinkAlredyTakenMessage] = useState<
     string | null
@@ -64,7 +64,7 @@ const Register = () => {
   const handleUpdateProfile = async (data: UpdateProfileData) => {
     try {
       await api.put('/users', data)
-      router.push(`/register/schedule`)
+      router.push(`/register/time-intervals`)
     } catch (err) {
       if (err instanceof AxiosError && err?.response?.data?.message) {
         setUserLinkAlredyTakenMessage('Esse nome de usuário já está em uso.')
@@ -191,7 +191,7 @@ const Register = () => {
             </div>
           </div>
 
-          <Button disabled={!isValid || isSubmitting}>
+          <Button disabled={isSubmitting}>
             Próximo Passo <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </form>

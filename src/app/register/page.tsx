@@ -20,7 +20,7 @@ const Register = () => {
   }
 
   return (
-    <main className="max-w-[572px] mt-20 mx-auto mb-4 py-0 px-4">
+    <main className="max-w-[572px] h-screen mt-20 mx-auto mb-4 py-0 px-4">
       <div className="py-0 px-6">
         <strong className="text-2xl text-white">Bem-vindo ao AnestOn!</strong>
         <p className="mb-6">
