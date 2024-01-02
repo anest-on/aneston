@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { jetBrainsMono, roboto } from './fonts'
 
@@ -22,6 +22,9 @@ import {
 
 import { HomeFooter } from '@/components/homeFooter'
 import { HomeHeader } from '@/components/homeHeader'
+import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import { unknown } from 'zod'
 
 export default function Home() {
   const recomendations = [
@@ -76,6 +79,25 @@ export default function Home() {
     },
   ]
 
+  const session = useSession()
+  const isSignedIn = session.status === 'authenticated'
+
+  useEffect(() => {
+    if (isSignedIn) {
+      if (
+        session.data.user.user_link === '' ||
+        session.data.user.user_link === null ||
+        session.data.user.user_link === undefined
+      ) {
+        router.push('/register/update-informations')
+      } else {
+        router.push('/not-found')
+      }
+    }
+  })
+
+  const router = useRouter()
+
   const [sessionTwoText, setSessionTwoText] = useState(
     'Com o formulário automatizado basta enviar um link para os pacientes que eles respondem todas as perguntas pré operatórias e agendam a consulta. Você ainda tem acesso a todas as respostas de forma dinâmica no seu painel de pacientes.',
   )
@@ -128,7 +150,10 @@ export default function Home() {
                   trabalho!
                 </p>
               </div>
-              <Button className="mt-[40px] w-[250px]">
+              <Button
+                className="mt-[40px] w-[250px]"
+                onClick={() => router.push('/register')}
+              >
                 <b>Vamos lá!</b>
               </Button>
             </div>
@@ -193,7 +218,10 @@ export default function Home() {
               >
                 {sessionTwoText}
               </p>
-              <Button className="mt-[15px]">
+              <Button
+                className="mt-[15px]"
+                onClick={() => router.push('/register')}
+              >
                 Começar a usar&nbsp;&nbsp;&nbsp;
                 <Image
                   src={rightArrow}

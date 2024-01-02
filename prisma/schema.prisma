@@ -22,8 +22,23 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  accounts Account[]
-  sessions Session[]
+  accounts         Account[]
+  sessions         Session[]
+  UserTimeInterval UserTimeInterval[]
+}
+
+model UserTimeInterval {
+  id                    String   @id @default(uuid())
+  week_day              Int
+  time_start_in_minutes Int
+  time_end_in_minutes   Int
+  appointment_time      Int
+  interval_times        Json?
+  user_id               String
+  user                  User     @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+  @@map("user_time_intervals")
 }
 
 model Account {

@@ -9,20 +9,24 @@ import { Button } from './ui/button'
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Menu } from 'lucide-react'
+import { signIn } from 'next-auth/react'
 
 export function HomeHeader() {
   const [homeButton, setHomeButton] = useState('')
   const [aboutUsButton, setaboutUsButton] = useState('')
   const path = usePathname()
+
+  async function handleConnectCalendar() {
+    await signIn('google')
+  }
 
   useEffect(() => {
     if (path === '/') {
@@ -76,6 +80,7 @@ export function HomeHeader() {
               <Button
                 className="rounded-full border-none bg-gray-400 text-gray mt-10"
                 variant={'outline'}
+                onClick={handleConnectCalendar}
               >
                 <Image
                   src={googleIcon}
@@ -103,7 +108,7 @@ export function HomeHeader() {
             Produto
           </Link>
           <Link
-            href={'/aboutus'}
+            href={'/not-found'}
             className={`ml-10 ${aboutUsButton} h-full flex items-center`}
           >
             Sobre nós
@@ -112,6 +117,7 @@ export function HomeHeader() {
         <Button
           className="rounded-full border-none bg-gray-400 text-gray"
           variant={'outline'}
+          onClick={handleConnectCalendar}
         >
           <Image
             src={googleIcon}

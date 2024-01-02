@@ -1,7 +1,12 @@
+'use client'
+
 import { MultiStep } from '@/components/multiStep'
 import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 
 const Register = () => {
+  const router = useRouter()
+
   return (
     <main className="max-w-[800px] h-full mt-20 mb-20 mx-auto py-0 px-4">
       <div className="flex w-full justify-center">
@@ -36,7 +41,9 @@ const Register = () => {
             <p>* A cobrança é realizada mensalmente.</p>
             <p>* Receba 15 dias gratuitos para testar.</p>
           </div>
-          <Button>Escolher Plano</Button>
+          <Button onClick={() => router.push('/not-found')}>
+            Escolher Plano
+          </Button>
         </div>
 
         <div className="flex flex-col w-full items-center gap-8 py-8 px-6 rounded-lg bg-gray-800 border  border-gray-600">
@@ -55,7 +62,9 @@ const Register = () => {
             <p>* A cobrança é realizada mensalmente.</p>
             <p>* Receba 15 dias gratuitos para testar.</p>
           </div>
-          <Button>Escolher Plano</Button>
+          <Button onClick={() => router.push('/not-found')}>
+            Escolher Plano
+          </Button>
         </div>
       </div>
 
