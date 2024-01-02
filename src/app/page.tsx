@@ -24,7 +24,6 @@ import { HomeFooter } from '@/components/homeFooter'
 import { HomeHeader } from '@/components/homeHeader'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { unknown } from 'zod'
 
 export default function Home() {
   const recomendations = [

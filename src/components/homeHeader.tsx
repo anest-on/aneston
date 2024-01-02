@@ -34,7 +34,7 @@ export function HomeHeader() {
 
   async function logOut() {
     // setSignOutClicked(true)
-    await api.delete('/users/sign-out')
+    await api.delete('/users/delete')
     window.location.href = '/'
   }
 

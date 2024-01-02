@@ -39,18 +39,18 @@ export async function PUT(req: Request) {
   }
 }
 
-export async function DELETE(req: Request) {
+export async function DELETE() {
   const session = await getServerSession(authOptions)
 
   if (!session) {
     return new NextResponse('Unauthorized', { status: 401 })
   }
 
-  await prisma.user.deleteMany({
+  await prisma.session.deleteMany({
     where: {
       user_id: session.user.id,
     },
   })
 
-  return res.status(201).end()
+  return new NextResponse('Success', { status: 201 })
 }
