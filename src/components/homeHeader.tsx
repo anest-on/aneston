@@ -17,15 +17,25 @@ import {
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Menu } from 'lucide-react'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
+import { api } from '@/lib/axios'
 
 export function HomeHeader() {
   const [homeButton, setHomeButton] = useState('')
   const [aboutUsButton, setaboutUsButton] = useState('')
   const path = usePathname()
+  const session = useSession()
+
+  const isSignedIn = session.status === 'authenticated'
 
   async function handleConnectCalendar() {
     await signIn('google')
+  }
+
+  async function logOut() {
+    // setSignOutClicked(true)
+    await api.delete('/users/sign-out')
+    window.location.href = '/'
   }
 
   useEffect(() => {
@@ -76,21 +86,30 @@ export function HomeHeader() {
               >
                 Sobre nós
               </Link>
-
-              <Button
-                className="rounded-full border-none bg-gray-400 text-gray mt-10"
-                variant={'outline'}
-                onClick={handleConnectCalendar}
-              >
-                <Image
-                  src={googleIcon}
-                  width={18}
-                  height={10}
-                  className="self-center mr-5"
-                  alt=""
-                />
-                Login/Cadastro com Google
-              </Button>
+              {isSignedIn ? (
+                <Button
+                  className="rounded-full border-none bg-gray-400 text-gray mt-10"
+                  variant={'outline'}
+                  onClick={handleConnectCalendar}
+                >
+                  Sair
+                </Button>
+              ) : (
+                <Button
+                  className="rounded-full border-none bg-gray-400 text-gray mt-10"
+                  variant={'outline'}
+                  onClick={handleConnectCalendar}
+                >
+                  <Image
+                    src={googleIcon}
+                    width={18}
+                    height={10}
+                    className="self-center mr-5"
+                    alt=""
+                  />
+                  Login/Cadastro com Google
+                </Button>
+              )}
             </div>
           </SheetContent>
         </Sheet>
@@ -114,20 +133,30 @@ export function HomeHeader() {
             Sobre nós
           </Link>
         </div>
-        <Button
-          className="rounded-full border-none bg-gray-400 text-gray"
-          variant={'outline'}
-          onClick={handleConnectCalendar}
-        >
-          <Image
-            src={googleIcon}
-            width={18}
-            height={10}
-            className="self-center mr-5"
-            alt=""
-          />
-          Login/Cadastro com Google
-        </Button>
+        {isSignedIn ? (
+          <Button
+            className="rounded-full border-none bg-gray-400 text-gray mt-10"
+            variant={'outline'}
+            onClick={logOut}
+          >
+            Sair
+          </Button>
+        ) : (
+          <Button
+            className="rounded-full border-none bg-gray-400 text-gray mt-10"
+            variant={'outline'}
+            onClick={handleConnectCalendar}
+          >
+            <Image
+              src={googleIcon}
+              width={18}
+              height={10}
+              className="self-center mr-5"
+              alt=""
+            />
+            Login/Cadastro com Google
+          </Button>
+        )}
       </div>
     </div>
   )
