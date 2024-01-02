@@ -9,7 +9,6 @@ import { Button } from './ui/button'
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -18,11 +17,16 @@ import {
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Menu } from 'lucide-react'
+import { signIn } from 'next-auth/react'
 
 export function HomeHeader() {
   const [homeButton, setHomeButton] = useState('')
   const [aboutUsButton, setaboutUsButton] = useState('')
   const path = usePathname()
+
+  async function handleConnectCalendar() {
+    await signIn('google')
+  }
 
   useEffect(() => {
     if (path === '/') {
@@ -52,9 +56,9 @@ export function HomeHeader() {
         />
         <Sheet>
           <SheetTrigger className="mr-5">
-            <Button className="bg-gray-400" variant={'circle'}>
+            <div className="bg-gray-400 rounded-full py-2 px-4">
               <Menu color="white" />
-            </Button>
+            </div>
           </SheetTrigger>
           <SheetContent className="bg-gray-800 border-gray-600">
             <SheetHeader>
@@ -78,6 +82,7 @@ export function HomeHeader() {
               <Button
                 className="rounded-full border-none bg-gray-400 text-gray mt-10"
                 variant={'outline'}
+                onClick={handleConnectCalendar}
               >
                 <Image
                   src={googleIcon}
@@ -114,6 +119,7 @@ export function HomeHeader() {
         <Button
           className="rounded-full border-none bg-gray-400 text-gray"
           variant={'outline'}
+          onClick={handleConnectCalendar}
         >
           <Image
             src={googleIcon}
