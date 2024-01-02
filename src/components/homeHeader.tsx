@@ -14,7 +14,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Menu } from 'lucide-react'
 import { signIn } from 'next-auth/react'
@@ -27,6 +27,8 @@ export function HomeHeader() {
   async function handleConnectCalendar() {
     await signIn('google')
   }
+
+  const router = useRouter()
 
   useEffect(() => {
     if (path === '/') {
@@ -110,7 +112,7 @@ export function HomeHeader() {
             Produto
           </Link>
           <Link
-            href={'/aboutus'}
+            href={'/not-found'}
             className={`ml-10 ${aboutUsButton} h-full flex items-center`}
           >
             Sobre nós
