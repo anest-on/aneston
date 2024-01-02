@@ -35,6 +35,10 @@
     --radius: 0.5rem;
   }
 
+  ::-webkit-calendar-picker-indicator {
+    filter: invert(100%) brightness(40%)
+  }
+
   .embla {
     overflow: hidden;
   }

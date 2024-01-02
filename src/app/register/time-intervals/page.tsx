@@ -132,7 +132,7 @@ const Register = () => {
 
   /*
     Can`t use 'data: TimeIntervalsFormOutput' because of an error in Typescript
-    after an actualization of Zod or ReactHookForm
+    after an Zod or ReactHookForm update
   */
   async function handleSetTimeIntervals(data: unknown) {
     // setSelectedIntervals(data.intervals)

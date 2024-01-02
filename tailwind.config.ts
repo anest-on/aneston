@@ -107,6 +107,7 @@ module.exports = {
   },
   plugins: [
     require('tailwindcss-animate'),
+    require('autoprefixer'),
     function ({ addUtilities }: any) {
       const newUtilities = {
         '.no-scrollbar::-webkit-scrollbar': { display: 'none' },
