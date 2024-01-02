@@ -24,6 +24,7 @@ import { HomeFooter } from '@/components/homeFooter'
 import { HomeHeader } from '@/components/homeHeader'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
+import { unknown } from 'zod'
 
 export default function Home() {
   const recomendations = [
@@ -83,7 +84,15 @@ export default function Home() {
 
   useEffect(() => {
     if (isSignedIn) {
-      router.push('/not-found')
+      if (
+        session.data.user.user_link === '' ||
+        session.data.user.user_link === null ||
+        session.data.user.user_link === undefined
+      ) {
+        router.push('/register/update-informations')
+      } else {
+        router.push('/not-found')
+      }
     }
   })
 

@@ -28,8 +28,6 @@ export function HomeHeader() {
     await signIn('google')
   }
 
-  const router = useRouter()
-
   useEffect(() => {
     if (path === '/') {
       setHomeButton(
