@@ -51,12 +51,10 @@ export function HomeHeader() {
           alt=""
         />
         <Sheet>
-          <SheetTrigger className="mr-5">
-            <Button className="bg-gray-400" variant={'circle'}>
-              <Menu color="white" />
-            </Button>
+          <SheetTrigger className="mr-5 p-[5px] rounded-full px-4 bg-gray-400">
+            <Menu color="white" />
           </SheetTrigger>
-          <SheetContent className="bg-gray-800 border-gray-600">
+          <SheetContent className="bg-gray-800  border-gray-600">
             <SheetHeader>
               <SheetTitle className="text-white">Menu</SheetTitle>
             </SheetHeader>
