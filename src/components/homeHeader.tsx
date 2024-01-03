@@ -18,7 +18,6 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Menu } from 'lucide-react'
 import { signIn, signOut, useSession } from 'next-auth/react'
-import { api } from '@/lib/axios'
 
 export function HomeHeader() {
   const [homeButton, setHomeButton] = useState('')
@@ -33,7 +32,7 @@ export function HomeHeader() {
   }
 
   async function logOut() {
-    signOut()
+    await signOut()
     window.location.href = '/'
   }
 
@@ -134,7 +133,7 @@ export function HomeHeader() {
         </div>
         {isSignedIn ? (
           <Button
-            className="rounded-full border-none bg-gray-400 text-gray mt-10"
+            className="rounded-full border-none bg-gray-400 text-gray"
             variant={'outline'}
             onClick={() => logOut()}
           >
@@ -142,7 +141,7 @@ export function HomeHeader() {
           </Button>
         ) : (
           <Button
-            className="rounded-full border-none bg-gray-400 text-gray mt-10"
+            className="rounded-full border-none bg-gray-400 text-gray"
             variant={'outline'}
             onClick={handleConnectCalendar}
           >
