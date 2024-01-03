@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
@@ -28,14 +29,14 @@ model User {
 }
 
 model UserTimeInterval {
-  id                    String   @id @default(uuid())
+  id                    String @id @default(uuid())
   week_day              Int
   time_start_in_minutes Int
   time_end_in_minutes   Int
   appointment_time      Int
   interval_times        Json?
   user_id               String
-  user                  User     @relation(fields: [user_id], references: [id])
+  user                  User   @relation(fields: [user_id], references: [id])
 
   @@index([user_id])
   @@map("user_time_intervals")
@@ -56,6 +57,7 @@ model Account {
   user User @relation(fields: [user_id], references: [id])
 
   @@unique([provider_id, provider_account_id])
+  @@index([user_id])
 }
 
 model Session {
@@ -67,4 +69,6 @@ model Session {
   updated_at    DateTime @updatedAt
 
   user User @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
 }
