@@ -84,6 +84,8 @@ const Register = () => {
     },
   })
 
+  const { isSubmitting } = form.formState
+
   const router = useRouter()
 
   const weekDays = getWeekDays()
@@ -248,7 +250,7 @@ const Register = () => {
             <Button variant="outline">Personalizar horários</Button>
           </div> */}
 
-          <Button>
+          <Button disabled={isSubmitting}>
             Próximo Passo <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </form>
