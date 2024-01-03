@@ -90,7 +90,7 @@ export default function Home() {
       ) {
         router.push('/register/update-informations')
       } else {
-        router.push('/not-found')
+        // router.push('/not-found')
       }
     }
   })
