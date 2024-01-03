@@ -2,11 +2,9 @@
 import { HomeFooter } from '@/components/homeFooter'
 import { HomeHeader } from '@/components/homeHeader'
 import SliderModal from '@/components/sliderModal'
-import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 
 const AboutUs = () => {
-  const [modalState, setModalState] = useState(false)
   return (
     <>
       <HomeHeader />

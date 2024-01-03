@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import ScheduleSelector from './timeScheduler/timeSchedulerModal'
 import { Button } from './ui/button'
@@ -8,7 +8,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -34,7 +33,7 @@ export default function SliderModal() {
   }
 
   return (
-    <Dialog className="text-white">
+    <Dialog>
       <DialogTrigger asChild>
         <Button variant={'outline'}>Abrir modal</Button>
       </DialogTrigger>
