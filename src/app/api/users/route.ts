@@ -38,19 +38,3 @@ export async function PUT(req: Request) {
     return new NextResponse('Internal Error', { status: 500 })
   }
 }
-
-export async function DELETE() {
-  const session = await getServerSession(authOptions)
-
-  if (!session) {
-    return new NextResponse('Unauthorized', { status: 401 })
-  }
-
-  await prisma.session.deleteMany({
-    where: {
-      user_id: session.user.id,
-    },
-  })
-
-  return new NextResponse('Success', { status: 201 })
-}

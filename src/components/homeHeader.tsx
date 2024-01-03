@@ -14,10 +14,10 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Menu } from 'lucide-react'
-import { signIn, useSession } from 'next-auth/react'
+import { signIn, signOut, useSession } from 'next-auth/react'
 import { api } from '@/lib/axios'
 
 export function HomeHeader() {
@@ -33,8 +33,7 @@ export function HomeHeader() {
   }
 
   async function logOut() {
-    // setSignOutClicked(true)
-    await api.delete('/users/delete')
+    signOut()
     window.location.href = '/'
   }
 
@@ -90,7 +89,7 @@ export function HomeHeader() {
                 <Button
                   className="rounded-full border-none bg-gray-400 text-gray mt-10"
                   variant={'outline'}
-                  onClick={handleConnectCalendar}
+                  onClick={() => logOut()}
                 >
                   Sair
                 </Button>
@@ -137,7 +136,7 @@ export function HomeHeader() {
           <Button
             className="rounded-full border-none bg-gray-400 text-gray mt-10"
             variant={'outline'}
-            onClick={logOut}
+            onClick={() => logOut()}
           >
             Sair
           </Button>
