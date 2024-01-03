@@ -126,7 +126,7 @@ export default function Home() {
         {/* PARTE 1 */}
 
         <div className="flex h-screen self-center justify-center lg:p-10 max-w-[80%] ">
-          <div className="flex flex-row self-center justify-center">
+          <div className="flex flex-row self-center justify-center gap-5">
             <div className="flex flex-col lg:max-w-[60%] max-lg:max-w- items-center justify-center ">
               <div className="flex flex-col items-start">
                 <h1
