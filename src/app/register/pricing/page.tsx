@@ -8,7 +8,7 @@ const Register = () => {
   const router = useRouter()
 
   return (
-    <main className="max-w-[800px] h-full mt-20 mb-20 mx-auto py-0 px-4">
+    <main className="max-w-[800px] mt-20 mb-20 mx-auto py-0 px-4">
       <div className="flex w-full justify-center">
         <div className="max-w-[572px] py-0 px-6">
           <strong className="text-2xl text-white">
