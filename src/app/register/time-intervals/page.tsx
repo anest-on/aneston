@@ -209,8 +209,9 @@ const Register = () => {
                         variant={showButtons[index] ? undefined : 'destructive'}
                         onClick={() => toggleIntervalForm(index)}
                       >
-                        <Plus className="w-[10px] h-[10px]" />
-                        <p className="text-xs">Intervalo</p>
+                        <p className="text-xs">
+                          {showButtons[index] ? '+ Intervalo' : 'Cancelar'}
+                        </p>
                       </Button>
                     </div>
                   </div>

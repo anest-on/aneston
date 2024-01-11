@@ -94,7 +94,7 @@ export function HomeHeader() {
                 </Button>
               ) : (
                 <Button
-                  className="rounded-full border-none bg-gray-400 text-gray mt-10"
+                  className="rounded-full border-none bg-gray-600 text-gray mt-10"
                   variant={'outline'}
                   onClick={handleConnectCalendar}
                 >
@@ -141,7 +141,7 @@ export function HomeHeader() {
           </Button>
         ) : (
           <Button
-            className="rounded-full border-none bg-gray-400 text-gray"
+            className="rounded-full border-none bg-gray-800 text-gray-100"
             variant={'outline'}
             onClick={handleConnectCalendar}
           >
