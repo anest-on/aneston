@@ -1,6 +1,6 @@
 'use client'
 
-const Register = () => {
+const NotFound = () => {
   return (
     <main className="max-w-[572px] h-screen w-full items-center justify-center mt-20 mx-auto py-20 px-10">
       <div className="flex flex-col justify-center gap-5">
@@ -20,4 +20,4 @@ const Register = () => {
   )
 }
 
-export default Register
+export default NotFound
