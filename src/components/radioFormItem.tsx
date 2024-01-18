@@ -14,6 +14,7 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
     const [isSelected, setIsSelected] = useState(false)
     const [inputValue, setInputValue] = useState('')
     const [extraItem, setExtraItem] = useState(false)
+    const [radioId, setRadioId] = useState(Math.random())
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       setInputValue(e.target.value)
@@ -52,8 +53,8 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
               ? value.map((item, index) =>
                 item === 'Outro' ? (
                   <div className="flex space-x-2 justify-start" key={index}>
-                    <RadioGroupItem value={`${inputValue}`} id={`${index}`} />
-                    <Label htmlFor={`${index}`}>{item}:</Label>
+                    <RadioGroupItem value={`${inputValue}`} id={`${Array.isArray(children) ? children[0] : children} ${index}`} />
+                    <Label htmlFor={`${Array.isArray(children) ? children[0] : children} ${index}`}>{item}:</Label>
                     <input
                       className="font-light w-full outline-none border-b-[2px] border-white bg-gray-600 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
                       type={type}
@@ -65,8 +66,8 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
                   </div>
                 ) : (
                   <div className="flex space-x-2" key={index}>
-                    <RadioGroupItem value={`${item}`} id={`${index}`} />
-                    <Label htmlFor={`${index}`}>{item}</Label>
+                    <RadioGroupItem value={`${item}`} id={`${Array.isArray(children) ? children[0] : children} ${index}`} />
+                    <Label htmlFor={`${Array.isArray(children) ? children[0] : children} ${index}`}>{item}</Label>
                   </div>
                 ),
               )

@@ -70,7 +70,7 @@ const Questionary = () => {
             <Button
               variant={'default'}
               className="w-[150px]"
-              onClick={() => router.push('/questionary/companion')}
+              onClick={() => router.push('/form/companion')}
             >
               Continuar
             </Button>

@@ -47,14 +47,14 @@ const Questionary = () => {
             <Button
               variant={'circle'}
               className="w-[150px] rounded-md"
-              onClick={() => router.push('/questionary/pacient')}
+              onClick={() => router.push('/form/pacient')}
             >
               Voltar
             </Button>
             <Button
               variant={'default'}
               className="w-[150px]"
-              onClick={() => router.push('/questionary/cirurgy')}
+              onClick={() => router.push('/form/cirurgy')}
             >
               Continuar
             </Button>
