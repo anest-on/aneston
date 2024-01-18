@@ -1,8 +1,13 @@
+import { Header } from '@/components/header'
+
 const RegisterLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex justify-center h-full w-screen bg-gray-900 text-gray-200 text-base">
-      {children}
-    </div>
+    <>
+      <Header />
+      <div className="flex justify-center h-full w-screen bg-gray-900 text-gray-200 text-base">
+        {children}
+      </div>
+    </>
   )
 }
 

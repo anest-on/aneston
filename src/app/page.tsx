@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/carousel'
 
 import { HomeFooter } from '@/components/homeFooter'
-import { HomeHeader } from '@/components/homeHeader'
+import { Header } from '@/components/header'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 
@@ -121,7 +121,7 @@ export default function Home() {
 
   return (
     <>
-      <HomeHeader />
+      <Header />
       <main className=" h-full w-full justify-center flex flex-col bg-gray-900  text-base text-white">
         {/* PARTE 1 */}
 

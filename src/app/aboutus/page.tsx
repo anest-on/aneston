@@ -1,13 +1,13 @@
 'use client'
 import { HomeFooter } from '@/components/homeFooter'
-import { HomeHeader } from '@/components/homeHeader'
+import { Header } from '@/components/header'
 import SliderModal from '@/components/sliderModal'
 import { useState } from 'react'
 
 const AboutUs = () => {
   return (
     <>
-      <HomeHeader />
+      <Header />
       <main className="h-screen w-full flex flex-col bg-gray-900  text-base text-white items-center">
         <SliderModal />
       </main>
