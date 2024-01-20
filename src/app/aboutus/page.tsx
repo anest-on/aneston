@@ -2,7 +2,6 @@
 import { HomeFooter } from '@/components/homeFooter'
 import { Header } from '@/components/header'
 import SliderModal from '@/components/sliderModal'
-import { useState } from 'react'
 
 const AboutUs = () => {
   return (
