@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Button } from './ui/button'
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
 
@@ -28,7 +29,11 @@ const SelectFormItem = React.forwardRef<HTMLInputElement, InputProps>(
         </p>
         {!!prefix && <p className="text-gray-400 ">{prefix}</p>}
         <Select>
-          <SelectTrigger className="w-[180px] mt-10">
+          <SelectTrigger
+            className="w-[180px] mt-10"
+            onFocus={() => setIsSelected(() => !isSelected)}
+            onBlur={() => setIsSelected(() => !isSelected)}
+          >
             <SelectValue placeholder="Selecione a cirurgia" />
           </SelectTrigger>
           <SelectContent>

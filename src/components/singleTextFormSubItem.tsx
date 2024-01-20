@@ -4,10 +4,19 @@ import { Plus, Trash } from 'lucide-react'
 import { Input } from './ui/input'
 import { cn } from '@/lib/utils'
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  inputValue: (value: string) => void
+}
 
 const SingleTextFormSubItem = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, prefix, children, ...props }, ref) => {
+  ({ className, type, prefix, children, inputValue, ...props }, ref) => {
+    const handleClick = (value: string) => {
+      if (typeof inputValue !== null) {
+        inputValue(value)
+      }
+    }
+
     return (
       <div
         className={cn(
@@ -20,6 +29,9 @@ const SingleTextFormSubItem = React.forwardRef<HTMLInputElement, InputProps>(
           className="font-light mt-2 outline-none border-b-[2px] border-white bg-white bg-opacity-0 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
           type={type}
           ref={ref}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            handleClick(e.target.value)
+          }
           {...props}
         />
       </div>

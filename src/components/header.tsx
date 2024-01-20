@@ -262,11 +262,11 @@ export function Header() {
               <MenubarMenu>
                 <MenubarTrigger>
                   <Button
-                    className="rounded-full h-12 border-none bg-gray-800 text-gray-100 px-6 gap-4"
+                    className="rounded-full h-full border-none bg-gray-800 text-gray-100 gap-4"
                     variant={'outline'}
                   >
                     {session.data.user.avatar_url ? (
-                      <Avatar>
+                      <Avatar className="h-8 w-8">
                         <AvatarImage src={session.data.user.avatar_url} />
                       </Avatar>
                     ) : (
@@ -308,7 +308,9 @@ export function Header() {
                       Gestão de consultas
                     </Button>
                   </MenubarItem>
+
                   <div className="w-full h-[1px] mt-2 bg-gray-500" />
+
                   <MenubarItem className="flex justify-center mt-2 border-none">
                     <Button
                       className="text-sm w-[180px] justify-start hover:bg-gray-600 hover:text-red-500"

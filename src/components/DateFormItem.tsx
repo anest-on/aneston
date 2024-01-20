@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, ChangeEvent } from 'react'
 import { Button } from './ui/button'
 import { CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
@@ -6,12 +6,21 @@ import { cn } from '@/lib/utils'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { Calendar } from './ui/calendar'
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  inputValue: (value: string) => void
+}
 
 const DateFormItem = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, prefix, children, ...props }, ref) => {
+  ({ className, type, prefix, children, inputValue, ...props }, ref) => {
     const [date, setDate] = useState<Date>()
     const [isSelected, setIsSelected] = useState(false)
+
+    const handleClick = (value: string) => {
+      if (typeof inputValue !== null) {
+        inputValue(value)
+      }
+    }
 
     return (
       <div
@@ -29,6 +38,9 @@ const DateFormItem = React.forwardRef<HTMLInputElement, InputProps>(
           className="w-[280px] p-2 rounded-md justify-start items-center text-left font-normal mt-7 bg-gray-800 border-gray-900"
           type="date"
           ref={ref}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            handleClick(e.target.value)
+          }
           onFocus={() => setIsSelected(() => !isSelected)}
           onBlur={() => setIsSelected(() => !isSelected)}
           {...props}

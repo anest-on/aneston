@@ -1,11 +1,8 @@
 'use client'
 
-import { DateFormItem } from '@/components/DateFormItem'
 import { MultiStep } from '@/components/multiStep'
-import { RadioFormItem } from '@/components/radioFormItem'
-import { SingleTextFormSubItem } from '@/components/singleTextFormSubItem'
-import { TextFormItem } from '@/components/textFormItem'
-import { Button } from '@/components/ui/button'
+import PacientPage from '@/components/page/pacientPage'
+
 import { useRouter } from 'next/navigation'
 
 const Questionary = () => {
@@ -33,48 +30,7 @@ const Questionary = () => {
             <b>Dados de Identificação do Paciente</b>
           </h3>
 
-          <TextFormItem>Qual seu nome?</TextFormItem>
-
-          <DateFormItem> Qual a sua data de nascimento?</DateFormItem>
-
-          <RadioFormItem
-            value={[
-              'Masculino',
-              'Feminino',
-              'Prefiro não me indentificar',
-              'Outro',
-            ]}
-            defaultValue={'Masculino'}
-          >
-            Qual seu sexo?
-          </RadioFormItem>
-
-          <TextFormItem>Qual seu e-mail?</TextFormItem>
-
-          <TextFormItem>Qual seu número de celular (WhatsApp)?</TextFormItem>
-
-          <RadioFormItem value={['Sim', 'Não']} accept="Sim">
-            O senhor(a) possui algum plano de saúde?
-            <SingleTextFormSubItem>
-              Qual o nome do seu plano de saúde?
-            </SingleTextFormSubItem>
-            <SingleTextFormSubItem>
-              Qual seu número de matrícula?
-            </SingleTextFormSubItem>
-          </RadioFormItem>
-
-          <div className="flex flex-row w-full justify-between px-5">
-            <Button variant={'blocked'} className="w-[150px]">
-              Voltar
-            </Button>
-            <Button
-              variant={'default'}
-              className="w-[150px]"
-              onClick={() => router.push('/form/companion')}
-            >
-              Continuar
-            </Button>
-          </div>
+          <PacientPage />
         </div>
       </div>
     </main>

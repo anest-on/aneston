@@ -4,27 +4,42 @@ import { cn } from '@/lib/utils'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Label } from './ui/label'
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  inputValue: (value: string) => void
+}
 
 const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
   (
-    { className, type, prefix, children, defaultValue, value, accept, ...props },
+    { className, type, prefix, children, defaultValue, value, accept, inputValue, ...props },
     ref,
   ) => {
     const [isSelected, setIsSelected] = useState(false)
-    const [inputValue, setInputValue] = useState('')
+    const [otherInputValue, setOtherInputValue] = useState('')
     const [extraItem, setExtraItem] = useState(false)
     const [radioId, setRadioId] = useState(Math.random())
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-      setInputValue(e.target.value)
-      console.log(children)
+
+
+    const handleChange = (value: string) => {
+      if (value !== '') {
+        setOtherInputValue(value)
+        inputValue(value)
+      }
     }
 
     const hadleRadioGroupValueChange = (value: string) => {
+
       if (value === accept) {
         setExtraItem(() => true)
       } else {
+        if (value !== 'Outro') {
+          setOtherInputValue('')
+          inputValue(value)
+        } else {
+
+          inputValue(otherInputValue)
+        }
         setExtraItem(() => false)
       }
     }
@@ -53,14 +68,14 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
               ? value.map((item, index) =>
                 item === 'Outro' ? (
                   <div className="flex space-x-2 justify-start" key={index}>
-                    <RadioGroupItem value={`${inputValue}`} id={`${Array.isArray(children) ? children[0] : children} ${index}`} />
+                    <RadioGroupItem value="Outro" id={`${Array.isArray(children) ? children[0] : children} ${index}`} />
                     <Label htmlFor={`${Array.isArray(children) ? children[0] : children} ${index}`}>{item}:</Label>
                     <input
                       className="font-light w-full outline-none border-b-[2px] border-white bg-gray-600 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
                       type={type}
                       ref={ref}
-                      onChange={handleChange}
-                      value={inputValue}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e.target.value)}
+                      value={otherInputValue}
                       {...props}
                     />
                   </div>

@@ -4,11 +4,18 @@ import { Plus, Trash } from 'lucide-react'
 import { Input } from './ui/input'
 import { cn } from '@/lib/utils'
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  inputValue: (value: string) => void
+}
 
 const TextFormItem = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, prefix, children, ...props }, ref) => {
+  ({ children, className, prefix, type, inputValue, ...props }, ref) => {
     const [isSelected, setIsSelected] = useState(false)
+
+    const handleClick = (value: string) => {
+      inputValue(value)
+    }
 
     return (
       <div
@@ -26,6 +33,9 @@ const TextFormItem = React.forwardRef<HTMLInputElement, InputProps>(
           className="font-light w-full py-2 outline-none border-b-[2px] mt-3 border-white bg-gray-600 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
           type={type}
           ref={ref}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            handleClick(e.target.value)
+          }
           onFocus={() => setIsSelected(() => !isSelected)}
           onBlur={() => setIsSelected(() => !isSelected)}
           {...props}
