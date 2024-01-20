@@ -71,7 +71,7 @@ const createUserSchema = z
       .string()
       .min(3, { message: 'O nome precisa ter pelo menos três letras.' }),
     email: z.string().email({ message: 'Digite um e-mail válido.' }),
-    accessType: z.string().optional(),
+    accessType: AccessType,
     password: z
       .string()
       .min(6, { message: 'A senha deve ter pelo menos 6 caracteres.' }),
