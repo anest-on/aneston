@@ -1,6 +1,7 @@
 'use client'
 
 import { MultiStep } from '@/components/multiStep'
+import CompanionPage from '@/components/page/companionPage'
 import PacientPage from '@/components/page/pacientPage'
 
 import { useRouter } from 'next/navigation'
@@ -31,6 +32,7 @@ const Questionary = () => {
           </h3>
 
           <PacientPage />
+          {/* <CompanionPage /> */}
         </div>
       </div>
     </main>

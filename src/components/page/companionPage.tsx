@@ -11,7 +11,7 @@ export default function CompanionPage() {
   const router = useRouter()
 
   return (
-    <>
+    <div>
       <TextFormItem>Qual o nome do seu acompanhante/familiar?</TextFormItem>
 
       <TextFormItem>Qual o seu parentesco com o paciente?</TextFormItem>
@@ -38,6 +38,6 @@ export default function CompanionPage() {
           Continuar
         </Button>
       </div>
-    </>
+    </div>
   )
 }

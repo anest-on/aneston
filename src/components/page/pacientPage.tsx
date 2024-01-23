@@ -24,13 +24,13 @@ const formSchema = z.object({
   pacient_name: z.string().min(2, {
     message: 'Username must be at least 2 characters.',
   }),
-  pacient_birthdate: z.string(),
+  pacient_birthdate: z.string().optional(),
   pacient_gender: z.string(),
-  pacient_email: z.string(),
-  pacient_number: z.string(),
-  pacient_healthInsurance: z.string(),
-  pacient_healthInsuranceName: z.string(),
-  pacient_healthInsuranceId: z.string(),
+  pacient_email: z.string().optional(),
+  pacient_number: z.string().optional(),
+  pacient_healthInsurance: z.string().optional(),
+  pacient_healthInsuranceName: z.string().optional(),
+  pacient_healthInsuranceId: z.string().optional(),
 })
 
 export default function PacientPage() {
@@ -47,7 +47,7 @@ export default function PacientPage() {
   }
 
   const handleInputChange = (value: string) => {
-    console.log(value)
+    // console.log(value)
   }
 
   return (
@@ -71,19 +71,31 @@ export default function PacientPage() {
           Qual a sua data de nascimento?
         </DateFormItem>
 
-        <RadioFormItem
+        <FormField
+          control={form.control}
           name="pacient_gender"
-          value={[
-            'Masculino',
-            'Feminino',
-            'Prefiro não me indentificar',
-            'Outro',
-          ]}
-          defaultValue={'Masculino'}
-          inputValue={handleInputChange}
-        >
-          Qual seu sexo?
-        </RadioFormItem>
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <RadioFormItem
+                  OptionValues={[
+                    'Masculino',
+                    'Feminino',
+                    'Prefiro não me indentificar',
+                    'Outro',
+                  ]}
+                  inputValue={handleInputChange}
+                  name={field.name}
+                  ref={field.ref}
+                  value={field.value}
+                  onChange={field.onChange}
+                >
+                  Qual seu sexo?
+                </RadioFormItem>
+              </FormControl>
+            </FormItem>
+          )}
+        />
 
         <TextFormItem name="pacient_email" inputValue={handleInputChange}>
           Qual seu e-mail?
@@ -93,26 +105,38 @@ export default function PacientPage() {
           Qual seu número de celular (WhatsApp)?
         </TextFormItem>
 
-        <RadioFormItem
+        <FormField
+          control={form.control}
           name="pacient_healthInsurance"
-          value={['Sim', 'Não']}
-          accept="Sim"
-          inputValue={handleInputChange}
-        >
-          O senhor(a) possui algum plano de saúde?
-          <SingleTextFormSubItem
-            name="pacient_healthInsuranceName"
-            inputValue={handleInputChange}
-          >
-            Qual o nome do seu plano de saúde?
-          </SingleTextFormSubItem>
-          <SingleTextFormSubItem
-            name="pacient_healthInsuranceId"
-            inputValue={handleInputChange}
-          >
-            Qual seu número de matrícula?
-          </SingleTextFormSubItem>
-        </RadioFormItem>
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <RadioFormItem
+                  OptionValues={['Sim', 'Não']}
+                  name={field.name}
+                  ref={field.ref}
+                  value={field.value}
+                  onChange={field.onChange}
+                  inputValue={handleInputChange}
+                >
+                  O senhor(a) possui algum plano de saúde?
+                  <SingleTextFormSubItem
+                    name="pacient_healthInsuranceName"
+                    inputValue={handleInputChange}
+                  >
+                    Qual o nome do seu plano de saúde?
+                  </SingleTextFormSubItem>
+                  <SingleTextFormSubItem
+                    name="pacient_healthInsuranceId"
+                    inputValue={handleInputChange}
+                  >
+                    Qual seu número de matrícula?
+                  </SingleTextFormSubItem>
+                </RadioFormItem>
+              </FormControl>
+            </FormItem>
+          )}
+        />
 
         <div className="flex flex-row w-full justify-between px-5">
           <Button variant={'blocked'} className="w-[150px]">
