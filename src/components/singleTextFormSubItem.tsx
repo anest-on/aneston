@@ -6,15 +6,13 @@ import { cn } from '@/lib/utils'
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  inputValue: (value: string) => void
+  inputValue?: (value: string) => void
 }
 
 const SingleTextFormSubItem = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, prefix, children, inputValue, ...props }, ref) => {
     const handleClick = (value: string) => {
-      if (typeof inputValue !== null) {
-        inputValue(value)
-      }
+      inputValue && inputValue(value)
     }
 
     return (

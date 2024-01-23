@@ -8,7 +8,7 @@ import { Calendar } from './ui/calendar'
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  inputValue: (value: string) => void
+  inputValue?: (value: string) => void
 }
 
 const DateFormItem = React.forwardRef<HTMLInputElement, InputProps>(

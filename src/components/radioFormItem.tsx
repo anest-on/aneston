@@ -2,18 +2,17 @@
 import React, { useState, ChangeEvent } from 'react'
 import { cn } from '@/lib/utils'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
-import { Label } from './ui/label'
 import { FormControl, FormItem, FormLabel } from './ui/form'
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   OptionValues: string[]
-  inputValue: (value: string) => void
+  inputValue?: (value: string) => void
 }
 
 const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
   (
-    { className, prefix, children, OptionValues, accept, onChange, ...props },
+    { className, prefix, children, OptionValues, accept, onChange, inputValue, ...props },
     ref,
   ) => {
     const [isSelected, setIsSelected] = useState(false)
@@ -28,12 +27,16 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
       if (!isOnRadioSelect) setOtherInputValue(e)
 
       if (onChange)
-        if (e && String(e) !== "Outro")
+        if (e && String(e) !== "Outro") {
           onChange(e)
-        else if (e && otherInputValue && String(e) === "Outro")
+          inputValue && inputValue(String(e))
+        } else if (e && otherInputValue && String(e) === "Outro") {
           onChange(otherInputValue)
-        else
+          inputValue && inputValue(String(otherInputValue))
+        } else {
           onChange(e)
+          inputValue && inputValue(String(e))
+        }
     }
 
     return (
@@ -50,11 +53,12 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
           </p>
           {!!prefix && <p className="text-gray-400 ">{prefix}</p>}
           <RadioGroup
-            onValueChange={(e: ChangeEvent<HTMLInputElement>) => hadleRadioGroupValueChange(e)}
+            onValueChange={(value: ChangeEvent<HTMLInputElement>) => hadleRadioGroupValueChange(value)}
             className="mt-5"
             onFocus={() => setIsSelected(() => !isSelected)}
             onBlur={() => setIsSelected(() => !isSelected)}
             ref={ref}
+            {...props}
           >
             {Array.isArray(OptionValues)
               ? OptionValues.map((item, index) =>
@@ -85,19 +89,6 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
 
 
         </div>
-
-        {
-          (Array.isArray(children) && extraItem) ?
-            <div className="bg-gray-800 w-full px-5 py-3 mt-2 rounded-b-md border-dashed border-gray-200 border-b-[2px] border-r-[2px] border-l-[2px]">
-              {children.map((item, index) => (
-                <span key={index}>{index === 0 ? '' : item}</span>
-              ))}
-            </div>
-
-            : (
-              ''
-            )
-        }
       </div >
     )
   },

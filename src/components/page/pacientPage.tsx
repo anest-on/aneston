@@ -19,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { useState } from 'react'
 
 const formSchema = z.object({
   pacient_name: z.string().min(2, {
@@ -35,6 +36,8 @@ const formSchema = z.object({
 
 export default function PacientPage() {
   const router = useRouter()
+  const [handleHalthInsuranceChanges, setHandleHalthInsuranceChanges] =
+    useState(['', 'hidden'])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,7 +50,11 @@ export default function PacientPage() {
   }
 
   const handleInputChange = (value: string) => {
-    // console.log(value)
+    if (value === 'Sim') {
+      setHandleHalthInsuranceChanges(() => ['rounded-b-none', ''])
+    } else {
+      setHandleHalthInsuranceChanges(() => ['', 'hidden'])
+    }
   }
 
   return (
@@ -59,17 +66,25 @@ export default function PacientPage() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <TextFormItem inputValue={handleInputChange} {...field}>
-                  Qual seu nome?
-                </TextFormItem>
+                <TextFormItem {...field}>Qual seu nome?</TextFormItem>
               </FormControl>
             </FormItem>
           )}
         />
 
-        <DateFormItem name="pacient_birthdate" inputValue={handleInputChange}>
-          Qual a sua data de nascimento?
-        </DateFormItem>
+        <FormField
+          control={form.control}
+          name="pacient_birthdate"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <DateFormItem {...field}>
+                  Qual a sua data de nascimento?
+                </DateFormItem>
+              </FormControl>
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
@@ -84,7 +99,6 @@ export default function PacientPage() {
                     'Prefiro não me indentificar',
                     'Outro',
                   ]}
-                  inputValue={handleInputChange}
                   name={field.name}
                   ref={field.ref}
                   value={field.value}
@@ -97,46 +111,88 @@ export default function PacientPage() {
           )}
         />
 
-        <TextFormItem name="pacient_email" inputValue={handleInputChange}>
-          Qual seu e-mail?
-        </TextFormItem>
-
-        <TextFormItem name="pacient_number" inputValue={handleInputChange}>
-          Qual seu número de celular (WhatsApp)?
-        </TextFormItem>
-
         <FormField
           control={form.control}
-          name="pacient_healthInsurance"
+          name="pacient_email"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <RadioFormItem
-                  OptionValues={['Sim', 'Não']}
-                  name={field.name}
-                  ref={field.ref}
-                  value={field.value}
-                  onChange={field.onChange}
-                  inputValue={handleInputChange}
-                >
-                  O senhor(a) possui algum plano de saúde?
-                  <SingleTextFormSubItem
-                    name="pacient_healthInsuranceName"
-                    inputValue={handleInputChange}
-                  >
-                    Qual o nome do seu plano de saúde?
-                  </SingleTextFormSubItem>
-                  <SingleTextFormSubItem
-                    name="pacient_healthInsuranceId"
-                    inputValue={handleInputChange}
-                  >
-                    Qual seu número de matrícula?
-                  </SingleTextFormSubItem>
-                </RadioFormItem>
+                <TextFormItem {...field}>Qual seu e-mail?</TextFormItem>
               </FormControl>
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="pacient_number"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <TextFormItem {...field}>
+                  Qual seu número de celular (WhatsApp)?
+                </TextFormItem>
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <div>
+          <FormField
+            control={form.control}
+            name="pacient_healthInsurance"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <RadioFormItem
+                    OptionValues={['Sim', 'Não']}
+                    accept={'Sim'}
+                    name={field.name}
+                    ref={field.ref}
+                    value={field.value}
+                    onChange={field.onChange}
+                    inputValue={handleInputChange}
+                    className={handleHalthInsuranceChanges[0]}
+                  >
+                    O senhor(a) possui algum plano de saúde?
+                  </RadioFormItem>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <div
+            className={`${handleHalthInsuranceChanges[1]} bg-gray-800 w-full px-5 py-3 rounded-b-md border-dashed border-gray-200 border-b-[2px] border-r-[2px] border-l-[2px]`}
+          >
+            <FormField
+              control={form.control}
+              name="pacient_healthInsuranceName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <SingleTextFormSubItem {...field}>
+                      Qual o nome do seu plano de saúde?
+                    </SingleTextFormSubItem>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="pacient_healthInsuranceId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <SingleTextFormSubItem {...field}>
+                      Qual seu número de matrícula?
+                    </SingleTextFormSubItem>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
 
         <div className="flex flex-row w-full justify-between px-5">
           <Button variant={'blocked'} className="w-[150px]">

@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  inputValue: (value: string) => void
+  inputValue?: (value: string) => void
 }
 
 const TextFormItem = React.forwardRef<HTMLInputElement, InputProps>(
@@ -14,7 +14,7 @@ const TextFormItem = React.forwardRef<HTMLInputElement, InputProps>(
     const [isSelected, setIsSelected] = useState(false)
 
     const handleClick = (value: string) => {
-      inputValue(value)
+      inputValue && inputValue(value)
     }
 
     return (
