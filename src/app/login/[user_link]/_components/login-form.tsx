@@ -14,34 +14,47 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { z } from 'zod'
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Digite um e-mail válido.' }),
   password: z
     .string()
     .min(6, { message: 'A senha precisa ter pelo menos seis caracteres.' }),
+  doctor_id: z.string().optional(),
 })
 
 type LoginData = z.infer<typeof loginSchema>
-export const LoginForm = () => {
+type doctorId = string
+export const LoginForm = ({ doctorId }: { doctorId: doctorId }) => {
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {},
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   })
 
   const { isSubmitting } = form.formState
 
+  const router = useRouter()
+
   const login = async (data: LoginData) => {
-    // try {
-    //   await api.put('/users', data)
-    //   router.push(`/register/time-intervals`)
-    // } catch (err) {
-    //   if (err instanceof AxiosError && err?.response?.data?.message) {
-    //     setUserLinkAlredyTakenMessage('Esse nome de usuário já está em uso.')
-    //     return
-    //   }
-    //   console.error(err)
-    // }
+    data.doctor_id = doctorId
+    const res = await signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      doctor_id: data.doctor_id,
+      redirect: false,
+    })
+
+    if (res?.error) {
+      console.log(res)
+      return
+    }
+
+    router.replace('/dashboard')
   }
 
   return (

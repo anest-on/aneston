@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html className={`${roboto.className} flex flex-col`} lang="en">
+    <html className={`${roboto.className} flex flex-col `} lang="en">
       <NextAuthProvider>
         <body className="w-full">
           <ThemeProvider

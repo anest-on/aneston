@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -34,8 +35,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { api } from '@/lib/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { AxiosError } from 'axios'
 import { Copy, Pencil, Trash } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -59,34 +63,26 @@ const employees = [
   },
 ]
 
-const AccessType = z.union([
-  z.literal('completAccess'),
-  z.literal('dashboardAccess'),
-])
-type AccessType = z.infer<typeof AccessType>
-
-const createUserSchema = z
-  .object({
-    name: z
-      .string()
-      .min(3, { message: 'O nome precisa ter pelo menos três letras.' }),
-    email: z.string().email({ message: 'Digite um e-mail válido.' }),
-    accessType: AccessType,
-    password: z
-      .string()
-      .min(6, { message: 'A senha deve ter pelo menos 6 caracteres.' }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: 'A senha deve ter pelo menos 6 caracteres.' }),
-  })
-  .refine((schema) => schema.confirmPassword === schema.password, {
-    message: 'As senhas devem ser iguais.',
-  })
+const createUserSchema = z.object({
+  name: z
+    .string()
+    .min(3, { message: 'O nome precisa ter pelo menos três letras.' }),
+  email: z.string().email({ message: 'Digite um e-mail válido.' }),
+  accessType: z.string().min(1, 'Selecione um tipo de acesso.'),
+  password: z
+    .string()
+    .min(6, { message: 'A senha deve ter pelo menos 6 caracteres.' }),
+  confirmPassword: z
+    .string()
+    .min(6, { message: 'A senha deve ter pelo menos 6 caracteres.' }),
+  doctorId: z.string(),
+})
 
 type CreateUserData = z.infer<typeof createUserSchema>
 
 const AccessConfiguration = () => {
   const router = useRouter()
+  const session = useSession()
 
   const form = useForm<z.infer<typeof createUserSchema>>({
     resolver: zodResolver(createUserSchema),
@@ -95,6 +91,8 @@ const AccessConfiguration = () => {
       email: '',
       password: '',
       confirmPassword: '',
+      doctorId: '',
+      accessType: '',
     },
   })
 
@@ -103,18 +101,32 @@ const AccessConfiguration = () => {
   const [userEmailAlreadyTakenMessage, setUserEmailAlreadyTakenMessage] =
     useState<string | null>(null)
 
+  const [userDoesNotMatchMessage, setUserDoesNotMatchMessage] = useState<
+    string | null
+  >(null)
+
   const handleCreateUser = async (data: CreateUserData) => {
-    console.log(data.accessType)
-    // try {
-    //   await api.put('/users', data)
-    //   router.push(`/register/time-intervals`)
-    // } catch (err) {
-    //   if (err instanceof AxiosError && err?.response?.data?.message) {
-    //     setUserEmailAlreadyTakenMessage('Esse e-mail já está em uso.')
-    //     return
-    //   }
-    //   console.error(err)
-    // }
+    const doctorId = session.data?.user.id
+    if (doctorId) data.doctorId = doctorId
+
+    try {
+      if (data.password !== data.confirmPassword) {
+        setUserDoesNotMatchMessage('As senhas devem ser iguais.')
+        return
+      }
+
+      await api.post('/third-party-user', data)
+
+      // router.push(`/register/time-intervals`)
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        setUserEmailAlreadyTakenMessage(
+          'Este e-mail já está em uso, registre um usuário com um novo e-mail ou edite as credenciais do usuário já cadastrado com esse e-mail.',
+        )
+        return
+      }
+      console.error(err)
+    }
   }
 
   return (
@@ -200,8 +212,9 @@ const AccessConfiguration = () => {
                         </FormItem>
                       )}
                     />
+
                     {userEmailAlreadyTakenMessage && (
-                      <p className="text-sm text-[#F75A68] mb-4">
+                      <p className="text-sm mt-2 text-[#F75A68]">
                         {userEmailAlreadyTakenMessage}
                       </p>
                     )}
@@ -225,10 +238,10 @@ const AccessConfiguration = () => {
                                 <SelectGroup>
                                   <SelectLabel>Nível de acesso</SelectLabel>
                                   <div className="w-full h-[1px] mt-1 mb-2 bg-gray-600" />
-                                  <SelectItem value="completAccess">
+                                  <SelectItem value="FULL_ACCESS">
                                     Acesso completo
                                   </SelectItem>
-                                  <SelectItem value="dashboardAccess">
+                                  <SelectItem value="DASHBOARD_ACCESS">
                                     Acesso ao Dashboard
                                   </SelectItem>
                                 </SelectGroup>
@@ -279,15 +292,24 @@ const AccessConfiguration = () => {
                           </FormItem>
                         )}
                       />
+
+                      {userDoesNotMatchMessage && (
+                        <p className="text-sm mt-2 text-[#F75A68]">
+                          {userDoesNotMatchMessage}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="flex w-full px-12 justify-between">
-                    <Button
-                      className="w-[150px] border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
-                      variant={'outline'}
-                    >
-                      Cancelar
-                    </Button>
+                    <DialogClose>
+                      <Button
+                        className="w-[150px] border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                        variant={'outline'}
+                        type="button"
+                      >
+                        Cancelar
+                      </Button>
+                    </DialogClose>
                     <Button className="w-[150px]">Salvar usuário</Button>
                   </div>
                 </form>

@@ -11,19 +11,19 @@ datasource db {
   relationMode = "prisma"
 }
 
-enum Position {
-  FULL_ACCESS
-  DASHBOARD_ACCESS
-}
-
 model User {
-  id         String  @id @default(uuid())
-  name       String
-  email      String  @unique
-  user_link  String?
-  city       String?
-  state      String?
-  avatar_url String?
+  id               String  @id @default(uuid())
+  name             String
+  email            String  @unique
+  user_link        String?
+  city             String?
+  state            String?
+  avatar_url       String?
+  access_type      String?
+  password         String?
+  confirm_password String?
+
+  doctor_id String?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -31,7 +31,6 @@ model User {
   accounts         Account[]
   sessions         Session[]
   UserTimeInterval UserTimeInterval[]
-  ThirdPartyUser   ThirdPartyUser[]
 }
 
 model UserTimeInterval {
@@ -77,20 +76,4 @@ model Session {
   user User @relation(fields: [user_id], references: [id])
 
   @@index([user_id])
-}
-
-model ThirdPartyUser {
-  id        String @id @default(uuid())
-  name      String
-  email     String @unique
-  password  String
-  position  Position @default(DASHBOARD_ACCESS)
-  doctor_id String
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  doctor User @relation(fields: [doctor_id], references: [id])
-
-  @@index([doctor_id])
 }

@@ -14,9 +14,9 @@ const Login = async ({ params }: { params: { user_link: string } }) => {
 
   return (
     <>
-      <div>
+      <div className="w-screen h-screen bg-gray-900">
         {doctor && (
-          <main className="max-w-[572px] mt-20 mb-20 mx-auto py-0 px-4">
+          <main className="max-w-[572px] pt-20 pb-20 mx-auto py-0 px-4 ">
             <div className="py-0 px-6 w-full justify-center">
               <Image
                 src={logoNameSide}
@@ -29,13 +29,11 @@ const Login = async ({ params }: { params: { user_link: string } }) => {
                 <span className="underline">{doctor?.name}</span>
               </p>
             </div>
-            <LoginForm />
+            <LoginForm doctorId={doctor?.id} />
           </main>
         )}
-      </div>
-      <div>
         {!doctor && (
-          <main className="max-w-[572px] h-screen w-full items-center justify-center mt-20 mx-auto py-20 px-10">
+          <main className="max-w-[572px] h-screen w-full items-center justify-center mx-auto py-40 px-10">
             <div className="flex flex-col justify-center gap-5">
               <strong className="text-2xl text-white">
                 Anestesista não encontrado!

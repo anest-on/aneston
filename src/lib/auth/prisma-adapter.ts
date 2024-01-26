@@ -13,6 +13,10 @@ export function PrismaAdapter(): Adapter {
           city: user.city!,
           state: user.state!,
           avatar_url: user.avatar_url!,
+          password: user.password!,
+          confirm_password: user.confirm_password!,
+          access_type: user.access_type!,
+          doctor_id: user.doctor_id!,
         },
       })
 
@@ -24,6 +28,10 @@ export function PrismaAdapter(): Adapter {
         city: prismaUser.city!,
         state: prismaUser.state!,
         avatar_url: prismaUser.avatar_url!,
+        password: user.password!,
+        confirm_password: user.confirm_password!,
+        access_type: user.access_type!,
+        doctor_id: user.doctor_id!,
         emailVerified: null,
       }
     },
@@ -47,6 +55,10 @@ export function PrismaAdapter(): Adapter {
         city: user.city!,
         state: user.state!,
         avatar_url: user.avatar_url!,
+        password: user.password!,
+        confirm_password: user.confirm_password!,
+        access_type: user.access_type!,
+        doctor_id: user.doctor_id!,
         emailVerified: null,
       }
     },
@@ -70,6 +82,10 @@ export function PrismaAdapter(): Adapter {
         city: user.city!,
         state: user.state!,
         avatar_url: user.avatar_url!,
+        password: user.password!,
+        confirm_password: user.confirm_password!,
+        access_type: user.access_type!,
+        doctor_id: user.doctor_id!,
         emailVerified: null,
       }
     },
@@ -100,6 +116,10 @@ export function PrismaAdapter(): Adapter {
         city: user.city!,
         state: user.state!,
         avatar_url: user.avatar_url!,
+        password: user.password!,
+        confirm_password: user.confirm_password!,
+        access_type: user.access_type!,
+        doctor_id: user.doctor_id!,
         emailVerified: null,
       }
     },
@@ -116,6 +136,10 @@ export function PrismaAdapter(): Adapter {
           city: user.city,
           state: user.state,
           avatar_url: user.avatar_url,
+          password: user.password!,
+          confirm_password: user.confirm_password!,
+          access_type: user.access_type!,
+          doctor_id: user.doctor_id!,
         },
       })
 
@@ -127,6 +151,10 @@ export function PrismaAdapter(): Adapter {
         city: prismaUser.city!,
         state: prismaUser.state!,
         avatar_url: prismaUser.avatar_url!,
+        password: user.password!,
+        confirm_password: user.confirm_password!,
+        access_type: user.access_type!,
+        doctor_id: user.doctor_id!,
         emailVerified: null,
       }
     },
@@ -190,6 +218,10 @@ export function PrismaAdapter(): Adapter {
           city: user.city!,
           state: user.state!,
           avatar_url: user.avatar_url!,
+          password: user.password!,
+          confirm_password: user.confirm_password!,
+          access_type: user.access_type!,
+          doctor_id: user.doctor_id!,
           emailVerified: null,
         },
       }
