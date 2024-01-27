@@ -14,15 +14,15 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { z } from 'zod'
-import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { login } from '@/actions/login'
+import { useState } from 'react'
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Digite um e-mail válido.' }),
   password: z
     .string()
     .min(6, { message: 'A senha precisa ter pelo menos seis caracteres.' }),
-  doctor_id: z.string().optional(),
+  doctor_id: z.string(),
 })
 
 type LoginData = z.infer<typeof loginSchema>
@@ -33,34 +33,27 @@ export const LoginForm = ({ doctorId }: { doctorId: doctorId }) => {
     defaultValues: {
       email: '',
       password: '',
+      doctor_id: '',
     },
   })
 
   const { isSubmitting } = form.formState
 
-  const router = useRouter()
+  const [error, setError] = useState<string | undefined>('')
 
-  const login = async (data: LoginData) => {
-    data.doctor_id = doctorId
-    const res = await signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      doctor_id: data.doctor_id,
-      redirect: false,
+  const onSubmit = async (values: LoginData) => {
+    setError('')
+
+    values.doctor_id = doctorId
+    login(values).then((data) => {
+      setError(data?.error)
     })
-
-    if (res?.error) {
-      console.log(res)
-      return
-    }
-
-    router.replace('/dashboard')
   }
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(login)}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6 gap-4"
       >
         <div className="flex flex-col">
@@ -95,7 +88,11 @@ export const LoginForm = ({ doctorId }: { doctorId: doctorId }) => {
           />
         </div>
 
-        <Button disabled={isSubmitting}>Entrar</Button>
+        <div className="text-sm text-red-500">{error}</div>
+
+        <Button className="mt-2" disabled={isSubmitting}>
+          Entrar
+        </Button>
       </form>
     </Form>
   )

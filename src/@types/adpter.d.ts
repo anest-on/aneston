@@ -1,7 +1,7 @@
-import NextAuth from 'next-auth'
+import type { AdapterUser as BaseAdapterUser } from "next-auth/adapters";
 
-declare module 'next-auth' {
-  interface User {
+declare module "@auth/core/adapters" {
+  interface AdapterUser extends BaseAdapterUser {
     id: string
     name: string
     email: string
@@ -14,8 +14,4 @@ declare module 'next-auth' {
     access_type: string
     doctor_id: string
     accepted_google_maps: string
-  }
-  interface Session {
-    user: User
-  }
-}
+  }}

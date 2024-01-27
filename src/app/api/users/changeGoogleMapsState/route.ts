@@ -12,16 +12,6 @@ export async function PUT(req: Request) {
 
     const data = await req.json()
 
-    const userLinkAlreadyExists = await prisma.user.findFirst({
-      where: {
-        user_link: data.user_link,
-      },
-    })
-
-    if (userLinkAlreadyExists && userLinkAlreadyExists.id !== session.user.id) {
-      return new NextResponse('Internal Error', { status: 400 })
-    }
-
     const user = await prisma.user.update({
       where: {
         id: session.user.id,

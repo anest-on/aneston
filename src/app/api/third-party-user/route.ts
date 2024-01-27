@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from 'next/server'
 import { randomUUID } from 'crypto'
@@ -51,9 +51,8 @@ export async function POST(req: Request) {
   await prisma.account.create({
     data: {
       user_id: thirdPartyUser.id,
-      provider_type: 'oauth',
-      provider_id: 'credentials',
-      provider_account_id: randomUUID(),
+      provider: 'credentials',
+      providerAccountId: randomUUID(),
     },
   })
 

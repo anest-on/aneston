@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Adapter } from 'next-auth/adapters'
-import { prisma } from '../prisma'
+import { type Adapter } from '@auth/core/adapters'
+import { db } from '../db'
 
 export function PrismaAdapter(): Adapter {
+  const prisma = db
   return {
     async createUser(user) {
       const prismaUser = await prisma.user.create({
@@ -17,6 +18,7 @@ export function PrismaAdapter(): Adapter {
           confirm_password: user.confirm_password!,
           access_type: user.access_type!,
           doctor_id: user.doctor_id!,
+          accepted_google_maps: user.accepted_google_maps!,
         },
       })
 
@@ -33,6 +35,7 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
+        accepted_google_maps: user.accepted_google_maps!,
       }
     },
 
@@ -60,6 +63,7 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
+        accepted_google_maps: user.accepted_google_maps!,
       }
     },
 
@@ -87,14 +91,15 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
+        accepted_google_maps: user.accepted_google_maps!,
       }
     },
     async getUserByAccount({ providerAccountId, provider }) {
       const account = await prisma.account.findUnique({
         where: {
-          provider_id_provider_account_id: {
-            provider_id: provider,
-            provider_account_id: providerAccountId,
+          provider_providerAccountId: {
+            provider,
+            providerAccountId,
           },
         },
         include: {
@@ -121,6 +126,7 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
+        accepted_google_maps: user.accepted_google_maps!,
       }
     },
 
@@ -140,6 +146,7 @@ export function PrismaAdapter(): Adapter {
           confirm_password: user.confirm_password!,
           access_type: user.access_type!,
           doctor_id: user.doctor_id!,
+          accepted_google_maps: user.accepted_google_maps!,
         },
       })
 
@@ -156,6 +163,7 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
+        accepted_google_maps: user.accepted_google_maps!,
       }
     },
 
@@ -163,9 +171,8 @@ export function PrismaAdapter(): Adapter {
       await prisma.account.create({
         data: {
           user_id: account.userId,
-          provider_account_id: account.providerAccountId,
-          provider_id: account.provider,
-          provider_type: account.type,
+          providerAccountId: account.providerAccountId,
+          provider: account.provider,
           access_token: account.access_token,
           refresh_token: account.refresh_token,
         },
@@ -173,13 +180,13 @@ export function PrismaAdapter(): Adapter {
     },
 
     async createSession({ sessionToken, userId, expires }) {
-      await prisma.session.create({
-        data: {
-          user_id: userId,
-          expires,
-          session_token: sessionToken,
-        },
-      })
+      // await prisma.session.create({
+      //   data: {
+      //     user_id: userId,
+      //     expires,
+      //     session_token: sessionToken,
+      //   },
+      // })
 
       return {
         userId,
@@ -188,69 +195,66 @@ export function PrismaAdapter(): Adapter {
       }
     },
 
-    async getSessionAndUser(sessionToken) {
-      const prismaSession = await prisma.session.findUnique({
-        where: {
-          session_token: sessionToken,
-        },
-        include: {
-          user: true,
-        },
-      })
+    // async getSessionAndUser(sessionToken) {
+    //   // const prismaSession = await prisma.session.findUnique({
+    //   //   where: {
+    //   //     session_token: sessionToken,
+    //   //   },
+    //   //   include: {
+    //   //     user: true,
+    //   //   },
+    //   // })
+    //   // if (!prismaSession) {
+    //   //   return null
+    //   // }
+    //   // const { user, ...session } = prismaSession
+    //   // return {
+    //   //   session: {
+    //   //     userId: session.user_id,
+    //   //     expires: session.expires,
+    //   //     sessionToken: session.session_token,
+    //   //   },
+    //   // user: {
+    //   //   id: user.id,
+    //   //   name: user.name,
+    //   //   email: user.email,
+    //   //   user_link: user.user_link!,
+    //   //   city: user.city!,
+    //   //   state: user.state!,
+    //   //   avatar_url: user.avatar_url!,
+    //   //   password: user.password!,
+    //   //   confirm_password: user.confirm_password!,
+    //   //   access_type: user.access_type!,
+    //   //   doctor_id: user.doctor_id!,
+    //   //   emailVerified: null,
+    //   // },
+    //   // }
+    // },
 
-      if (!prismaSession) {
-        return null
-      }
+    // async updateSession({ sessionToken, userId, expires }) {
+    //   const prismaSession = await prisma.session.update({
+    //     where: {
+    //       session_token: sessionToken,
+    //     },
+    //     data: {
+    //       expires,
+    //       user_id: userId,
+    //     },
+    //   })
 
-      const { user, ...session } = prismaSession
+    //   return {
+    //     sessionToken: prismaSession.session_token,
+    //     userId: prismaSession.user_id,
+    //     expires: prismaSession.expires,
+    //   }
+    // },
 
-      return {
-        session: {
-          userId: session.user_id,
-          expires: session.expires,
-          sessionToken: session.session_token,
-        },
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          user_link: user.user_link!,
-          city: user.city!,
-          state: user.state!,
-          avatar_url: user.avatar_url!,
-          password: user.password!,
-          confirm_password: user.confirm_password!,
-          access_type: user.access_type!,
-          doctor_id: user.doctor_id!,
-          emailVerified: null,
-        },
-      }
-    },
-
-    async updateSession({ sessionToken, userId, expires }) {
-      const prismaSession = await prisma.session.update({
-        where: {
-          session_token: sessionToken,
-        },
-        data: {
-          expires,
-          user_id: userId,
-        },
-      })
-
-      return {
-        sessionToken: prismaSession.session_token,
-        userId: prismaSession.user_id,
-        expires: prismaSession.expires,
-      }
-    },
-
-    async deleteSession(sessionToken) {
-      await prisma.session.delete({
-        where: {
-          session_token: sessionToken,
-        },
-      })
-    },
+    //   async deleteSession(sessionToken) {
+    //     await prisma.session.delete({
+    //       where: {
+    //         session_token: sessionToken,
+    //       },
+    //     })
+    //   },
   }
 }
