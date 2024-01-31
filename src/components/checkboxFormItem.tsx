@@ -1,36 +1,43 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, ChangeEvent, useEffect, use } from 'react'
-import { Button } from './ui/button'
-import { Plus, Trash } from 'lucide-react'
-import { Input } from './ui/input'
 import { cn } from '@/lib/utils'
 import { Checkbox } from './ui/checkbox'
 import { CheckedState } from '@radix-ui/react-checkbox'
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
-
-export interface AnswerState {
+export interface resposnseCheckboxProps {
   value: string
   checked: boolean
 }
 
+export interface InputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+  OptionValues: string[]
+  onChange: (e: string[]) => void
+  inputValue?: (value: string) => void
+}
+
+
+
 const CheckboxFormItem = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, prefix, children, value, ...props }, ref) => {
+  ({ className, type, prefix, children, OptionValues, onChange, inputValue, ...props }, ref) => {
     const [isSelected, setIsSelected] = useState(false)
     const [extraItem, setExtraItem] = useState(false)
-    const [answers, setAnswers] = useState<AnswerState[]>([])
+    const [answers, setAnswers] = useState<resposnseCheckboxProps[]>([])
 
     useEffect(() => {
-      console.log(answers)
+      // console.log(answers)
+      // onChange('asd')
+
     }, [answers])
 
-    if (Array.isArray(value) && answers.length === 0)
-      value.forEach((item, index) => {
+    if (Array.isArray(OptionValues) && answers.length === 0)
+      OptionValues.forEach((item, index) => {
         setAnswers(answers => [...answers, { value: item, checked: false }])
         // answersValue.push({ value: item, checked: false })
       })
 
     const handleCheckedChange = (checked: CheckedState, item: string) => {
+      console.log('alo')
       if (checked !== 'indeterminate') {
         setAnswers(answer => {
           let isAllFalse = 0
@@ -51,11 +58,11 @@ const CheckboxFormItem = React.forwardRef<HTMLInputElement, InputProps>(
               setExtraItem(true)
             }
           })
-
+          console.log(answerValue)
           return answerValue
         })
       }
-      console.log(answers)
+      // console.log(answers)
     }
 
 
@@ -74,8 +81,8 @@ const CheckboxFormItem = React.forwardRef<HTMLInputElement, InputProps>(
           </p>
           {!!prefix && <p className="text-gray-400 ">{prefix}</p>}
           <div className="flex flex-col gap-2 mt-5">
-            {Array.isArray(value)
-              ? value.map((item, index) => (
+            {Array.isArray(OptionValues)
+              ? OptionValues.map((item, index) => (
                 <div className="items-center flex space-x-2" key={index}>
                   <Checkbox
                     id={cn(item)}
@@ -83,6 +90,7 @@ const CheckboxFormItem = React.forwardRef<HTMLInputElement, InputProps>(
                     onFocus={() => setIsSelected(() => !isSelected)}
                     onBlur={() => setIsSelected(() => !isSelected)}
                   />
+                  <input type="hidden" value={`${answers[index]}`} onChange={() => onChange(['1q233', '1231'])} />
                   <label
                     htmlFor={cn(item)}
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

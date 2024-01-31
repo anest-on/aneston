@@ -10,10 +10,14 @@ import {
 } from '@/components/ui/select'
 import { Button } from './ui/button'
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  OptionValues: string[]
+  inputValue?: (value: string) => void
+}
 
 const SelectFormItem = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, prefix, children, value, ...props }, ref) => {
+  ({ className, type, prefix, children, OptionValues, ...props }, ref) => {
     const [isSelected, setIsSelected] = useState(false)
 
     return (
@@ -28,7 +32,7 @@ const SelectFormItem = React.forwardRef<HTMLInputElement, InputProps>(
           <b>{children}</b>
         </p>
         {!!prefix && <p className="text-gray-400 ">{prefix}</p>}
-        <Select>
+        <Select onValueChange={(value: ChangeEvent<HTMLInputElement>) => props.onChange && props.onChange(value)} >
           <SelectTrigger
             className="w-[180px] mt-10"
             onFocus={() => setIsSelected(() => !isSelected)}
@@ -37,8 +41,8 @@ const SelectFormItem = React.forwardRef<HTMLInputElement, InputProps>(
             <SelectValue placeholder="Selecione a cirurgia" />
           </SelectTrigger>
           <SelectContent>
-            {Array.isArray(value)
-              ? value.map((item, index) => (
+            {Array.isArray(OptionValues)
+              ? OptionValues.map((item, index) => (
                 <SelectItem key={index} value={item}>
                   {item}
                 </SelectItem>
@@ -48,7 +52,7 @@ const SelectFormItem = React.forwardRef<HTMLInputElement, InputProps>(
               </SelectItem>}
           </SelectContent>
         </Select>
-      </div>
+      </div >
     )
   },
 )

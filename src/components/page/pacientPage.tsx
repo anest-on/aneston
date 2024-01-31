@@ -25,28 +25,57 @@ const formSchema = z.object({
   pacient_name: z.string().min(2, {
     message: 'Username must be at least 2 characters.',
   }),
-  pacient_birthdate: z.string().optional(),
+  pacient_birthdate: z.string(),
   pacient_gender: z.string(),
-  pacient_email: z.string().optional(),
-  pacient_number: z.string().optional(),
-  pacient_healthInsurance: z.string().optional(),
+  pacient_email: z.string().email(),
+  pacient_number: z.string(),
+  pacient_healthInsurance: z.string(),
   pacient_healthInsuranceName: z.string().optional(),
   pacient_healthInsuranceId: z.string().optional(),
 })
 
-export default function PacientPage() {
-  const router = useRouter()
+export interface pacientSubmitProps {
+  pacient_name: string
+  pacient_birthdate: string
+  pacient_gender: string
+  pacient_email: string
+  pacient_number: string
+  pacient_healthInsurance: string
+  pacient_healthInsuranceName?: string
+  pacient_healthInsuranceId?: string
+}
+
+interface pacientPageProps {
+  setPacientData: pacientSubmitProps | null
+  getPacientData: (value: pacientSubmitProps | null) => void
+}
+
+export default function PacientPage({
+  getPacientData,
+  setPacientData,
+}: pacientPageProps) {
   const [handleHalthInsuranceChanges, setHandleHalthInsuranceChanges] =
     useState(['', 'hidden'])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      pacient_name: setPacientData?.pacient_name,
+      pacient_birthdate: setPacientData?.pacient_birthdate,
+      pacient_gender: setPacientData?.pacient_gender,
+      pacient_email: setPacientData?.pacient_email,
+      pacient_number: setPacientData?.pacient_number,
+      pacient_healthInsurance: setPacientData?.pacient_healthInsurance,
+      pacient_healthInsuranceName: setPacientData?.pacient_healthInsuranceName,
+      pacient_healthInsuranceId: setPacientData?.pacient_healthInsuranceId,
+    },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values)
+    // console.log(values)
+    getPacientData(values)
   }
 
   const handleInputChange = (value: string) => {
@@ -194,10 +223,7 @@ export default function PacientPage() {
           </div>
         </div>
 
-        <div className="flex flex-row w-full justify-between px-5">
-          <Button variant={'blocked'} className="w-[150px]">
-            Voltar
-          </Button>
+        <div className="flex flex-row w-full justify-center px-5">
           <Button variant={'default'} className="w-[150px]" type="submit">
             Continuar
           </Button>

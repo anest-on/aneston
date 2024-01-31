@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, ChangeEvent } from 'react'
+import React, { useState, ChangeEvent, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { FormControl, FormItem, FormLabel } from './ui/form'
@@ -17,14 +17,32 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const [isSelected, setIsSelected] = useState(false)
     const [otherInputValue, setOtherInputValue] = useState<ChangeEvent<HTMLInputElement>>()
-    const [extraItem, setExtraItem] = useState(false)
+    const [otherStringInputValue, setOtherStringInputValue] = useState<string | null>(null)
+
+    useEffect(() => {
+      if (props.value) {
+        const isOnRadioSelect = OptionValues.find((value) => value === props.value)
+
+        if (!isOnRadioSelect && typeof props.value === 'string') setOtherStringInputValue(props.value)
+
+        if (isOnRadioSelect === accept) {
+          isOnRadioSelect && (inputValue && inputValue(isOnRadioSelect))
+        }
+      }
+
+    }, [])
 
     const hadleRadioGroupValueChange = (e: ChangeEvent<HTMLInputElement>) => {
       const isOnRadioSelect = OptionValues.find((value) => value === String(e))
 
-      if (isOnRadioSelect === accept) setExtraItem(true)
+      // console.log(e.target.value)
 
-      if (!isOnRadioSelect) setOtherInputValue(e)
+      if (!isOnRadioSelect) {
+        setOtherInputValue(e)
+        // setOtherStringInputValue(String(e))
+      }
+
+
 
       if (onChange)
         if (e && String(e) !== "Outro") {
@@ -71,7 +89,9 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
                     <input
                       className="font-light w-full outline-none border-b-[2px] border-white bg-gray-600 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
                       type="text"
-                      onChange={hadleRadioGroupValueChange}
+                      // value={otherStringInputValue}
+                      defaultValue={otherStringInputValue}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => hadleRadioGroupValueChange(e)}
                     />
 
                   </FormItem>

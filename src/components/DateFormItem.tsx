@@ -17,9 +17,7 @@ const DateFormItem = React.forwardRef<HTMLInputElement, InputProps>(
     const [isSelected, setIsSelected] = useState(false)
 
     const handleClick = (value: string) => {
-      if (typeof inputValue !== null) {
-        inputValue(value)
-      }
+      inputValue && inputValue(value)
     }
 
     return (

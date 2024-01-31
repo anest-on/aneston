@@ -1,47 +1,52 @@
 import React, { useState, ChangeEvent } from 'react'
 import { Button } from './ui/button'
-import { Plus, Trash } from 'lucide-react'
-import { Input } from './ui/input'
 import { cn } from '@/lib/utils'
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+export interface InputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+  onChange: (e: string[]) => void
+}
 
 export interface Interval {
   input: string
 }
 
 const TextListFormSubItem = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, prefix, children, placeholder, ...props }, ref) => {
-    const [intervals, setIntervals] = useState<Interval[]>([{ input: '' }])
+  (
+    { className, type, prefix, children, placeholder, onChange, ...props },
+    ref,
+  ) => {
+    const [intervals, setIntervals] = useState([''])
     const [errorMessage, setErrorMessage] = useState('')
 
     const addInterval = () => {
-      setIntervals([...intervals, { input: '' }])
+      setIntervals([...intervals, ''])
     }
 
     const removeInterval = (index: number) => {
-      const updatedIntervals = intervals.filter((_, i) => i !== index)
+      const updatedIntervals = intervals.filter(
+        (value, i) => i !== index && value !== '',
+      )
+      console.log(updatedIntervals)
+      // console.log(updatedIntervals)
       setIntervals(updatedIntervals)
+      onChange && onChange(updatedIntervals)
     }
 
     const handleInputChange = (
       index: number,
-      inputName: string,
-      value: string,
+      e: ChangeEvent<HTMLInputElement>,
     ) => {
       const updatedIntervals = [...intervals]
-      updatedIntervals[index] = {
-        ...updatedIntervals[index],
-        [inputName]: value,
-      }
+      updatedIntervals[index] = e.target.value
       setIntervals(updatedIntervals)
 
-      // onChange(updatedIntervals)
-      console.log('Updated Interval in IntervalItem:', updatedIntervals[index])
+      onChange && onChange(updatedIntervals)
+      // console.log('Updated Interval in IntervalItem:', updatedIntervals)
     }
 
     const handleAddClick = (index: number) => {
-      if (intervals[index].input === '') {
+      if (intervals[index] === '') {
         setErrorMessage(
           () =>
             'Você deve preencher o campo anterior antes de adicionar um novo.',
@@ -72,12 +77,11 @@ const TextListFormSubItem = React.forwardRef<HTMLInputElement, InputProps>(
                 className="font-light w-full py-2 outline-none border-b-[2px] mt-3 border-white bg-gray-800 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
                 type="text"
                 step={60}
-                value={interval.input}
+                value={interval}
                 placeholder={placeholder ? `${placeholder} ${index + 1}` : ''}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleInputChange(index, 'input', e.target.value)
+                  handleInputChange(index, e)
                 }
-                {...props}
               />
             </div>
             {index === intervals.length - 1 ? (
