@@ -13,5 +13,4 @@ declare module "@auth/core/adapters" {
     confirm_password: string
     access_type: string
     doctor_id: string
-    accepted_google_maps: string
   }}

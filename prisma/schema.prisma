@@ -12,17 +12,16 @@ datasource db {
 }
 
 model User {
-  id                   String  @id @default(uuid())
-  name                 String
-  email                String  @unique
-  user_link            String?
-  city                 String?
-  state                String?
-  avatar_url           String?
-  access_type          String?
-  password             String?
-  confirm_password     String?
-  accepted_google_maps String?
+  id               String  @id @default(uuid())
+  name             String
+  email            String  @unique
+  user_link        String?
+  city             String?
+  state            String?
+  avatar_url       String?
+  access_type      String?
+  password         String?
+  confirm_password String?
 
   doctor_id String?
 

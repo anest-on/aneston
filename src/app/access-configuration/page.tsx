@@ -49,6 +49,7 @@ import { string, z } from 'zod'
 import { useToast } from '@/components/ui/use-toast'
 import { useSession } from 'next-auth/react'
 import {
+  DeleteUserData,
   ThirdPartyUserForm,
   UpdateUserData,
 } from '@/components/thirdPartyUserForm'
@@ -69,11 +70,6 @@ const createUserSchema = z.object({
 })
 
 type CreateUserData = z.infer<typeof createUserSchema>
-
-type DeleteUserData = {
-  email: string
-  doctorId: string
-}
 
 const AccessConfiguration = () => {
   const router = useRouter()
@@ -236,6 +232,7 @@ const AccessConfiguration = () => {
                   <ThirdPartyUserForm
                     thirdPartyUser={thirdPartyUser}
                     handleSubmit={handleUpdateProfile}
+                    handleDelete={handleDeleteUser}
                     key={thirdPartyUser.email}
                   />
                 ))}

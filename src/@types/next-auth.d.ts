@@ -13,7 +13,6 @@ declare module 'next-auth' {
     confirm_password: string
     access_type: string
     doctor_id: string
-    accepted_google_maps: string
   }
   interface Session {
     user: User
