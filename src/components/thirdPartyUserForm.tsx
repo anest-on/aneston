@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { User } from '@prisma/client'
 import {
   Form,
@@ -7,14 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { TableCell, TableRow } from '@/components/ui/table'
 import {
   Dialog,
   DialogClose,
@@ -58,14 +52,21 @@ const updateUserSchema = z.object({
 
 export type UpdateUserData = z.infer<typeof updateUserSchema>
 
+export type DeleteUserData = {
+  email: string
+  doctorId: string
+}
+
 interface ThirdPartyUserProps {
   thirdPartyUser: User
   handleSubmit: (data: UpdateUserData) => void
+  handleDelete: (data: DeleteUserData) => void
 }
 
 export function ThirdPartyUserForm({
   thirdPartyUser,
   handleSubmit,
+  handleDelete,
 }: ThirdPartyUserProps) {
   const [userEmailAlreadyTakenMessage, setUserEmailAlreadyTakenMessage] =
     useState<string | null>(null)
@@ -82,16 +83,23 @@ export function ThirdPartyUserForm({
       email: thirdPartyUser.email,
       password: '',
       confirmPassword: '',
-      doctorId: thirdPartyUser.doctor_id || '',
-      accessType: thirdPartyUser.access_type || '',
+      doctorId: thirdPartyUser.doctor_id!,
+      accessType: thirdPartyUser.access_type!,
     },
   })
 
   const { isSubmitting } = updateForm.formState
 
   const onSubmit = (values: z.infer<typeof updateUserSchema>) => {
-    console.log(values)
-    handleSubmit(values)
+    handleSubmit && handleSubmit(values)
+  }
+
+  const onDelete = () => {
+    handleDelete &&
+      handleDelete({
+        email: thirdPartyUser.email,
+        doctorId: thirdPartyUser.doctor_id!,
+      })
   }
 
   return (
@@ -264,7 +272,12 @@ export function ThirdPartyUserForm({
               </Form>
             </DialogContent>
           </Dialog>
-          <Trash className="w-4 h-4 hover:text-red-500 hover:cursor-pointer" />
+          <Trash
+            onClick={() => {
+              onDelete()
+            }}
+            className="w-4 h-4 hover:text-red-500 hover:cursor-pointer"
+          />
         </div>
       </TableCell>
     </TableRow>

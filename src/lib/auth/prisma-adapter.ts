@@ -18,7 +18,6 @@ export function PrismaAdapter(): Adapter {
           confirm_password: user.confirm_password!,
           access_type: user.access_type!,
           doctor_id: user.doctor_id!,
-          accepted_google_maps: user.accepted_google_maps!,
         },
       })
 
@@ -35,7 +34,6 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
-        accepted_google_maps: user.accepted_google_maps!,
       }
     },
 
@@ -63,7 +61,6 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
-        accepted_google_maps: user.accepted_google_maps!,
       }
     },
 
@@ -91,7 +88,6 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
-        accepted_google_maps: user.accepted_google_maps!,
       }
     },
     async getUserByAccount({ providerAccountId, provider }) {
@@ -126,7 +122,6 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
-        accepted_google_maps: user.accepted_google_maps!,
       }
     },
 
@@ -146,7 +141,6 @@ export function PrismaAdapter(): Adapter {
           confirm_password: user.confirm_password!,
           access_type: user.access_type!,
           doctor_id: user.doctor_id!,
-          accepted_google_maps: user.accepted_google_maps!,
         },
       })
 
@@ -163,7 +157,6 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
-        accepted_google_maps: user.accepted_google_maps!,
       }
     },
 

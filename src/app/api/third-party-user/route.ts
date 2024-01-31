@@ -99,12 +99,24 @@ export async function DELETE(req: Request) {
       return new NextResponse('Internal Error', { status: 400 })
     }
 
+    const account = await prisma.account.findFirst({
+      where: {
+        user_id: userExists.id,
+      },
+    })
+
+    if (!account) {
+      return new NextResponse('Internal Error', { status: 400 })
+    }
+
+    await prisma.account.delete({ where: { id: account.id } })
+
     const deletedUser = await prisma.user.delete({
       where: {
         id: userExists.id,
       },
     })
-    console.log(deletedUser)
+
     return NextResponse.json(deletedUser)
   } catch (err) {
     return new NextResponse('Internal Error', { status: 500 })
