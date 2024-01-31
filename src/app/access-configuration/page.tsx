@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 'use client'
 
 import { Button } from '@/components/ui/button'
@@ -37,31 +39,19 @@ import {
 } from '@/components/ui/table'
 import { api } from '@/lib/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { User } from '@prisma/client'
 import { AxiosError } from 'axios'
 import { Copy, Pencil, Trash } from 'lucide-react'
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-
-const employees = [
-  {
-    name: 'Matheus Adorno',
-    email: 'teste@gmail.com',
-    role: 'Acesso Completo',
-  },
-  {
-    name: 'Matheus Adorno',
-    email: 'teste1@gmail.com',
-    role: 'Acesso Completo',
-  },
-  {
-    name: 'Matheus Adorno',
-    email: 'teste2@gmail.com',
-    role: 'Acesso Completo',
-  },
-]
+import { string, z } from 'zod'
+import { useToast } from '@/components/ui/use-toast'
+import { useSession } from 'next-auth/react'
+import {
+  ThirdPartyUserForm,
+  UpdateUserData,
+} from '@/components/thirdPartyUserForm'
 
 const createUserSchema = z.object({
   name: z
@@ -80,9 +70,16 @@ const createUserSchema = z.object({
 
 type CreateUserData = z.infer<typeof createUserSchema>
 
+type DeleteUserData = {
+  email: string
+  doctorId: string
+}
+
 const AccessConfiguration = () => {
   const router = useRouter()
+
   const session = useSession()
+  const { toast } = useToast()
 
   const form = useForm<z.infer<typeof createUserSchema>>({
     resolver: zodResolver(createUserSchema),
@@ -105,6 +102,28 @@ const AccessConfiguration = () => {
     string | null
   >(null)
 
+  const [thirdPartyUsers, setThirdPartyUsers] = useState<User[]>([])
+
+  function copyLinkToClipboard() {
+    navigator.clipboard.writeText(
+      // TODO: Mudar link quando for para produção
+      `http://aneston.com/form/${session.data?.user.user_link}`,
+    )
+  }
+
+  const users = useCallback(async () => {
+    const response = await api.get('third-party-user')
+
+    setThirdPartyUsers(response.data)
+  }, [])
+
+  useEffect(() => {
+    users()
+  }, [users])
+
+  const [openCreateUser, setOpenCreateUser] = useState(false)
+  const [openUpdateUser, setOpenUpdateUser] = useState(false)
+
   const handleCreateUser = async (data: CreateUserData) => {
     const doctorId = session.data?.user.id
     if (doctorId) data.doctorId = doctorId
@@ -117,7 +136,16 @@ const AccessConfiguration = () => {
 
       await api.post('/third-party-user', data)
 
-      // router.push(`/register/time-intervals`)
+      const response = await api.get('third-party-user')
+
+      setThirdPartyUsers(response.data)
+
+      toast({
+        title: 'Usuário cadastrado com sucesso!',
+        variant: 'success',
+      })
+
+      setOpenCreateUser(false)
     } catch (err) {
       if (err instanceof AxiosError) {
         setUserEmailAlreadyTakenMessage(
@@ -129,45 +157,94 @@ const AccessConfiguration = () => {
     }
   }
 
+  const [emailAlredyTakenMessage, setEmailAlredyTakenMessage] = useState<
+    string | null
+  >(null)
+
+  const handleUpdateProfile = async (data: UpdateUserData) => {
+    const doctorId = session.data?.user.id
+    if (doctorId) data.doctorId = doctorId
+
+    try {
+      await api.put('/third-party-user', data)
+
+      const response = await api.get('third-party-user')
+
+      setThirdPartyUsers(response.data)
+
+      toast({
+        title: 'Dados do usuário modificados com sucesso!',
+        variant: 'success',
+      })
+
+      setOpenUpdateUser(false)
+    } catch (err) {
+      if (err instanceof AxiosError && err?.response?.data?.message) {
+        setEmailAlredyTakenMessage(
+          'Esse e-mail já está em uso por outro usuário.',
+        )
+        return
+      }
+      console.error(err)
+    }
+  }
+
+  const handleDeleteUser = async (data: DeleteUserData) => {
+    const doctorId = session.data?.user.id
+    if (doctorId) data.doctorId = doctorId
+
+    try {
+      await api.delete('/third-party-user', { data })
+
+      const response = await api.get('third-party-user')
+
+      setThirdPartyUsers(response.data)
+
+      toast({
+        title: 'Usuário deletado com sucesso!',
+        variant: 'destructive',
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   return (
-    <main className="max-w-[880px] h-screen mt-20 mx-auto mb-4 py-0 px-4">
-      <div className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6">
+    <main className="max-w-[880px] h-screen mt-10 mx-auto mb-4 py-0 px-4">
+      <div className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600">
         <p className="text-white text-center text-2xl font-bold">
           Configuração de Acessos
         </p>
         <div className="w-full h-[2px] mt-6 px-6 bg-gray-500" />
         <div className="flex flex-col rounded-md bg-gray-800 border border-solid border-gray-600 mt-6">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b border-gray-600">
-                <TableHead>Nome</TableHead>
-                <TableHead>E-mail</TableHead>
-                <TableHead>Cargo</TableHead>
-                <TableHead className="text-right w-[100px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {employees.map((employee) => (
-                <TableRow
-                  className="border-b border-gray-600"
-                  key={employee.email}
-                >
-                  <TableCell>{employee.name}</TableCell>
-                  <TableCell>{employee.email}</TableCell>
-                  <TableCell>{employee.role}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-4 justify-end">
-                      <Pencil className="w-4 h-4 hover:text-green-500 hover:cursor-pointer" />
-                      <Trash className="w-4 h-4 hover:text-red-500 hover:cursor-pointer" />
-                    </div>
-                  </TableCell>
+          {thirdPartyUsers.length > 0 && (
+            <Table>
+              <TableHeader>
+                <TableRow className="border-b border-gray-600">
+                  <TableHead className="hidden items-center md:flex">
+                    Nome
+                  </TableHead>
+                  <TableHead>E-mail</TableHead>
+                  <TableHead className="hidden items-center md:flex">
+                    Cargo
+                  </TableHead>
+                  <TableHead className="text-right w-[100px]"></TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {thirdPartyUsers.map((thirdPartyUser) => (
+                  <ThirdPartyUserForm
+                    thirdPartyUser={thirdPartyUser}
+                    handleSubmit={handleUpdateProfile}
+                    key={thirdPartyUser.email}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </div>
         <div className="w-full flex justify-center mt-6 gap-20">
-          <Dialog>
+          <Dialog open={openCreateUser} onOpenChange={setOpenCreateUser}>
             <DialogTrigger asChild>
               <Button>Criar novo acesso</Button>
             </DialogTrigger>
@@ -239,7 +316,7 @@ const AccessConfiguration = () => {
                                   <SelectLabel>Nível de acesso</SelectLabel>
                                   <div className="w-full h-[1px] mt-1 mb-2 bg-gray-600" />
                                   <SelectItem value="FULL_ACCESS">
-                                    Acesso completo
+                                    Acesso Completo
                                   </SelectItem>
                                   <SelectItem value="DASHBOARD_ACCESS">
                                     Acesso ao Dashboard
@@ -319,6 +396,13 @@ const AccessConfiguration = () => {
           <Button
             variant={'outline'}
             className="text-white border-white hover:bg-gray-600"
+            onClick={() => {
+              copyLinkToClipboard()
+              toast({
+                title: 'Link copiado para a área de transferência!',
+                description: `Seu Link: http://aneston.com/form/${session.data?.user.user_link}`,
+              })
+            }}
           >
             Link para login
             <Copy className="w-4 h-4 ml-2" />

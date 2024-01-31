@@ -4,6 +4,7 @@ import { roboto } from './fonts'
 import './globals.css'
 import { NextAuthProvider } from './provider'
 import { ThemeProvider } from '@/components/ui/themeProvider'
+import { Toaster } from '@/components/ui/toaster'
 
 export const metadata: Metadata = {
   title: 'AnestOn',
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html className={`${roboto.className} flex flex-col `} lang="en">
       <NextAuthProvider>
         <body className="w-full">
+          <Toaster />
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"

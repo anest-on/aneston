@@ -17,7 +17,6 @@ type ExtendedUser = DefaultSession['user'] & {
   confirm_password: string
   accessType: 'OWNER' | 'FULL_ACCESS' | 'DASHBOARD_ACCESS'
   doctor_id: string
-  accepted_google_maps: string
 }
 
 declare module 'next-auth' {
@@ -57,8 +56,8 @@ export const {
         session.user.avatar_url = token.avatar_url
       }
 
-      if (token.accepted_google_maps && session.user) {
-        session.user.accepted_google_maps = token.accepted_google_maps
+      if (token.user_link && session.user) {
+        session.user.user_link = token.user_link
       }
 
       return session
@@ -71,7 +70,7 @@ export const {
       if (!existingUser) return token
       token.accessType = existingUser.access_type
       token.avatar_url = existingUser.avatar_url
-      token.accepted_google_maps = existingUser.accepted_google_maps
+      token.user_link = existingUser.user_link
 
       return token
     },
