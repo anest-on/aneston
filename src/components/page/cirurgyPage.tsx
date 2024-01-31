@@ -11,7 +11,10 @@ import { SelectFormItem } from '../selectFormItem'
 import { TextListFormSubItem } from '../textListFormSubItem'
 import { CheckboxFormItem, resposnseCheckboxProps } from '../checkboxFormItem'
 import { TreeTextFieldsFormItem } from '../treeTextFieldsFormItem'
-import { DoubleTextListFormSubItem } from '../doubleTextListFormSubItem'
+import {
+  DoubleTextInputProps,
+  DoubleTextListFormSubItem,
+} from '../doubleTextListFormSubItem'
 import { RadioFormSubItem } from '../radioFormSubItem'
 import {
   Form,
@@ -59,7 +62,7 @@ const formSchema = z.object({
   pacient_medicines: z.array(medicinesSchema).optional(),
   pacient_antibiotic: z.string().optional().optional(),
   pacient_antibiotics_names: z.string().array().optional(),
-  pacient_did_cirugy: z.string().optional(),
+  pacient_did_cirurgy: z.string().optional(),
   pacient_cirurgies: z.array(cirurgySchema).optional(),
   pacient_smoke: z.string().optional(),
   pacient_started_smoking: z.string().optional(),
@@ -73,49 +76,7 @@ const formSchema = z.object({
   pacient_procedure_summary: z.string().optional(),
 })
 
-type pacientMedicineType = {
-  name: string
-  dose: string
-  pills: string
-}
-
-type pacientCirurgyProps = {
-  name: string
-  year: string
-}
-
-type pacientPhysicalActivityProps = {
-  name: string
-  frequency: string
-}
-
-export interface cirurgySubmitProps {
-  cirurgy_name?: string
-  cirurgy_physician?: string
-  pacient_weight?: string
-  pacient_height?: string
-  pacient_allergy?: string
-  pacient_allergy_names?: string[]
-  pacient_heart_conditions?: string[]
-  pacient_heart_conditions_observation?: string
-  pacient_disease?: string
-  pacient_disease_names?: string[]
-  pacient_medicines?: pacientMedicineType[]
-  pacient_antibiotic?: string
-  pacient_antibiotics_names?: string[]
-  pacient_did_cirugy?: string
-  pacient_cirurgies?: pacientCirurgyProps[]
-  pacient_smoke?: string
-  pacient_started_smoking?: string
-  pacient_stopped_smoking?: string
-  pacient_when_stop_smoking?: string
-  pacient_pack_smoke?: string
-  pacient_do_physical_activity?: string
-  pacient_physical_activity?: pacientPhysicalActivityProps[]
-  pacient_has_anesthetic_complication?: string
-  pacient_anesthetic_complications?: string[]
-  pacient_procedure_summary?: string
-}
+export type cirurgySubmitProps = z.infer<typeof formSchema>
 
 interface cirurgyPageProps {
   setCirurgyData: cirurgySubmitProps | null
@@ -127,6 +88,18 @@ export default function CirurgyPage({
   setCirurgyData,
 }: cirurgyPageProps) {
   const [pacientAllergyStyle, setPacientAllergyStyle] = useState(['', 'hidden'])
+  const [pacientCardiacConditionStyle, setPacientCardiacConditionStyle] =
+    useState(['', 'hidden'])
+  const [pacientCardiacDiseaseStyle, setPacientCardiacDiseaseStyle] = useState([
+    '',
+    'hidden',
+  ])
+  const [pacientAtibioticStyle, setPacientAtibioticStyle] = useState([
+    '',
+    'hidden',
+  ])
+  const [pacientCirurgyStyle, setPacientCirurgyStyle] = useState(['', 'hidden'])
+  const [pacientSmokeStyle, setPacientSmokeStyle] = useState(['', 'hidden'])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -145,7 +118,7 @@ export default function CirurgyPage({
       pacient_medicines: setCirurgyData?.pacient_medicines,
       pacient_antibiotic: setCirurgyData?.pacient_antibiotic,
       pacient_antibiotics_names: setCirurgyData?.pacient_antibiotics_names,
-      pacient_did_cirugy: setCirurgyData?.pacient_did_cirugy,
+      pacient_did_cirurgy: setCirurgyData?.pacient_did_cirurgy,
       pacient_cirurgies: setCirurgyData?.pacient_cirurgies,
       pacient_smoke: setCirurgyData?.pacient_smoke,
       pacient_started_smoking: setCirurgyData?.pacient_started_smoking,
@@ -190,10 +163,10 @@ export default function CirurgyPage({
   ]
 
   const handleInputChange = (
-    value: string,
+    value: boolean,
     setStyle: Dispatch<SetStateAction<string[]>>,
   ) => {
-    if (value === 'Sim') {
+    if (value === true) {
       setStyle(() => ['rounded-b-none', ''])
     } else {
       setStyle(() => ['', 'hidden'])
@@ -201,15 +174,7 @@ export default function CirurgyPage({
   }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    // console.log(values)
-    // console.log('asfdjpqwef')
     getCirurgyData(values)
-  }
-
-  function teste(e: resposnseCheckboxProps) {
-    console.log(e)
   }
 
   return (
@@ -285,7 +250,7 @@ export default function CirurgyPage({
                     ref={field.ref}
                     value={field.value}
                     onChange={field.onChange}
-                    inputValue={(value: string) =>
+                    inputValue={(value: boolean) =>
                       handleInputChange(value, setPacientAllergyStyle)
                     }
                     className={pacientAllergyStyle[0]}
@@ -318,86 +283,408 @@ export default function CirurgyPage({
           </div>
         </div>
 
+        <div>
+          <FormField
+            control={form.control}
+            name="pacient_heart_conditions"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <CheckboxFormItem
+                    OptionValues={cardiacSymptoms}
+                    // onChange={field.onChange}
+                    onChange={field.onChange}
+                    inputValue={(value: boolean) =>
+                      handleInputChange(value, setPacientCardiacConditionStyle)
+                    }
+                    className={pacientCardiacConditionStyle[0]}
+                  >
+                    O senhor(a) possui alguma das seguintes condições cardíaca?
+                  </CheckboxFormItem>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <div
+            className={`${pacientCardiacConditionStyle[1]} bg-gray-800 w-full px-5 py-3 rounded-b-md border-dashed border-gray-200 border-b-[2px] border-r-[2px] border-l-[2px]`}
+          >
+            <FormField
+              control={form.control}
+              name="pacient_heart_conditions_observation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <SingleTextFormSubItem {...field}>
+                      Descreva
+                    </SingleTextFormSubItem>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        <div>
+          <FormField
+            control={form.control}
+            name="pacient_disease"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <RadioFormItem
+                    OptionValues={['Sim', 'Não']}
+                    accept="Sim"
+                    name={field.name}
+                    ref={field.ref}
+                    value={field.value}
+                    onChange={field.onChange}
+                    inputValue={(value: boolean) =>
+                      handleInputChange(value, setPacientCardiacDiseaseStyle)
+                    }
+                    className={pacientCardiacDiseaseStyle[0]}
+                  >
+                    Além das condições cardíacas, o senhor(a) possui alguma
+                    outra doença?
+                  </RadioFormItem>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div
+            className={`${pacientCardiacDiseaseStyle[1]} bg-gray-800 w-full px-5 py-3 rounded-b-md border-dashed border-gray-200 border-b-[2px] border-r-[2px] border-l-[2px]`}
+          >
+            <FormField
+              control={form.control}
+              name="pacient_disease_names"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <TextListFormSubItem placeholder="Doença" {...field}>
+                      Quais outras doenças o senhor(a) possui?
+                    </TextListFormSubItem>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
         <FormField
           control={form.control}
-          name="pacient_heart_conditions"
+          name="pacient_medicines"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <CheckboxFormItem
-                  OptionValues={cardiacSymptoms}
-                  // onChange={field.onChange}
+                <TreeTextFieldsFormItem
+                  OptionValues={{
+                    name: 'Nome do medicamento',
+                    dose: 'Dose (mg ou mcg)',
+                    pills: 'N° de comprimidos por dia',
+                  }}
+                  name={field.name}
+                  ref={field.ref}
+                  defaultValue={field.value}
                   onChange={field.onChange}
                 >
-                  O senhor(a) possui alguma das seguintes condições cardíaca?
-                </CheckboxFormItem>
+                  O senhor(a) faz uso de algum remédio regularmente?
+                </TreeTextFieldsFormItem>
               </FormControl>
             </FormItem>
           )}
         />
 
-        <CheckboxFormItem value={cardiacSymptoms}>
-          O senhor(a) possui alguma das seguintes condições cardíaca?
-          <SingleTextFormSubItem>Descreva</SingleTextFormSubItem>
-        </CheckboxFormItem>
+        <div>
+          <FormField
+            control={form.control}
+            name="pacient_antibiotic"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <RadioFormItem
+                    OptionValues={['Sim', 'Não']}
+                    accept="Sim"
+                    name={field.name}
+                    ref={field.ref}
+                    value={field.value}
+                    onChange={field.onChange}
+                    inputValue={(value: boolean) =>
+                      handleInputChange(value, setPacientAtibioticStyle)
+                    }
+                    className={pacientAtibioticStyle[0]}
+                  >
+                    O senhor(a) fez uso de antibióticos nos últimos 6 meses?
+                  </RadioFormItem>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <RadioFormItem OptionValues={['Sim', 'Não']} accept="Sim">
-          Além das condições cardíacas, o senhor(a) possui alguma outra doença?
-          <TextListFormSubItem placeholder="Doença">
-            Quais outras doenças o senhor(a) possui?
-          </TextListFormSubItem>
-        </RadioFormItem>
-
-        <TreeTextFieldsFormItem
-          defaultValue={[
-            'Nome do medicamento',
-            'Dose (mg ou mcg)',
-            'N° de comprimidos por dia',
-          ]}
-        >
-          O senhor(a) faz uso de algum remédio regularmente?
-        </TreeTextFieldsFormItem>
-
-        <RadioFormItem OptionValues={['Sim', 'Não']} accept="Sim">
-          O senhor(a) fez uso de antibióticos nos últimos 6 meses?
-          <TextListFormSubItem placeholder="Antibiótico">
-            Qual antibiótico usou no último mês?
-          </TextListFormSubItem>
-        </RadioFormItem>
-
-        <RadioFormItem OptionValues={['Sim', 'Não']} accept="Sim">
-          O senhor(a) já realizou alguma cirurgia anteriormente?
-          <DoubleTextListFormSubItem
-            defaultValue={['Nome da cirurgia', 'Ano de realização']}
+          <div
+            className={`${pacientAtibioticStyle[1]} bg-gray-800 w-full px-5 py-3 rounded-b-md border-dashed border-gray-200 border-b-[2px] border-r-[2px] border-l-[2px]`}
           >
-            Qual cirurgia e quando realizou?
-          </DoubleTextListFormSubItem>
-        </RadioFormItem>
+            <FormField
+              control={form.control}
+              name="pacient_antibiotics_names"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <TextListFormSubItem placeholder="Antibiótico" {...field}>
+                      Qual antibiótico usou no último mês?
+                    </TextListFormSubItem>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
 
-        <RadioFormItem OptionValues={['Sim', 'Não']} accept="Sim">
-          O senhor(a) é/era fumante?
-          <SingleTextFormSubItem>
-            Começou a fumar com quantos anos?
-          </SingleTextFormSubItem>
-          <RadioFormSubItem value={['Sim', 'Não']}>
-            Já parou de fumar?
-          </RadioFormSubItem>
-          <SingleTextFormSubItem>
-            Com quantos anos parou de fumar?
-          </SingleTextFormSubItem>
-          <SingleTextFormSubItem>
-            Quantos maços fuma/fumava por dia?
-          </SingleTextFormSubItem>
-        </RadioFormItem>
+        <div>
+          <FormField
+            control={form.control}
+            name="pacient_did_cirurgy"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <RadioFormItem
+                    OptionValues={['Sim', 'Não']}
+                    accept="Sim"
+                    name={field.name}
+                    ref={field.ref}
+                    value={field.value}
+                    onChange={field.onChange}
+                    inputValue={(value: boolean) =>
+                      handleInputChange(value, setPacientCirurgyStyle)
+                    }
+                    className={pacientCirurgyStyle[0]}
+                  >
+                    O senhor(a) já realizou alguma cirurgia anteriormente?
+                  </RadioFormItem>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <RadioFormItem OptionValues={['Sim', 'Não']} accept="Sim">
-          O senhor(a) pratica alguma atividade física?
-          <DoubleTextListFormSubItem
-            defaultValue={['Nome da atividade', 'Frequencia por semana']}
+          <div
+            className={`${pacientCirurgyStyle[1]} bg-gray-800 w-full px-5 py-3 rounded-b-md border-dashed border-gray-200 border-b-[2px] border-r-[2px] border-l-[2px]`}
           >
-            Qual atividade e quantas vezes na semana?
-          </DoubleTextListFormSubItem>
-        </RadioFormItem>
+            <FormField
+              control={form.control}
+              name="pacient_cirurgies"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <DoubleTextListFormSubItem
+                      OptionValues={{
+                        input1: 'Nome da cirurgia',
+                        input2: 'Ano de realização',
+                      }}
+                      name={field.name}
+                      ref={field.ref}
+                      defaultValue={() => {
+                        const fieldValue: DoubleTextInputProps[] = []
+                        field.value &&
+                          field.value.forEach((element) => {
+                            fieldValue.push({
+                              input1: element.name,
+                              input2: element.year,
+                            })
+                          })
+                        field.onChange(fieldValue)
+                        return fieldValue
+                      }}
+                      onChange={(value: DoubleTextInputProps[]) => {
+                        const fieldValue: z.infer<typeof cirurgySchema>[] = []
+                        value.forEach((element) => {
+                          fieldValue.push({
+                            name: element.input1,
+                            year: element.input2,
+                          })
+                        })
+                        field.onChange(fieldValue)
+                      }}
+                    >
+                      Qual cirurgia e quando realizou?
+                    </DoubleTextListFormSubItem>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        <div>
+          <FormField
+            control={form.control}
+            name="pacient_smoke"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <RadioFormItem
+                    OptionValues={['Sim', 'Não']}
+                    accept="Sim"
+                    name={field.name}
+                    ref={field.ref}
+                    value={field.value}
+                    onChange={field.onChange}
+                    inputValue={(value: boolean) =>
+                      handleInputChange(value, setPacientSmokeStyle)
+                    }
+                    className={pacientSmokeStyle[0]}
+                  >
+                    O senhor(a) é/era fumante?
+                  </RadioFormItem>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div
+            className={`${pacientSmokeStyle[1]} bg-gray-800 w-full px-5 py-3 rounded-b-md border-dashed border-gray-200 border-b-[2px] border-r-[2px] border-l-[2px]`}
+          >
+            <FormField
+              control={form.control}
+              name="pacient_started_smoking"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <SingleTextFormSubItem {...field}>
+                      Começou a fumar com quantos anos?
+                    </SingleTextFormSubItem>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="pacient_stopped_smoking"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <RadioFormSubItem
+                      OptionValues={['Sim', 'Não']}
+                      name={field.name}
+                      ref={field.ref}
+                      value={field.value}
+                      onChange={field.onChange}
+                    >
+                      Já parou de fumar?
+                    </RadioFormSubItem>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="pacient_when_stop_smoking"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <SingleTextFormSubItem {...field}>
+                      Com quantos anos parou de fumar?
+                    </SingleTextFormSubItem>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="pacient_pack_smoke"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <SingleTextFormSubItem {...field}>
+                      Quantos maços fuma/fumava por dia?
+                    </SingleTextFormSubItem>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        <div>
+          <FormField
+            control={form.control}
+            name="pacient_do_physical_activity"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <RadioFormItem
+                    OptionValues={['Sim', 'Não']}
+                    accept="Sim"
+                    name={field.name}
+                    ref={field.ref}
+                    value={field.value}
+                    onChange={field.onChange}
+                    inputValue={(value: boolean) =>
+                      handleInputChange(value, setPacientCirurgyStyle)
+                    }
+                    className={pacientCirurgyStyle[0]}
+                  >
+                    O senhor(a) pratica alguma atividade física?
+                  </RadioFormItem>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div
+            className={`${pacientCirurgyStyle[1]} bg-gray-800 w-full px-5 py-3 rounded-b-md border-dashed border-gray-200 border-b-[2px] border-r-[2px] border-l-[2px]`}
+          >
+            <FormField
+              control={form.control}
+              name="pacient_physical_activity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <DoubleTextListFormSubItem
+                      OptionValues={{
+                        input1: 'Nome da atividade',
+                        input2: 'Frequencia por semana',
+                      }}
+                      name={field.name}
+                      ref={field.ref}
+                      defaultValue={() => {
+                        const fieldValue: DoubleTextInputProps[] = []
+                        field.value &&
+                          field.value.forEach((element) => {
+                            fieldValue.push({
+                              input1: element.name,
+                              input2: element.year,
+                            })
+                          })
+                        field.onChange(fieldValue)
+                        return fieldValue
+                      }}
+                      onChange={(value: DoubleTextInputProps[]) => {
+                        const fieldValue: z.infer<typeof cirurgySchema>[] = []
+                        value.forEach((element) => {
+                          fieldValue.push({
+                            name: element.input1,
+                            year: element.input2,
+                          })
+                        })
+                        field.onChange(fieldValue)
+                      }}
+                    >
+                      Qual atividade e quantas vezes na semana?
+                    </DoubleTextListFormSubItem>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
 
         <RadioFormItem OptionValues={['Sim', 'Não']} accept="Sim">
           O senhor(a) já apresentou alguma complicação anestésica?

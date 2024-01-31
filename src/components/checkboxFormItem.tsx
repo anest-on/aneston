@@ -13,7 +13,7 @@ export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   OptionValues: string[]
   onChange: (e: string[]) => void
-  inputValue?: (value: string) => void
+  inputValue?: (value: boolean) => void
 }
 
 
@@ -21,7 +21,6 @@ export interface InputProps
 const CheckboxFormItem = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, prefix, children, OptionValues, onChange, inputValue, ...props }, ref) => {
     const [isSelected, setIsSelected] = useState(false)
-    const [extraItem, setExtraItem] = useState(false)
     const [answers, setAnswers] = useState<resposnseCheckboxProps[]>([])
 
     useEffect(() => {
@@ -36,8 +35,17 @@ const CheckboxFormItem = React.forwardRef<HTMLInputElement, InputProps>(
         // answersValue.push({ value: item, checked: false })
       })
 
+    const handleOnChange = () => {
+      const stringAnswers: string[] = []
+      answers.forEach((element) => {
+        if (element.checked === true)
+          stringAnswers.push(element.value)
+      })
+
+      onChange(stringAnswers)
+    }
+
     const handleCheckedChange = (checked: CheckedState, item: string) => {
-      console.log('alo')
       if (checked !== 'indeterminate') {
         setAnswers(answer => {
           let isAllFalse = 0
@@ -53,14 +61,17 @@ const CheckboxFormItem = React.forwardRef<HTMLInputElement, InputProps>(
             }
 
             if (answerValue.length === isAllFalse) {
-              setExtraItem(false)
+              inputValue && inputValue(false)
             } else {
-              setExtraItem(true)
+              inputValue && inputValue(true)
             }
           })
-          console.log(answerValue)
+          // console.log(answerValue)
           return answerValue
         })
+        handleOnChange()
+
+        // onChange(['aaa'])
       }
       // console.log(answers)
     }
@@ -90,7 +101,7 @@ const CheckboxFormItem = React.forwardRef<HTMLInputElement, InputProps>(
                     onFocus={() => setIsSelected(() => !isSelected)}
                     onBlur={() => setIsSelected(() => !isSelected)}
                   />
-                  <input type="hidden" value={`${answers[index]}`} onChange={() => onChange(['1q233', '1231'])} />
+                  {/* <input type="text" value={`${answers[index].checked}`} onChange={handleOnChange} /> */}
                   <label
                     htmlFor={cn(item)}
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -102,15 +113,7 @@ const CheckboxFormItem = React.forwardRef<HTMLInputElement, InputProps>(
               : ''}
           </div>
         </div>
-        {Array.isArray(children) && extraItem ? (
-          <div className="bg-gray-800 w-full px-5 py-3 mt-2 rounded-b-md border-dashed border-gray-200 border-b-[2px] border-r-[2px] border-l-[2px]">
-            {children.map((item, index) => (
-              <span key={index}>{index === 0 ? '' : item}</span>
-            ))}
-          </div>
-        ) : (
-          ''
-        )}
+
       </div>
     )
   },

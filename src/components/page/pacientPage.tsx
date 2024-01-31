@@ -78,8 +78,8 @@ export default function PacientPage({
     getPacientData(values)
   }
 
-  const handleInputChange = (value: string) => {
-    if (value === 'Sim') {
+  const handleInputChange = (value: boolean) => {
+    if (value) {
       setHandleHalthInsuranceChanges(() => ['rounded-b-none', ''])
     } else {
       setHandleHalthInsuranceChanges(() => ['', 'hidden'])

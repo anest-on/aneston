@@ -11,10 +11,6 @@ export interface InputProps
 
 const SingleTextFormSubItem = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, prefix, children, inputValue, ...props }, ref) => {
-    const handleClick = (value: string) => {
-      inputValue && inputValue(value)
-    }
-
     return (
       <div
         className={cn(
@@ -25,11 +21,8 @@ const SingleTextFormSubItem = React.forwardRef<HTMLInputElement, InputProps>(
         <p className="text-[1rem]">{children}</p>
         <input
           className="font-light mt-2 outline-none border-b-[2px] border-white bg-white bg-opacity-0 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
-          type={type}
+          type="text"
           ref={ref}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleClick(e.target.value)
-          }
           {...props}
         />
       </div>

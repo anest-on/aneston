@@ -7,7 +7,7 @@ import { FormControl, FormItem, FormLabel } from './ui/form'
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   OptionValues: string[]
-  inputValue?: (value: string) => void
+  inputValue?: (value: boolean) => void
 }
 
 const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
@@ -26,7 +26,7 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
         if (!isOnRadioSelect && typeof props.value === 'string') setOtherStringInputValue(props.value)
 
         if (isOnRadioSelect === accept) {
-          isOnRadioSelect && (inputValue && inputValue(isOnRadioSelect))
+          isOnRadioSelect && (inputValue && inputValue(isOnRadioSelect === accept))
         }
       }
 
@@ -47,13 +47,13 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
       if (onChange)
         if (e && String(e) !== "Outro") {
           onChange(e)
-          inputValue && inputValue(String(e))
+          inputValue && inputValue(String(e) === accept)
         } else if (e && otherInputValue && String(e) === "Outro") {
           onChange(otherInputValue)
-          inputValue && inputValue(String(otherInputValue))
+          inputValue && inputValue(String(otherInputValue) === accept)
         } else {
           onChange(e)
-          inputValue && inputValue(String(e))
+          inputValue && inputValue(String(e) === accept)
         }
     }
 

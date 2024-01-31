@@ -7,25 +7,27 @@ import { cn } from '@/lib/utils'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Label } from './ui/label'
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+export interface SubItemCheckboxProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+  OptionValues: string[]
+  onChange: (e: string) => void
+}
 
-const RadioFormSubItem = React.forwardRef<HTMLInputElement, InputProps>(
+const RadioFormSubItem = React.forwardRef<HTMLInputElement, SubItemCheckboxProps>(
   (
     {
       className,
       type,
-      prefix,
       children,
-      value,
       defaultValue,
-      accept,
+      OptionValues,
+      onChange,
       ...props
     },
     ref,
   ) => {
     const [isSelected, setIsSelected] = useState(false)
     const [inputValue, setInputValue] = useState('')
-    const [extraItem, setExtraItem] = useState(false)
     const [radioId, setRadioId] = useState(Math.random())
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,11 +36,7 @@ const RadioFormSubItem = React.forwardRef<HTMLInputElement, InputProps>(
     }
 
     const hadleRadioGroupValueChange = (value: string) => {
-      if (value === accept) {
-        setExtraItem(() => true)
-      } else {
-        setExtraItem(() => false)
-      }
+      onChange(value)
     }
     return (
       <div
@@ -55,47 +53,45 @@ const RadioFormSubItem = React.forwardRef<HTMLInputElement, InputProps>(
           onFocus={() => setIsSelected(() => !isSelected)}
           onBlur={() => setIsSelected(() => !isSelected)}
         >
-          {Array.isArray(value)
-            ? value.map((item, index) =>
-              item === 'Outro' ? (
-                <div className="flex space-x-2 justify-start" key={index}>
-                  <RadioGroupItem
-                    value={`${inputValue}`}
-                    id={`${Array.isArray(children) ? children[0] : children
-                      } ${index}`}
-                  />
-                  <Label
-                    htmlFor={`${Array.isArray(children) ? children[0] : children
-                      } ${index}`}
-                  >
-                    {item}:
-                  </Label>
-                  <input
-                    className="font-light w-full outline-none border-b-[2px] border-white bg-gray-600 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
-                    type={type}
-                    ref={ref}
-                    onChange={handleChange}
-                    value={inputValue}
-                    {...props}
-                  />
-                </div>
-              ) : (
-                <div className="flex space-x-2" key={index}>
-                  <RadioGroupItem
-                    value={`${item}`}
-                    id={`${Array.isArray(children) ? children[0] : children
-                      } ${index}`}
-                  />
-                  <Label
-                    htmlFor={`${Array.isArray(children) ? children[0] : children
-                      } ${index}`}
-                  >
-                    {item}
-                  </Label>
-                </div>
-              ),
-            )
-            : ''}
+          {OptionValues.map((item, index) =>
+            item === 'Outro' ? (
+              <div className="flex space-x-2 justify-start" key={index}>
+                <RadioGroupItem
+                  value={`${inputValue}`}
+                  id={`${Array.isArray(children) ? children[0] : children
+                    } ${index}`}
+                />
+                <Label
+                  htmlFor={`${Array.isArray(children) ? children[0] : children
+                    } ${index}`}
+                >
+                  {item}:
+                </Label>
+                <input
+                  className="font-light w-full outline-none border-b-[2px] border-white bg-gray-600 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
+                  type={type}
+                  ref={ref}
+                  onChange={handleChange}
+                  value={inputValue}
+                  {...props}
+                />
+              </div>
+            ) : (
+              <div className="flex space-x-2" key={index}>
+                <RadioGroupItem
+                  value={`${item}`}
+                  id={`${Array.isArray(children) ? children[0] : children
+                    } ${index}`}
+                />
+                <Label
+                  htmlFor={`${Array.isArray(children) ? children[0] : children
+                    } ${index}`}
+                >
+                  {item}
+                </Label>
+              </div>
+            ),
+          )}
         </RadioGroup>
       </div>
     )

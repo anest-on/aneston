@@ -6,24 +6,35 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { cn } from '@/lib/utils'
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+export interface MedicineProps {
+  name: string
+  dose: string
+  pills: string
+}
 
-export interface Interval {
-  input1: string
-  input2: string
-  input3: string
+export interface InputProps
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    'onChange' | 'defaultValue'
+  > {
+  OptionValues: MedicineProps
+  defaultValue?: MedicineProps[]
+  onChange: (value: MedicineProps[]) => void
 }
 
 const TreeTextFieldsFormItem = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, prefix, children, defaultValue, ...props }, ref) => {
+  (
+    { className, type, prefix, children, onChange, OptionValues, ...props },
+    ref,
+  ) => {
     const [isSelected, setIsSelected] = useState(false)
-    const [intervals, setIntervals] = useState<Interval[]>([
-      { input1: '', input2: '', input3: '' },
+    const [intervals, setIntervals] = useState<MedicineProps[]>([
+      { name: '', dose: '', pills: '' },
     ])
     const [errorMessage, setErrorMessage] = useState('')
 
     const addInterval = () => {
-      setIntervals([...intervals, { input1: '', input2: '', input3: '' }])
+      setIntervals([...intervals, { name: '', dose: '', pills: '' }])
     }
 
     const removeInterval = (index: number) => {
@@ -43,15 +54,15 @@ const TreeTextFieldsFormItem = React.forwardRef<HTMLInputElement, InputProps>(
       }
       setIntervals(updatedIntervals)
 
-      // onChange(updatedIntervals)
+      onChange(updatedIntervals)
       // console.log('Updated Interval in IntervalItem:', updatedIntervals[index])
     }
 
     const handleAddClick = (index: number) => {
       if (
-        intervals[index].input1 === '' ||
-        intervals[index].input2 === '' ||
-        intervals[index].input3 === ''
+        intervals[index].name === '' ||
+        intervals[index].dose === '' ||
+        intervals[index].pills === ''
       ) {
         setErrorMessage(
           () =>
@@ -86,35 +97,32 @@ const TreeTextFieldsFormItem = React.forwardRef<HTMLInputElement, InputProps>(
                 className="font-light w-full py-2 outline-none border-b-[2px] mt-3 border-white bg-gray-600 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
                 type="text"
                 step={60}
-                value={interval.input1}
-                placeholder={Array.isArray(defaultValue) ? defaultValue[0] : ''}
+                value={interval.name}
+                placeholder={OptionValues.name}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleInputChange(index, 'input1', e.target.value)
+                  handleInputChange(index, 'name', e.target.value)
                 }
-                {...props}
               />
               <input
                 className="font-light w-full py-2 outline-none border-b-[2px] mt-3 border-white bg-gray-600 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
                 type="text"
                 step={60}
-                value={interval.input2}
-                placeholder={Array.isArray(defaultValue) ? defaultValue[1] : ''}
+                value={interval.dose}
+                placeholder={OptionValues.dose}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleInputChange(index, 'input2', e.target.value)
+                  handleInputChange(index, 'dose', e.target.value)
                 }
-                {...props}
               />
 
               <input
                 className="font-light w-full py-2 outline-none border-b-[2px] mt-3 border-white bg-gray-600 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
                 type="text"
                 step={60}
-                value={interval.input3}
-                placeholder={Array.isArray(defaultValue) ? defaultValue[2] : ''}
+                value={interval.pills}
+                placeholder={OptionValues.pills}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleInputChange(index, 'input3', e.target.value)
+                  handleInputChange(index, 'pills', e.target.value)
                 }
-                {...props}
               />
             </div>
             {index === intervals.length - 1 ? (
