@@ -18,6 +18,21 @@ export default {
             'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar',
         },
       },
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          user_link: '',
+          city: '',
+          state: '',
+          avatar_url: profile.picture,
+          access_type: '',
+          doctor_id: '',
+          password: '',
+          confirm_password: '',
+        }
+      },
     }),
     Credentials({
       name: 'credentials',
