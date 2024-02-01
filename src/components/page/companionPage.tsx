@@ -21,7 +21,7 @@ import {
 
 const formSchema = z.object({
   companion_name: z.string().min(2, {
-    message: 'Username must be at least 2 characters.',
+    message: 'user_link must be at least 2 characters.',
   }),
   companion_kinship: z.string(),
   companion_email: z.string().email(),
