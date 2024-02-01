@@ -55,7 +55,6 @@ export default function CompanionPage({
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
     getCompanionData(values)
   }
 
@@ -119,7 +118,7 @@ export default function CompanionPage({
             )}
           />
 
-          <div className="flex flex-row w-full justify-between px-5">
+          <div className="flex flex-row w-full justify-between lg:px-5 max-lg:gap-3">
             <Button
               variant={'circle'}
               className="w-[150px] rounded-md"

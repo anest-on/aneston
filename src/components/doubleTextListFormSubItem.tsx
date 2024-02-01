@@ -65,6 +65,7 @@ const DoubleTextListFormSubItem = React.forwardRef<
         [inputName]: value,
       }
       setIntervals(updatedIntervals)
+      onChange(updatedIntervals)
 
       // onChange(updatedIntervals)
       // console.log('Updated Interval in IntervalItem:', updatedIntervals[index])
@@ -80,7 +81,6 @@ const DoubleTextListFormSubItem = React.forwardRef<
         addInterval()
         setErrorMessage(() => '')
       }
-      onChange(intervals)
     }
 
     return (

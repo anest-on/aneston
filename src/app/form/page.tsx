@@ -51,6 +51,8 @@ const Questionary = () => {
   }
 
   useEffect(() => {
+    console.log(pacientData)
+    console.log(companionData)
     console.log(cirurgyData)
 
     // pacientData && companionData
@@ -58,24 +60,26 @@ const Questionary = () => {
     //   : pacientData && !companionData
     //     ? setStep(2)
     //     : setStep(1)
-  }, [cirurgyData])
+  }, [cirurgyData, companionData, pacientData])
 
   return (
-    <main className="max-w-[800px]  mx-auto my-20 px-4 ">
-      <div className="py-0 px-6">
-        <strong className="text-2xl text-white">
-          Avaliação de Risco Pré-Operatório
-        </strong>
-        <p className="mb-6">
-          Este formulário tem o objetivo de coletar informações essenciais para
-          avaliar o risco anestésico e de complicações durante procedimentos
-          cirúrgicos. Suas respostas nos ajudarão a garantir a sua segurança e
-          bem-estar antes, durante e após a cirurgia. Por favor, preencha-o com
-          precisão e atenção. Suas respostas são confidenciais e essenciais para
-          um cuidado médico de alta qualidade.
-        </p>
+    <main className="max-w-[800px] justify-center items-center mx-auto my-20  ">
+      <div className="py-0 px-0">
+        <div className="px-4">
+          <strong className="text-2xl text-white">
+            Avaliação de Risco Pré-Operatório
+          </strong>
+          <p className="mb-6">
+            Este formulário tem o objetivo de coletar informações essenciais
+            para avaliar o risco anestésico e de complicações durante
+            procedimentos cirúrgicos. Suas respostas nos ajudarão a garantir a
+            sua segurança e bem-estar antes, durante e após a cirurgia. Por
+            favor, preencha-o com precisão e atenção. Suas respostas são
+            confidenciais e essenciais para um cuidado médico de alta qualidade.
+          </p>
 
-        <MultiStep size={3} currentStep={1} />
+          <MultiStep size={3} currentStep={1} />
+        </div>
 
         <div className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid gap-4 border-gray-600 mt-6">
           <h3 className="text-white text-[1.2rem]">
@@ -85,9 +89,9 @@ const Questionary = () => {
           {
             {
               1: (
-                <CirurgyPage
-                  getCirurgyData={handleCirurgySubmit}
-                  setCirurgyData={cirurgyData}
+                <PacientPage
+                  getPacientData={handlePacientSubmit}
+                  setPacientData={pacientData}
                 />
               ),
               2: (
