@@ -23,7 +23,7 @@ import { useState } from 'react'
 
 const formSchema = z.object({
   pacient_name: z.string().min(2, {
-    message: 'Username must be at least 2 characters.',
+    message: 'user_link must be at least 2 characters.',
   }),
   pacient_birthdate: z.string(),
   pacient_gender: z.string(),

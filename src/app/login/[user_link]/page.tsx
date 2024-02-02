@@ -24,7 +24,7 @@ const Login = async ({ params }: { params: { user_link: string } }) => {
                 className="mx-auto mb-6"
                 alt=""
               />
-              <p className="mb-6 text-center text-lg">
+              <p className="mb-6 text-center text-lg text-white">
                 Conta principal:{' '}
                 <span className="underline">{doctor?.name}</span>
               </p>
