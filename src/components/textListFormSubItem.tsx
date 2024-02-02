@@ -3,7 +3,11 @@ import { Button } from './ui/button'
 import { cn } from '@/lib/utils'
 
 export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    'onChange' | 'value'
+  > {
+  value: string[]
   onChange: (e: string[]) => void
 }
 
@@ -13,10 +17,19 @@ export interface Interval {
 
 const TextListFormSubItem = React.forwardRef<HTMLInputElement, InputProps>(
   (
-    { className, type, prefix, children, placeholder, onChange, ...props },
+    {
+      className,
+      type,
+      prefix,
+      children,
+      placeholder,
+      onChange,
+      value,
+      ...props
+    },
     ref,
   ) => {
-    const [intervals, setIntervals] = useState([''])
+    const [intervals, setIntervals] = useState(value)
     const [errorMessage, setErrorMessage] = useState('')
 
     const addInterval = () => {

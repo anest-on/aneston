@@ -8,9 +8,13 @@ import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { Label } from './ui/label'
 
 export interface SubItemCheckboxProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    'onChange' | 'value'
+  > {
   OptionValues: string[]
   onChange: (e: string) => void
+  value: string
 }
 
 const RadioFormSubItem = React.forwardRef<HTMLInputElement, SubItemCheckboxProps>(
@@ -22,13 +26,14 @@ const RadioFormSubItem = React.forwardRef<HTMLInputElement, SubItemCheckboxProps
       defaultValue,
       OptionValues,
       onChange,
+      accept,
+      value,
       ...props
     },
     ref,
   ) => {
     const [isSelected, setIsSelected] = useState(false)
     const [inputValue, setInputValue] = useState('')
-    const [radioId, setRadioId] = useState(Math.random())
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       setInputValue(e.target.value)
@@ -47,11 +52,12 @@ const RadioFormSubItem = React.forwardRef<HTMLInputElement, SubItemCheckboxProps
       >
         <p className="text-[1rem]">{children}</p>
         <RadioGroup
-          onValueChange={hadleRadioGroupValueChange}
-          defaultValue={`${defaultValue}`}
+          onValueChange={(e: string) => hadleRadioGroupValueChange(e)}
           className="mt-5"
           onFocus={() => setIsSelected(() => !isSelected)}
           onBlur={() => setIsSelected(() => !isSelected)}
+          ref={ref}
+          value={value}
         >
           {OptionValues.map((item, index) =>
             item === 'Outro' ? (

@@ -12,25 +12,45 @@ export interface MedicineProps {
   pills: string
 }
 
+class MedicineTypeProps implements MedicineProps {
+  name = ''
+  dose = ''
+  pills = ''
+
+  constructor(input1: string, input2: string, input3: string) {
+    this.name = input1
+    this.dose = input2
+    this.pills = input3
+  }
+}
+
 export interface InputProps
   extends Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
     'onChange' | 'defaultValue'
   > {
   OptionValues: MedicineProps
-  defaultValue?: MedicineProps[]
+  defaultValue: MedicineProps[]
+  defaultValueProps: { input1: string; input2: string; input3: string }
   onChange: (value: MedicineProps[]) => void
 }
 
 const TreeTextFieldsFormItem = React.forwardRef<HTMLInputElement, InputProps>(
   (
-    { className, type, prefix, children, onChange, OptionValues, ...props },
+    {
+      className,
+      type,
+      prefix,
+      children,
+      onChange,
+      OptionValues,
+      defaultValue,
+      ...props
+    },
     ref,
   ) => {
     const [isSelected, setIsSelected] = useState(false)
-    const [intervals, setIntervals] = useState<MedicineProps[]>([
-      { name: '', dose: '', pills: '' },
-    ])
+    const [intervals, setIntervals] = useState<MedicineProps[]>(defaultValue)
     const [errorMessage, setErrorMessage] = useState('')
 
     const addInterval = () => {
@@ -99,6 +119,8 @@ const TreeTextFieldsFormItem = React.forwardRef<HTMLInputElement, InputProps>(
                 step={60}
                 value={interval.name}
                 placeholder={OptionValues.name}
+                onFocus={() => setIsSelected(() => !isSelected)}
+                onBlur={() => setIsSelected(() => !isSelected)}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   handleInputChange(index, 'name', e.target.value)
                 }
@@ -109,6 +131,8 @@ const TreeTextFieldsFormItem = React.forwardRef<HTMLInputElement, InputProps>(
                 step={60}
                 value={interval.dose}
                 placeholder={OptionValues.dose}
+                onFocus={() => setIsSelected(() => !isSelected)}
+                onBlur={() => setIsSelected(() => !isSelected)}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   handleInputChange(index, 'dose', e.target.value)
                 }
@@ -120,6 +144,8 @@ const TreeTextFieldsFormItem = React.forwardRef<HTMLInputElement, InputProps>(
                 step={60}
                 value={interval.pills}
                 placeholder={OptionValues.pills}
+                onFocus={() => setIsSelected(() => !isSelected)}
+                onBlur={() => setIsSelected(() => !isSelected)}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   handleInputChange(index, 'pills', e.target.value)
                 }

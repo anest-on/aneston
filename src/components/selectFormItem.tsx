@@ -11,13 +11,15 @@ import {
 import { Button } from './ui/button'
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
   OptionValues: string[]
+  onChange: (e: string) => void
+  value: string
   inputValue?: (value: string) => void
 }
 
 const SelectFormItem = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, prefix, children, OptionValues, ...props }, ref) => {
+  ({ className, type, prefix, children, OptionValues, value, ...props }, ref) => {
     const [isSelected, setIsSelected] = useState(false)
 
     return (
@@ -32,7 +34,7 @@ const SelectFormItem = React.forwardRef<HTMLInputElement, InputProps>(
           <b>{children}</b>
         </p>
         {!!prefix && <p className="text-gray-400 ">{prefix}</p>}
-        <Select onValueChange={(value: ChangeEvent<HTMLInputElement>) => props.onChange && props.onChange(value)} >
+        <Select onValueChange={(e: string) => props.onChange && props.onChange(e)} defaultValue={value}>
           <SelectTrigger
             className="w-[180px] mt-10"
             onFocus={() => setIsSelected(() => !isSelected)}

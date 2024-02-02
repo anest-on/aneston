@@ -23,12 +23,12 @@ const Questionary = () => {
     null,
   )
 
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
 
   function handleCirurgySubmit(values: cirurgySubmitProps | null) {
     if (values) {
       setCirurgyData(values)
-      setStep(3)
+      setStep(4)
     } else {
       setStep(2)
     }

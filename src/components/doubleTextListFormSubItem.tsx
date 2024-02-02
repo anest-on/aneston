@@ -5,8 +5,7 @@ import { Input } from './ui/input'
 import { cn } from '@/lib/utils'
 
 export interface DoubleTextInputProps {
-  input1: string
-  input2: string
+  [input: string]: string
 }
 
 export interface InputProps
@@ -15,7 +14,8 @@ export interface InputProps
     'onChange' | 'defaultValue'
   > {
   OptionValues: DoubleTextInputProps
-  defaultValue?: () => DoubleTextInputProps[]
+  defaultValue: DoubleTextInputProps[]
+  defaultValueProps: { input1: string; input2: string }
   onChange: (value: DoubleTextInputProps[]) => void
 }
 
@@ -32,27 +32,26 @@ const DoubleTextListFormSubItem = React.forwardRef<
       defaultValue,
       OptionValues,
       onChange,
+      defaultValueProps,
       ...props
     },
     ref,
   ) => {
-    const [intervals, setIntervals] = useState<DoubleTextInputProps[]>([
-      { input1: '', input2: '' },
-    ])
+    const [intervals, setIntervals] =
+      useState<DoubleTextInputProps[]>(defaultValue)
     const [errorMessage, setErrorMessage] = useState('')
 
     const addInterval = () => {
-      setIntervals([...intervals, { input1: '', input2: '' }])
+      setIntervals([
+        ...intervals,
+        { [defaultValueProps.input1]: '', [defaultValueProps.input2]: '' },
+      ])
     }
 
     const removeInterval = (index: number) => {
       const updatedIntervals = intervals.filter((_, i) => i !== index)
       setIntervals(updatedIntervals)
     }
-
-    const inputDefaultValues: DoubleTextInputProps[] = defaultValue
-      ? defaultValue()
-      : []
 
     const handleInputChange = (
       index: number,
@@ -64,6 +63,7 @@ const DoubleTextListFormSubItem = React.forwardRef<
         ...updatedIntervals[index],
         [inputName]: value,
       }
+      console.log(updatedIntervals)
       setIntervals(updatedIntervals)
       onChange(updatedIntervals)
 
@@ -72,7 +72,12 @@ const DoubleTextListFormSubItem = React.forwardRef<
     }
 
     const handleAddClick = (index: number) => {
-      if (intervals[index].input1 === '' || intervals[index].input2 === '') {
+      const {
+        [defaultValueProps.input1]: value1,
+        [defaultValueProps.input2]: value2,
+      } = intervals[index]
+
+      if (value1 === '' || value2 === '') {
         setErrorMessage(
           () =>
             'Você deve preencher todos os campos anteriores antes de adicionar um novo.',
@@ -102,10 +107,14 @@ const DoubleTextListFormSubItem = React.forwardRef<
                 className="font-light w-full py-2 outline-none border-b-[2px] mt-3 border-white bg-gray-800 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
                 type="text"
                 step={60}
-                value={interval.input1}
-                placeholder={OptionValues.input1}
+                value={interval[defaultValueProps.input1]}
+                placeholder={OptionValues[defaultValueProps.input1]}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleInputChange(index, 'input1', e.target.value)
+                  handleInputChange(
+                    index,
+                    defaultValueProps.input1,
+                    e.target.value,
+                  )
                 }
               />
 
@@ -113,10 +122,14 @@ const DoubleTextListFormSubItem = React.forwardRef<
                 className="font-light w-full py-2 outline-none border-b-[2px] mt-3 border-white bg-gray-800 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
                 type="text"
                 step={60}
-                value={interval.input2}
-                placeholder={OptionValues.input2}
+                value={interval[defaultValueProps.input2]}
+                placeholder={OptionValues[defaultValueProps.input2]}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleInputChange(index, 'input2', e.target.value)
+                  handleInputChange(
+                    index,
+                    defaultValueProps.input2,
+                    e.target.value,
+                  )
                 }
               />
             </div>
@@ -155,6 +168,6 @@ const DoubleTextListFormSubItem = React.forwardRef<
     )
   },
 )
-DoubleTextListFormSubItem.displayName = 'FormItem'
+DoubleTextListFormSubItem.displayName = 'doubleTextListSubItem'
 
 export { DoubleTextListFormSubItem }

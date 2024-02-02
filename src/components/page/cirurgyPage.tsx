@@ -115,18 +115,25 @@ export default function CirurgyPage({
       pacient_weight: setCirurgyData?.pacient_weight || '',
       pacient_height: setCirurgyData?.pacient_height || '',
       pacient_allergy: setCirurgyData?.pacient_allergy || '',
-      pacient_allergy_names: setCirurgyData?.pacient_allergy_names || [],
-      pacient_heart_conditions: setCirurgyData?.pacient_heart_conditions || [],
+      pacient_allergy_names: setCirurgyData?.pacient_allergy_names || [''],
+      pacient_heart_conditions: setCirurgyData?.pacient_heart_conditions || [
+        '',
+      ],
       pacient_heart_conditions_observation:
         setCirurgyData?.pacient_heart_conditions_observation || '',
       pacient_disease: setCirurgyData?.pacient_disease || '',
-      pacient_disease_names: setCirurgyData?.pacient_disease_names || [],
-      pacient_medicines: setCirurgyData?.pacient_medicines || [],
+      pacient_disease_names: setCirurgyData?.pacient_disease_names || [''],
+      pacient_medicines: setCirurgyData?.pacient_medicines || [
+        { dose: '', name: '', pills: '' },
+      ],
       pacient_antibiotic: setCirurgyData?.pacient_antibiotic || '',
-      pacient_antibiotics_names:
-        setCirurgyData?.pacient_antibiotics_names || [],
+      pacient_antibiotics_names: setCirurgyData?.pacient_antibiotics_names || [
+        '',
+      ],
       pacient_did_cirurgy: setCirurgyData?.pacient_did_cirurgy || '',
-      pacient_cirurgies: setCirurgyData?.pacient_cirurgies || [],
+      pacient_cirurgies: setCirurgyData?.pacient_cirurgies || [
+        { name: '', year: '' },
+      ],
       pacient_smoke: setCirurgyData?.pacient_smoke || '',
       pacient_started_smoking: setCirurgyData?.pacient_started_smoking || '',
       pacient_stopped_smoking: setCirurgyData?.pacient_stopped_smoking || '',
@@ -135,12 +142,13 @@ export default function CirurgyPage({
       pacient_pack_smoke: setCirurgyData?.pacient_pack_smoke || '',
       pacient_do_physical_activity:
         setCirurgyData?.pacient_do_physical_activity || '',
-      pacient_physical_activity:
-        setCirurgyData?.pacient_physical_activity || [],
+      pacient_physical_activity: setCirurgyData?.pacient_physical_activity || [
+        { name: '', frequency: '' },
+      ],
       pacient_has_anesthetic_complication:
         setCirurgyData?.pacient_has_anesthetic_complication || '',
       pacient_anesthetic_complications:
-        setCirurgyData?.pacient_anesthetic_complications || [],
+        setCirurgyData?.pacient_anesthetic_complications || [''],
       pacient_procedure_summary:
         setCirurgyData?.pacient_procedure_summary || '',
     },
@@ -196,7 +204,11 @@ export default function CirurgyPage({
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <SelectFormItem OptionValues={cirurgies} {...field}>
+                <SelectFormItem
+                  OptionValues={cirurgies}
+                  value={field.value ? field.value : ''}
+                  onChange={field.onChange}
+                >
                   Qual tipo de cirurgia o senhor(a) vai realizar?
                 </SelectFormItem>
               </FormControl>
@@ -283,7 +295,11 @@ export default function CirurgyPage({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <TextListFormSubItem placeholder="Alergia" {...field}>
+                    <TextListFormSubItem
+                      placeholder="Alergia"
+                      onChange={field.onChange}
+                      value={field.value ? field.value : ['']}
+                    >
                       Qual alergia você possui?
                     </TextListFormSubItem>
                   </FormControl>
@@ -302,8 +318,8 @@ export default function CirurgyPage({
                 <FormControl>
                   <CheckboxFormItem
                     OptionValues={cardiacSymptoms}
-                    // onChange={field.onChange}
                     onChange={field.onChange}
+                    value={field.value ? field.value : []}
                     inputValue={(value: boolean) =>
                       handleInputChange(value, setPacientCardiacConditionStyle)
                     }
@@ -372,7 +388,11 @@ export default function CirurgyPage({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <TextListFormSubItem placeholder="Doença" {...field}>
+                    <TextListFormSubItem
+                      placeholder="Doença"
+                      onChange={field.onChange}
+                      value={field.value ? field.value : ['']}
+                    >
                       Quais outras doenças o senhor(a) possui?
                     </TextListFormSubItem>
                   </FormControl>
@@ -396,7 +416,11 @@ export default function CirurgyPage({
                   }}
                   name={field.name}
                   ref={field.ref}
-                  defaultValue={field.value}
+                  defaultValue={
+                    field.value
+                      ? field.value
+                      : [{ dose: '', name: '', pills: '' }]
+                  }
                   onChange={field.onChange}
                 >
                   O senhor(a) faz uso de algum remédio regularmente?
@@ -442,7 +466,11 @@ export default function CirurgyPage({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <TextListFormSubItem placeholder="Antibiótico" {...field}>
+                    <TextListFormSubItem
+                      placeholder="Antibiótico"
+                      onChange={field.onChange}
+                      value={field.value ? field.value : ['']}
+                    >
                       Qual antibiótico usou no último mês?
                     </TextListFormSubItem>
                   </FormControl>
@@ -490,32 +518,16 @@ export default function CirurgyPage({
                   <FormControl>
                     <DoubleTextListFormSubItem
                       OptionValues={{
-                        input1: 'Nome da cirurgia',
-                        input2: 'Ano de realização',
+                        name: 'Nome da cirurgia',
+                        year: 'Ano de realização',
                       }}
                       name={field.name}
                       ref={field.ref}
-                      defaultValue={() => {
-                        const fieldValue: DoubleTextInputProps[] = []
-                        field.value &&
-                          field.value.forEach((element) => {
-                            fieldValue.push({
-                              input1: element.name,
-                              input2: element.year,
-                            })
-                          })
-                        return fieldValue
-                      }}
-                      onChange={(value: DoubleTextInputProps[]) => {
-                        const fieldValue: z.infer<typeof cirurgySchema>[] = []
-                        value.forEach((element) => {
-                          fieldValue.push({
-                            name: element.input1,
-                            year: element.input2,
-                          })
-                        })
-                        field.onChange(fieldValue)
-                      }}
+                      defaultValue={
+                        field.value ? field.value : [{ name: '', year: '' }]
+                      }
+                      defaultValueProps={{ input1: 'name', input2: 'year' }}
+                      onChange={field.onChange}
                     >
                       Qual cirurgia e quando realizou?
                     </DoubleTextListFormSubItem>
@@ -580,7 +592,7 @@ export default function CirurgyPage({
                       OptionValues={['Sim', 'Não']}
                       name={field.name}
                       ref={field.ref}
-                      value={field.value}
+                      value={field.value ? field.value : ''}
                       onChange={field.onChange}
                     >
                       Já parou de fumar?
@@ -658,34 +670,21 @@ export default function CirurgyPage({
                   <FormControl>
                     <DoubleTextListFormSubItem
                       OptionValues={{
-                        input1: 'Nome da atividade',
-                        input2: 'Frequencia por semana',
+                        name: 'Nome da atividade',
+                        frequency: 'Frequencia por semana',
                       }}
                       name={field.name}
                       ref={field.ref}
-                      defaultValue={() => {
-                        const fieldValue: DoubleTextInputProps[] = []
-                        field.value &&
-                          field.value.forEach((element) => {
-                            fieldValue.push({
-                              input1: element.name,
-                              input2: element.frequency,
-                            })
-                          })
-                        return fieldValue
+                      defaultValue={
+                        field.value
+                          ? field.value
+                          : [{ name: '', frequency: '' }]
+                      }
+                      defaultValueProps={{
+                        input1: 'name',
+                        input2: 'frequency',
                       }}
-                      onChange={(value: DoubleTextInputProps[]) => {
-                        const fieldValue: z.infer<
-                          typeof physicalActivitySchema
-                        >[] = []
-                        value.forEach((element) => {
-                          fieldValue.push({
-                            name: element.input1,
-                            frequency: element.input2,
-                          })
-                        })
-                        field.onChange(fieldValue)
-                      }}
+                      onChange={field.onChange}
                     >
                       Qual atividade e quantas vezes na semana?
                     </DoubleTextListFormSubItem>
@@ -732,7 +731,11 @@ export default function CirurgyPage({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <TextListFormSubItem placeholder="Complicação" {...field}>
+                    <TextListFormSubItem
+                      placeholder="Complicação"
+                      onChange={field.onChange}
+                      value={field.value ? field.value : ['']}
+                    >
                       Qual(ais) complicação(ões)?
                     </TextListFormSubItem>
                   </FormControl>
@@ -750,12 +753,10 @@ export default function CirurgyPage({
               <FormControl>
                 <RadioFormItem
                   OptionValues={['Sim', 'Não']}
-                  accept="Sim"
                   name={field.name}
                   ref={field.ref}
                   value={field.value}
                   onChange={field.onChange}
-                  className={pacientAtibioticStyle[0]}
                 >
                   Gostaria de receber um resumo do procedimento que irá
                   realizar?

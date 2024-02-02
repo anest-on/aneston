@@ -60,14 +60,16 @@ export default function PacientPage({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      pacient_name: setPacientData?.pacient_name,
-      pacient_birthdate: setPacientData?.pacient_birthdate,
-      pacient_gender: setPacientData?.pacient_gender,
-      pacient_email: setPacientData?.pacient_email,
-      pacient_number: setPacientData?.pacient_number,
-      pacient_healthInsurance: setPacientData?.pacient_healthInsurance,
-      pacient_healthInsuranceName: setPacientData?.pacient_healthInsuranceName,
-      pacient_healthInsuranceId: setPacientData?.pacient_healthInsuranceId,
+      pacient_name: setPacientData?.pacient_name || '',
+      pacient_birthdate: setPacientData?.pacient_birthdate || '',
+      pacient_gender: setPacientData?.pacient_gender || '',
+      pacient_email: setPacientData?.pacient_email || '',
+      pacient_number: setPacientData?.pacient_number || '',
+      pacient_healthInsurance: setPacientData?.pacient_healthInsurance || '',
+      pacient_healthInsuranceName:
+        setPacientData?.pacient_healthInsuranceName || '',
+      pacient_healthInsuranceId:
+        setPacientData?.pacient_healthInsuranceId || '',
     },
   })
 

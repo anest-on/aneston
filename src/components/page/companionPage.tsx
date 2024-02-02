@@ -47,10 +47,10 @@ export default function CompanionPage({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      companion_name: setCompanionData?.companion_name,
-      companion_kinship: setCompanionData?.companion_kinship,
-      companion_email: setCompanionData?.companion_email,
-      companion_number: setCompanionData?.companion_number,
+      companion_name: setCompanionData?.companion_name || '',
+      companion_kinship: setCompanionData?.companion_kinship || '',
+      companion_email: setCompanionData?.companion_email || '',
+      companion_number: setCompanionData?.companion_number || '',
     },
   })
 
