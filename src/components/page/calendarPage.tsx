@@ -3,6 +3,7 @@
 import CalendarIntermediary from '@/components/page/calendarIntermediary'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { prisma } from '@/lib/prisma'
+import { useState } from 'react'
 
 const CalendarPage = async ({ params }: { params: { user_link: string } }) => {
   const doctor = await prisma.user.findFirst({
@@ -31,7 +32,7 @@ const CalendarPage = async ({ params }: { params: { user_link: string } }) => {
       </div>
 
       <div className="w-[35%] flex relative my-6 mx-0 p-0 bg-gray-800 border rounded-lg border-solid border-gray-600">
-        <CalendarIntermediary />
+        <CalendarIntermediary onSelectDateTime={setSelectedDateTime} />
       </div>
     </div>
   )
