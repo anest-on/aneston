@@ -8,10 +8,14 @@ import PacientPage, { pacientSubmitProps } from '@/components/page/pacientPage'
 import CirurgyPage, { cirurgySubmitProps } from '@/components/page/cirurgyPage'
 import { Button } from '@/components/ui/button'
 
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import SummaryPage from '@/components/page/summaryPage'
 
-const Questionary = () => {
+const FormBody = ({
+  doctor,
+}: {
+  doctor: { avatar_url: string; name: string; state: string; city: string }
+}) => {
   const [pacientData, setPacientData] = useState<pacientSubmitProps | null>(
     null,
   )
@@ -23,7 +27,7 @@ const Questionary = () => {
     null,
   )
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(5)
 
   function handleCirurgySubmit(values: cirurgySubmitProps | null) {
     if (values) {
@@ -78,12 +82,23 @@ const Questionary = () => {
             confidenciais e essenciais para um cuidado médico de alta qualidade.
           </p>
 
-          <MultiStep size={3} currentStep={1} />
+          <MultiStep size={5} currentStep={step} />
         </div>
 
         <div className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid gap-4 border-gray-600 mt-6">
           <h3 className="text-white text-[1.2rem]">
-            <b>Dados de Identificação do Paciente</b>
+            <b>
+              {
+                {
+                  1: 'Identificação do paciente',
+                  2: 'Identificação do acompanhante',
+                  3: 'Informações da cirurgia',
+                  4: 'Agendamento da consulta',
+                  5: 'Resumo das informações',
+                  // 5: '',
+                }[step]
+              }
+            </b>
           </h3>
 
           {
@@ -107,7 +122,8 @@ const Questionary = () => {
                 />
               ),
               4: <Button onClick={() => setStep(3)}>Voltar</Button>,
-              5: 'confirmation in progress',
+              5: <SummaryPage doctor={doctor} />,
+              // 5: '',
             }[step]
           }
         </div>
@@ -116,4 +132,4 @@ const Questionary = () => {
   )
 }
 
-export default Questionary
+export default FormBody
