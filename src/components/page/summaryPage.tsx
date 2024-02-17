@@ -1,13 +1,31 @@
 /* eslint-disable @next/next/no-async-client-component */
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
-import SummaryContent from './summaryContent'
+import SummaryContent, { SummaryProps } from './summaryContent'
+
+import { pacientSubmitProps } from './pacientPage'
+import { companionSubmitProps } from './companionPage'
+import { cirurgySubmitProps } from './cirurgyPage'
+
+export interface doctorProps {
+  avatar_url: string
+  name: string
+  state: string
+  city: string
+}
+
+interface SummaryPageProps extends SummaryProps {
+  doctor: doctorProps
+}
 
 const SummaryPage = ({
   doctor,
-}: {
-  doctor: { avatar_url: string; name: string; state: string; city: string }
-}) => {
+  pacientData,
+  companionData,
+  cirurgyData,
+  setObservationsData,
+  getSummaryData,
+}: SummaryPageProps) => {
   return (
     <div className="flex flex-col items-center">
       <div className="max-w-[852px] py-0 px-4 my-4 mx-20">
@@ -28,7 +46,13 @@ const SummaryPage = ({
         </div>
       </div>
 
-      <SummaryContent />
+      <SummaryContent
+        cirurgyData={cirurgyData}
+        companionData={companionData}
+        pacientData={pacientData}
+        setObservationsData={setObservationsData}
+        getSummaryData={getSummaryData}
+      />
     </div>
   )
 }

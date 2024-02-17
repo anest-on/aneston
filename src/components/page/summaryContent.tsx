@@ -21,54 +21,53 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Calendar, Clock } from 'lucide-react'
 import { Textarea } from '../ui/textarea'
+import { pacientSubmitProps } from './pacientPage'
+import { companionSubmitProps } from './companionPage'
+import { cirurgySubmitProps } from './cirurgyPage'
 
-const updateProfileSchema = z.object({
-  user_link: z
-    .string()
-    .min(3, { message: 'O link precisa ter pelo menos três letras.' })
-    .regex(/^([a-z\\-]+)$/i, {
-      message: 'O link precisa ter apenas letras e hifens.',
-    })
-    .transform((userLink) => userLink.toLowerCase()),
-  name: z
-    .string()
-    .min(3, { message: 'O nome precisa ter pelo menos três letras.' }),
-  email: z.string().email({ message: 'Digite um e-mail válido.' }),
-  city: z.string(),
-  state: z.string().max(2, { message: 'Digite apenas a sigla do estado.' }),
+const summaryFormSchema = z.object({
+  pacient_name: z.string(),
+  pacient_contact: z.string(),
+  pacient_observations: z.string().optional(),
 })
 
-type UpdateProfileData = z.infer<typeof updateProfileSchema>
+export type summarySubmitProps = z.infer<typeof summaryFormSchema>
 
-const SummaryContent = () => {
-  const session = useSession()
+export interface SummaryProps {
+  pacientData?: pacientSubmitProps | null
+  companionData?: companionSubmitProps | null
+  cirurgyData?: cirurgySubmitProps | null
+  setObservationsData?: { observation: string } | null
+  getSummaryData: (value: summarySubmitProps | null) => void
+}
 
-  const form = useForm<z.infer<typeof updateProfileSchema>>({
-    resolver: zodResolver(updateProfileSchema),
+const SummaryContent = ({
+  pacientData,
+  companionData,
+  cirurgyData,
+  setObservationsData,
+  getSummaryData,
+}: SummaryProps) => {
+  const form = useForm<z.infer<typeof summaryFormSchema>>({
+    resolver: zodResolver(summaryFormSchema),
     defaultValues: {
-      user_link: session.data?.user.user_link || '',
-      name: session.data?.user.name || '',
-      email: session.data?.user.email || '',
-      city: session.data?.user.city || '',
-      state: session.data?.user.state || '',
+      pacient_name: pacientData?.pacient_name || '',
+      pacient_contact: pacientData?.pacient_number || '',
+      pacient_observations: setObservationsData?.observation || '',
     },
   })
 
   const { isSubmitting } = form.formState
 
-  const [userLinkAlredyTakenMessage, setUserLinkAlredyTakenMessage] = useState<
-    string | null
-  >(null)
-
-  const handleUpdateProfile = async (data: UpdateProfileData) => {
-    console.log(data)
+  const handleUpdateProfile = async (data: summarySubmitProps) => {
+    getSummaryData(data)
   }
 
   return (
     <div className="max-w-[572px] mb-20 mx-auto py-0 px-4">
       <div className="flex flex-row items-center justify-center text-[0.8rem] gap-10 mt-8">
         <div className="flex items-center">
-          <Calendar size={18} />{' '}
+          <Calendar size={18} />
           <p className="ml-1 text-gray-100">22 de setembro de 2023</p>
         </div>
         <div className="flex items-center">
@@ -83,7 +82,7 @@ const SummaryContent = () => {
           <div className="flex flex-col w-full mr-4">
             <FormField
               control={form.control}
-              name="user_link"
+              name="pacient_name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nome do paciente</FormLabel>
@@ -99,7 +98,7 @@ const SummaryContent = () => {
           <div className="flex flex-col">
             <FormField
               control={form.control}
-              name="name"
+              name="pacient_contact"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contato</FormLabel>
@@ -115,7 +114,7 @@ const SummaryContent = () => {
           <div className="flex flex-col min-w-[350px]">
             <FormField
               control={form.control}
-              name="name"
+              name="pacient_observations"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Observações</FormLabel>
@@ -128,7 +127,18 @@ const SummaryContent = () => {
             />
           </div>
 
-          <Button disabled={isSubmitting}>Enviar formulário</Button>
+          <div className="flex flex-row w-full justify-between px-5">
+            <Button
+              variant={'circle'}
+              className="w-[150px] rounded-md"
+              onClick={() => getSummaryData(null)}
+            >
+              Voltar
+            </Button>
+            <Button variant={'default'} className="w-[150px]" type="submit">
+              Continuar
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

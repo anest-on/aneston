@@ -19,7 +19,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
-const formSchema = z.object({
+export const companionFormSchema = z.object({
   companion_name: z.string().min(2, {
     message: 'user_link must be at least 2 characters.',
   }),
@@ -44,8 +44,8 @@ export default function CompanionPage({
   getCompanionData,
   setCompanionData,
 }: companionPageProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof companionFormSchema>>({
+    resolver: zodResolver(companionFormSchema),
     defaultValues: {
       companion_name: setCompanionData?.companion_name || '',
       companion_kinship: setCompanionData?.companion_kinship || '',
@@ -54,7 +54,7 @@ export default function CompanionPage({
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof companionFormSchema>) {
     getCompanionData(values)
   }
 

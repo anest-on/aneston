@@ -12,18 +12,6 @@ export interface MedicineProps {
   pills: string
 }
 
-class MedicineTypeProps implements MedicineProps {
-  name = ''
-  dose = ''
-  pills = ''
-
-  constructor(input1: string, input2: string, input3: string) {
-    this.name = input1
-    this.dose = input2
-    this.pills = input3
-  }
-}
-
 export interface InputProps
   extends Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
@@ -31,7 +19,7 @@ export interface InputProps
   > {
   OptionValues: MedicineProps
   defaultValue: MedicineProps[]
-  defaultValueProps: { input1: string; input2: string; input3: string }
+  defaultValueProps?: { input1: string; input2: string; input3: string }
   onChange: (value: MedicineProps[]) => void
 }
 

@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 
 import { useEffect, useState } from 'react'
 import SummaryPage from '@/components/page/summaryPage'
+import { summarySubmitProps } from '@/components/page/summaryContent'
 
 const FormBody = ({
   doctor,
@@ -27,7 +28,11 @@ const FormBody = ({
     null,
   )
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(5)
+  const [summaryData, setSummaryData] = useState<summarySubmitProps | null>(
+    null,
+  )
+
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(3)
 
   function handleCirurgySubmit(values: cirurgySubmitProps | null) {
     if (values) {
@@ -54,17 +59,27 @@ const FormBody = ({
     }
   }
 
+  function handleSummarySubmit(values: summarySubmitProps | null) {
+    if (values) {
+      setSummaryData(values)
+      console.log(values)
+    } else {
+      setStep(4)
+    }
+  }
+
   useEffect(() => {
     console.log(pacientData)
     console.log(companionData)
     console.log(cirurgyData)
+    console.log(summaryData)
 
     // pacientData && companionData
     //   ? setStep(3)
     //   : pacientData && !companionData
     //     ? setStep(2)
     //     : setStep(1)
-  }, [cirurgyData, companionData, pacientData])
+  }, [cirurgyData, companionData, pacientData, summaryData])
 
   return (
     <main className="max-w-[800px] justify-center items-center mx-auto my-20  ">
@@ -95,7 +110,6 @@ const FormBody = ({
                   3: 'Informações da cirurgia',
                   4: 'Agendamento da consulta',
                   5: 'Resumo das informações',
-                  // 5: '',
                 }[step]
               }
             </b>
@@ -121,8 +135,27 @@ const FormBody = ({
                   setCirurgyData={cirurgyData}
                 />
               ),
-              4: <Button onClick={() => setStep(3)}>Voltar</Button>,
-              5: <SummaryPage doctor={doctor} />,
+              4: (
+                <div className="flex flex-col gap-4">
+                  Work in progress
+                  <Button onClick={() => setStep(3)}>Voltar</Button>
+                  <Button onClick={() => setStep(5)}>próximo</Button>
+                </div>
+              ),
+              5: (
+                <SummaryPage
+                  doctor={doctor}
+                  cirurgyData={cirurgyData}
+                  companionData={companionData}
+                  pacientData={pacientData}
+                  setObservationsData={{
+                    observation: summaryData?.pacient_observations
+                      ? summaryData?.pacient_observations
+                      : '',
+                  }}
+                  getSummaryData={handleSummarySubmit}
+                />
+              ),
               // 5: '',
             }[step]
           }
