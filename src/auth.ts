@@ -60,6 +60,14 @@ export const {
         session.user.user_link = token.user_link
       }
 
+      if (token.state && session.user) {
+        session.user.state = token.state
+      }
+
+      if (token.city && session.user) {
+        session.user.city = token.city
+      }
+
       return session
     },
     async jwt({ token }) {
@@ -71,6 +79,8 @@ export const {
       token.accessType = existingUser.access_type
       token.avatar_url = existingUser.avatar_url
       token.user_link = existingUser.user_link
+      token.state = existingUser.state
+      token.city = existingUser.city
 
       return token
     },

@@ -133,7 +133,7 @@ export function Header() {
 
                   <Button
                     onClick={() => {
-                      router.push('/not-found')
+                      router.push('/time-intervals')
                     }}
                     variant={'ghost'}
                     className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
@@ -143,7 +143,7 @@ export function Header() {
 
                   <Button
                     onClick={() => {
-                      router.push('/my-account')
+                      router.push('/profile')
                     }}
                     variant={'ghost'}
                     className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
@@ -153,7 +153,7 @@ export function Header() {
 
                   <Button
                     onClick={() => {
-                      router.push('/my-account')
+                      router.push('/access-configuration')
                     }}
                     variant={'ghost'}
                     className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
@@ -169,16 +169,6 @@ export function Header() {
                     className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
                   >
                     Configurações
-                  </Button>
-
-                  <Button
-                    onClick={() => {
-                      router.push('/my-account')
-                    }}
-                    variant={'ghost'}
-                    className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
-                  >
-                    Gestão de consultas
                   </Button>
                   <div className="w-full h-[1px] mt-4 bg-gray-500" />
                   <Button
@@ -250,7 +240,9 @@ export function Header() {
                 Pacientes
               </Button>
               <Button
-                onClick={() => router.push('/not-found')}
+                onClick={() => {
+                  router.push('/time-intervals')
+                }}
                 variant={'ghost'}
                 className={`${schedulesButton} h-full rounded-none flex items-center text-md hover:text-green-500`}
               >
@@ -280,6 +272,9 @@ export function Header() {
                     <Button
                       className="text-sm w-[180px] justify-start hover:bg-gray-600"
                       variant={'ghost'}
+                      onClick={() => {
+                        router.push('/profile')
+                      }}
                     >
                       Meu perfil
                     </Button>
@@ -288,6 +283,9 @@ export function Header() {
                     <Button
                       className="text-sm w-[180px] justify-start hover:bg-gray-600"
                       variant={'ghost'}
+                      onClick={() => {
+                        router.push('/access-configuration')
+                      }}
                     >
                       Config. Acessos
                     </Button>
@@ -298,14 +296,6 @@ export function Header() {
                       variant={'ghost'}
                     >
                       Configurações
-                    </Button>
-                  </MenubarItem>
-                  <MenubarItem className="flex justify-center mt-2">
-                    <Button
-                      className="text-sm w-[180px] justify-start hover:bg-gray-600"
-                      variant={'ghost'}
-                    >
-                      Gestão de consultas
                     </Button>
                   </MenubarItem>
 
