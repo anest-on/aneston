@@ -43,11 +43,6 @@ const physicalActivitySchema = z.object({
   frequency: z.string(),
 })
 
-const heartConditionsSchema = z.object({
-  value: z.string(),
-  checked: z.boolean(),
-})
-
 const formSchema = z.object({
   cirurgy_name: z.string().optional(),
   cirurgy_physician: z.string().optional(),

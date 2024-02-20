@@ -6,9 +6,57 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "postgresql"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
+}
+
+model Form {
+  id                          String  @id @default(uuid())
+  doctor_id                   String
+  pacient_name                String
+  pacient_birthdate           String
+  pacient_gender              String
+  pacient_email               String
+  pacient_number              String
+  pacient_healthInsurance     String
+  pacient_healthInsuranceName String?
+  pacient_healthInsuranceId   String?
+
+  companion_name    String
+  companion_kinship String
+  companion_email   String
+  companion_number  String
+
+  cirurgy_name                         String?
+  cirurgy_physician                    String?
+  pacient_weight                       String?
+  pacient_height                       String?
+  pacient_allergy                      String?
+  pacient_allergy_names                String[]
+  pacient_heart_conditions             String[]
+  pacient_heart_conditions_observation String?
+  pacient_disease                      String?
+  pacient_disease_names                String[]
+  pacient_medicines                    Json[]
+  pacient_antibiotic                   String?
+  pacient_antibiotics_names            String[]
+  pacient_did_cirurgy                  String?
+  pacient_cirurgies                    Json[]
+  pacient_smoke                        String?
+  pacient_started_smoking              String?
+  pacient_stopped_smoking              String?
+  pacient_when_stop_smoking            String?
+  pacient_pack_smoke                   String?
+  pacient_do_physical_activity         String?
+  pacient_physical_activity            Json[]
+  pacient_has_anesthetic_complication  String?
+  pacient_anesthetic_complications     String[]
+  pacient_procedure_summary            String?
+
+  doctor User @relation(fields: [doctor_id], references: [id])
+
+  @@index([doctor_id])
 }
 
 model User {
@@ -30,6 +78,7 @@ model User {
 
   accounts         Account[]
   UserTimeInterval UserTimeInterval[]
+  Form             Form[]
 }
 
 model UserTimeInterval {

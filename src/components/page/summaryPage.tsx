@@ -12,6 +12,7 @@ export interface doctorProps {
   name: string
   state: string
   city: string
+  user_link: string
 }
 
 interface SummaryPageProps extends SummaryProps {
@@ -52,6 +53,7 @@ const SummaryPage = ({
         pacientData={pacientData}
         setObservationsData={setObservationsData}
         getSummaryData={getSummaryData}
+        doctorLink={doctor.user_link}
       />
     </div>
   )

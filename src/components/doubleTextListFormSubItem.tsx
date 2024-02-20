@@ -63,7 +63,7 @@ const DoubleTextListFormSubItem = React.forwardRef<
         ...updatedIntervals[index],
         [inputName]: value,
       }
-      console.log(updatedIntervals)
+      // console.log(updatedIntervals)
       setIntervals(updatedIntervals)
       onChange(updatedIntervals)
 

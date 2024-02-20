@@ -14,6 +14,7 @@ const Form = async ({ params }: { params: { user_link: string } }) => {
         city: doctor && doctor.city ? doctor.city : '',
         name: doctor && doctor.name ? doctor.name : '',
         state: doctor && doctor?.state ? doctor.state : '',
+        user_link: params.user_link,
       }}
     />
   )

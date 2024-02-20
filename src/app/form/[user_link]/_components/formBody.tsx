@@ -9,14 +9,10 @@ import CirurgyPage, { cirurgySubmitProps } from '@/components/page/cirurgyPage'
 import { Button } from '@/components/ui/button'
 
 import { useEffect, useState } from 'react'
-import SummaryPage from '@/components/page/summaryPage'
+import SummaryPage, { doctorProps } from '@/components/page/summaryPage'
 import { summarySubmitProps } from '@/components/page/summaryContent'
 
-const FormBody = ({
-  doctor,
-}: {
-  doctor: { avatar_url: string; name: string; state: string; city: string }
-}) => {
+const FormBody = ({ doctor }: { doctor: doctorProps }) => {
   const [pacientData, setPacientData] = useState<pacientSubmitProps | null>(
     null,
   )

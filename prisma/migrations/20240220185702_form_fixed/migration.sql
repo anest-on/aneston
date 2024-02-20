@@ -1,0 +1,18 @@
+-- AlterTable
+ALTER TABLE "Form" ALTER COLUMN "cirurgy_name" DROP NOT NULL,
+ALTER COLUMN "cirurgy_physician" DROP NOT NULL,
+ALTER COLUMN "pacient_weight" DROP NOT NULL,
+ALTER COLUMN "pacient_height" DROP NOT NULL,
+ALTER COLUMN "pacient_allergy" DROP NOT NULL,
+ALTER COLUMN "pacient_heart_conditions_observation" DROP NOT NULL,
+ALTER COLUMN "pacient_disease" DROP NOT NULL,
+ALTER COLUMN "pacient_disease" SET DATA TYPE TEXT,
+ALTER COLUMN "pacient_did_cirurgy" DROP NOT NULL,
+ALTER COLUMN "pacient_smoke" DROP NOT NULL,
+ALTER COLUMN "pacient_started_smoking" DROP NOT NULL,
+ALTER COLUMN "pacient_stopped_smoking" DROP NOT NULL,
+ALTER COLUMN "pacient_when_stop_smoking" DROP NOT NULL,
+ALTER COLUMN "pacient_pack_smoke" DROP NOT NULL,
+ALTER COLUMN "pacient_do_physical_activity" DROP NOT NULL,
+ALTER COLUMN "pacient_has_anesthetic_complication" DROP NOT NULL,
+ALTER COLUMN "pacient_procedure_summary" DROP NOT NULL;
