@@ -1,8 +1,6 @@
 /* eslint-disable camelcase */
-import bcrypt from 'bcryptjs'
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from 'next/server'
-import { randomUUID } from 'crypto'
 import { auth } from '@/auth'
 
 const prisma = new PrismaClient()
@@ -112,4 +110,89 @@ export async function POST(req: Request) {
   })
 
   return NextResponse.json(form)
+}
+
+export async function GET() {
+  try {
+    const session = await auth()
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 })
+    }
+
+    const patient = await prisma.form.findMany({
+      where: {
+        doctor_id: session.user.id,
+      },
+    })
+
+    return NextResponse.json(patient)
+  } catch (error) {
+    return new NextResponse('Internal Error', { status: 500 })
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const session = await auth()
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 })
+    }
+    const body = await req.json()
+    const { name, cellNumber, doctorId } = body
+
+    const patient = await prisma.form.findFirst({
+      where: {
+        doctor_id: doctorId,
+        pacient_name: name,
+        pacient_number: cellNumber,
+      },
+    })
+
+    if (!patient) {
+      return new NextResponse('Internal Error', { status: 400 })
+    }
+
+    await prisma.form.delete({ where: { id: patient.id } })
+
+    return NextResponse.json(patient)
+  } catch (err) {
+    return new NextResponse('Internal Error', { status: 500 })
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const session = await auth()
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 })
+    }
+
+    const body = await req.json()
+    const { name, surgery, cellNumber, createdAt, doctorId } = body
+
+    const patient = await prisma.form.findFirst({
+      where: {
+        doctor_id: doctorId,
+        pacient_number: cellNumber,
+      },
+    })
+
+    if (!patient) {
+      return new NextResponse('Internal Error', { status: 400 })
+    }
+
+    const patientUpdated = await prisma.form.update({
+      where: {
+        id: patient?.id,
+      },
+      data: {
+        pacient_name: name,
+        cirurgy_name: surgery,
+        doctor_id: doctorId,
+      },
+    })
+    return NextResponse.json(patientUpdated)
+  } catch (error) {
+    return new NextResponse('Internal Error', { status: 500 })
+  }
 }

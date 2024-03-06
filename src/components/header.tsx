@@ -163,12 +163,22 @@ export function Header() {
 
                   <Button
                     onClick={() => {
-                      router.push('/config')
+                      router.push('/configuration')
                     }}
                     variant={'ghost'}
                     className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
                   >
                     Configurações
+                  </Button>
+
+                  <Button
+                    onClick={() => {
+                      router.push('/appointments-management')
+                    }}
+                    variant={'ghost'}
+                    className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
+                  >
+                    Gestão de consultas
                   </Button>
                   <div className="w-full h-[1px] mt-4 bg-gray-500" />
                   <Button
@@ -294,8 +304,22 @@ export function Header() {
                     <Button
                       className="text-sm w-[180px] justify-start hover:bg-gray-600"
                       variant={'ghost'}
+                      onClick={() => {
+                        router.push('/configuration')
+                      }}
                     >
                       Configurações
+                    </Button>
+                  </MenubarItem>
+                  <MenubarItem className="flex justify-center mt-2">
+                    <Button
+                      className="text-sm w-[180px] justify-start hover:bg-gray-600"
+                      variant={'ghost'}
+                      onClick={() => {
+                        router.push('/appointments-management')
+                      }}
+                    >
+                      Gestão de consultas
                     </Button>
                   </MenubarItem>
 
