@@ -23,6 +23,7 @@ import { Input } from './ui/input'
 import { useState } from 'react'
 import { Button } from './ui/button'
 import { Pencil, Trash } from 'lucide-react'
+import { formPatientInterface } from '@/app/appointments-management/page'
 
 export type Patient = {
   name: string
@@ -40,7 +41,7 @@ const updatePatientSchema = z.object({
   cellNumber: z
     .string()
     .min(6, { message: 'Digite um número de telefone válido.' }),
-  createdAt: z.string().datetime(),
+  createdAt: z.string(),
   doctorId: z.string(),
 })
 
@@ -53,8 +54,8 @@ export type DeletePatientData = {
 }
 
 interface ThirdPartyUserProps {
-  patient: Patient
-  handleSubmit: (data: UpdatePatientData) => void
+  patient: formPatientInterface
+  handleSubmit: (data: formPatientInterface) => void
   handleDelete: (data: DeletePatientData) => void
 }
 
@@ -68,37 +69,40 @@ export function PatientForm({
   const updateForm = useForm<z.infer<typeof updatePatientSchema>>({
     resolver: zodResolver(updatePatientSchema),
     defaultValues: {
-      name: patient.name,
-      surgery: patient.surgery,
-      cellNumber: patient.cellNumber,
-      createdAt: patient.createdAt,
-      doctorId: patient.doctorId!,
+      name: patient.pacient_name,
+      surgery: patient.cirurgy_name,
+      cellNumber: patient.pacient_number,
+      createdAt: '',
+      doctorId: patient.doctor_id!,
     },
   })
 
   const { isSubmitting } = updateForm.formState
 
   const onSubmit = (values: z.infer<typeof updatePatientSchema>) => {
-    handleSubmit && handleSubmit(values)
-    console.log(patient)
+    const newPatient = patient
+    newPatient.pacient_name = values.name
+    newPatient.cirurgy_name = values.surgery
+    newPatient.pacient_number = values.cellNumber
+    handleSubmit && handleSubmit(newPatient)
   }
 
   const onDelete = () => {
     handleDelete &&
       handleDelete({
-        name: patient.name,
-        cellNumber: patient.cellNumber,
-        doctorId: patient.doctorId!,
+        name: patient.pacient_name,
+        cellNumber: patient.pacient_number,
+        doctorId: patient.doctor_id!,
       })
   }
 
   return (
     <TableRow className="border-b border-gray-600">
       <TableCell className="hidden items-center md:flex">
-        {patient.cellNumber}
+        {patient.pacient_number}
       </TableCell>
-      <TableCell>{patient.name}</TableCell>
-      <TableCell>{patient.createdAt}</TableCell>
+      <TableCell>{patient.pacient_name}</TableCell>
+      <TableCell>{}</TableCell>
 
       <TableCell>
         <div className="flex gap-4 justify-end">
@@ -175,7 +179,9 @@ export function PatientForm({
                         Cancelar
                       </Button>
                     </DialogClose>
-                    <Button className="w-[150px]">Confirmar Alterações</Button>
+                    <Button type="submit" className="w-[150px]">
+                      Confirmar Alterações
+                    </Button>
                   </div>
                 </form>
               </Form>

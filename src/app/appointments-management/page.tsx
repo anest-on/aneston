@@ -26,6 +26,9 @@ import {
   PatientForm,
   UpdatePatientData,
 } from '@/components/patientForm'
+import { pacientSubmitProps } from '../../components/page/pacientPage'
+import { companionSubmitProps } from '../../components/page/companionPage'
+import { cirurgySubmitProps } from '../../components/page/cirurgyPage'
 
 const patientSchema = z.object({
   name: z
@@ -35,9 +38,17 @@ const patientSchema = z.object({
   cellNumber: z
     .string()
     .min(6, { message: 'Digite um número de telefone válido.' }),
-  createdAt: z.string().datetime(),
+  createdAt: z.string(),
   doctorId: z.string(),
 })
+
+export interface formPatientInterface
+  extends pacientSubmitProps,
+    cirurgySubmitProps,
+    companionSubmitProps {
+  id: string
+  doctor_id: string
+}
 
 const AccessConfiguration = () => {
   const session = useSession()
@@ -56,10 +67,12 @@ const AccessConfiguration = () => {
 
   const { isSubmitting } = form.formState
 
-  const [patients, setPatients] = useState<Patient[]>([])
+  const [patients, setPatients] = useState<formPatientInterface[]>([])
 
   const patientsList = useCallback(async () => {
     const response = await api.get('form')
+
+    console.log(response.data)
 
     setPatients(response.data)
   }, [])
@@ -71,9 +84,9 @@ const AccessConfiguration = () => {
   const [openCreateUser, setOpenCreateUser] = useState(false)
   const [openUpdateUser, setOpenUpdateUser] = useState(false)
 
-  const handleUpdatePatient = async (data: UpdatePatientData) => {
+  const handleUpdatePatient = async (data: formPatientInterface) => {
     const doctorId = session.data?.user.id
-    if (doctorId) data.doctorId = doctorId
+    if (doctorId) data.doctor_id = doctorId
 
     try {
       await api.put('/form', data)
@@ -139,14 +152,16 @@ const AccessConfiguration = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {patients.map((patient) => (
-                  <PatientForm
-                    patient={patient}
-                    handleSubmit={handleUpdatePatient}
-                    handleDelete={handleDeletePatient}
-                    key={patient.cellNumber}
-                  />
-                ))}
+                {patients.map((patient) => {
+                  return (
+                    <PatientForm
+                      patient={patient}
+                      handleSubmit={handleUpdatePatient}
+                      handleDelete={handleDeletePatient}
+                      key={patient.id}
+                    />
+                  )
+                })}
               </TableBody>
             </Table>
           )}

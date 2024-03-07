@@ -168,12 +168,13 @@ export async function PUT(req: Request) {
     }
 
     const body = await req.json()
-    const { name, surgery, cellNumber, createdAt, doctorId } = body
+    const { pacient_name, cirurgy_name, pacient_number, createdAt, doctor_id } =
+      body
 
     const patient = await prisma.form.findFirst({
       where: {
-        doctor_id: doctorId,
-        pacient_number: cellNumber,
+        doctor_id,
+        pacient_number,
       },
     })
 
@@ -186,9 +187,9 @@ export async function PUT(req: Request) {
         id: patient?.id,
       },
       data: {
-        pacient_name: name,
-        cirurgy_name: surgery,
-        doctor_id: doctorId,
+        pacient_name,
+        cirurgy_name,
+        doctor_id,
       },
     })
     return NextResponse.json(patientUpdated)
