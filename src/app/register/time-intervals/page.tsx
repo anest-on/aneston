@@ -33,6 +33,7 @@ const timeIntervalsFormSchema = z.object({
     })
     .transform((intervals) => {
       return intervals.map((interval) => {
+        // console.log(interval)
         return {
           weekDay: interval.weekDay,
           startTimeInMinutes: convertTimeStringToMinutes(interval.startTime),
@@ -57,6 +58,29 @@ const timeIntervalsFormSchema = z.object({
     .refine((appointmentTime) => appointmentTime > 0, {
       message: 'O tempo de duração da consulta deve ser maior que 0 minutos.',
     }),
+  breakIntervals: z
+    .array(
+      z.object({ weekDay: z.string(), start: z.string(), end: z.string() }),
+    )
+    .transform((intervals) => {
+      return intervals.map((interval) => {
+        // console.log(interval)
+        return {
+          weekDay: interval.weekDay,
+          start: convertTimeStringToMinutes(interval.start),
+          end: convertTimeStringToMinutes(interval.end),
+        }
+      })
+    })
+    .refine(
+      (intervals) => {
+        return intervals.every((interval) => interval.end > interval.start)
+      },
+      {
+        message:
+          'O horário de início do intervalo deve ocorrer antes do horário de término.',
+      },
+    ),
 })
 
 type TimeIntervalsFormInput = z.input<typeof timeIntervalsFormSchema>
@@ -67,12 +91,7 @@ const Register = () => {
     resolver: zodResolver(timeIntervalsFormSchema),
     defaultValues: {
       intervals: [
-        {
-          weekDay: 0,
-          enabled: false,
-          startTime: '08:00',
-          endTime: '18:00',
-        },
+        { weekDay: 0, enabled: false, startTime: '08:00', endTime: '18:00' },
         { weekDay: 1, enabled: true, startTime: '08:00', endTime: '18:00' },
         { weekDay: 2, enabled: true, startTime: '08:00', endTime: '18:00' },
         { weekDay: 3, enabled: true, startTime: '08:00', endTime: '18:00' },
@@ -81,6 +100,7 @@ const Register = () => {
         { weekDay: 6, enabled: false, startTime: '08:00', endTime: '18:00' },
       ],
       appointmentTime: '00:30',
+      breakIntervals: [],
     },
   })
 
@@ -139,8 +159,8 @@ const Register = () => {
   async function handleSetTimeIntervals(data: unknown) {
     // setSelectedIntervals(data.intervals)
     // console.log('Intervals from IntervalForm:', data.intervals)
-
     const { intervals, appointmentTime } = data as TimeIntervalsFormOutput
+    // console.log(intervals, selectedIntervals)
     await api.post('/users/time-intervals', { intervals, appointmentTime })
     router.push('/register/pricing')
   }
@@ -218,8 +238,9 @@ const Register = () => {
 
                   {showIntervalForms[index] && (
                     <IntervalItem
-                      dayOfWeek={getDayOfWeek(index)}
+                      // dayOfWeek={getDayOfWeek(index)}
                       onChange={handleIntervalChange}
+                      {...form.register(``)}
                     />
                   )}
                   {index < fields.length - 1 && (
