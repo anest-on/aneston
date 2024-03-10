@@ -68,7 +68,23 @@ export default {
             return null
           }
 
-          return user
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            user_link: user.user_link ? user.user_link : '',
+            city: user.city ? user.city : '',
+            state: user.state ? user.state : '',
+            avatar_url: user.avatar_url ? user.avatar_url : '',
+            access_type: user.access_type ? user.access_type : '',
+            password: user.password ? user.password : '',
+            confirm_password: user.confirm_password
+              ? user.confirm_password
+              : '',
+            doctor_id: user.doctor_id ? user.doctor_id : '',
+            created_at: user.created_at,
+            updated_at: user.updated_at,
+          }
         }
         return null
       },
