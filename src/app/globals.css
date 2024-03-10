@@ -35,7 +35,7 @@
     --radius: 0.5rem;
   }
 
-  ::-webkit-calendar-picker-indicator {
+  .calendarIcon:-webkit-calendar-picker-indicator {
     filter: invert(100%) brightness(40%)
   }
 

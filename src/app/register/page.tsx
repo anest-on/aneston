@@ -2,9 +2,11 @@
 
 import { MultiStep } from '@/components/multiStep'
 import { Button } from '@/components/ui/button'
+import { DEFAULT_LOGIN_REDIRECT } from '@/routes'
 import { ArrowRight, Check } from 'lucide-react'
 import { signIn, useSession } from 'next-auth/react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { AuthError } from 'next-auth'
 
 const Register = () => {
   const session = useSession()

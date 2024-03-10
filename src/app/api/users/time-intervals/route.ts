@@ -1,12 +1,11 @@
 /* eslint-disable camelcase */
+import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import { authOptions } from '@/utils/authOptions'
-import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
 
     if (!session) {
       return new NextResponse('Unauthorized', { status: 401 })

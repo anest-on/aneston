@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 
-import ScheduleSelector from './timeScheduler/timeSchedulerModal'
 import { Button } from './ui/button'
 import {
   Dialog,
@@ -48,19 +47,6 @@ export default function SliderModal() {
             disponíveis para os seus pacientes.
           </DialogDescription>
         </DialogHeader>
-        <ScheduleSelector
-          selection={state.schedule}
-          numDays={7}
-          minTime={8}
-          maxTime={17}
-          hourlyChunks={7}
-          timeFormat={'HH:mm'}
-          onChange={(date: Date[]) => {
-            handleChange(date)
-          }}
-          columnGap={'10px'}
-          rowGap={'3px'}
-        />
       </DialogContent>
     </Dialog>
   )

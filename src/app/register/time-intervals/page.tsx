@@ -10,7 +10,7 @@ import { api } from '@/lib/axios'
 import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
 import { getWeekDays } from '@/utils/get-week-days'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowRight, Plus } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
@@ -209,8 +209,9 @@ const Register = () => {
                         variant={showButtons[index] ? undefined : 'destructive'}
                         onClick={() => toggleIntervalForm(index)}
                       >
-                        <Plus className="w-[10px] h-[10px]" />
-                        <p className="text-xs">Intervalo</p>
+                        <p className="text-xs">
+                          {showButtons[index] ? '+ Intervalo' : 'Cancelar'}
+                        </p>
                       </Button>
                     </div>
                   </div>
