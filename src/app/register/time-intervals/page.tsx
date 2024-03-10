@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 'use client'
 
 import IntervalItem, { Interval } from '@/components/intervalItem'
@@ -240,7 +241,7 @@ const Register = () => {
                     <IntervalItem
                       // dayOfWeek={getDayOfWeek(index)}
                       onChange={handleIntervalChange}
-                      {...form.register(``)}
+                    // {...form.register(``)}
                     />
                   )}
                   {index < fields.length - 1 && (
