@@ -238,7 +238,7 @@ const Register = () => {
 
                     {showIntervalForms[index] && (
                       <IntervalItem
-                        dayOfWeek={getDayOfWeek(index)}
+                        // dayOfWeek={getDayOfWeek(index)}
                         onChange={handleIntervalChange}
                       />
                     )}
