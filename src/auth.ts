@@ -48,26 +48,6 @@ export const {
         session.user.id = token.sub
       }
 
-      if (token.accessType && session.user) {
-        session.user.accessType = token.accessType
-      }
-
-      if (token.avatar_url && session.user) {
-        session.user.avatar_url = token.avatar_url
-      }
-
-      if (token.user_link && session.user) {
-        session.user.user_link = token.user_link
-      }
-
-      if (token.state && session.user) {
-        session.user.state = token.state
-      }
-
-      if (token.city && session.user) {
-        session.user.city = token.city
-      }
-
       return session
     },
     async jwt({ token }) {
