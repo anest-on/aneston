@@ -18,7 +18,7 @@ export default auth((req) => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname)
 
   if (isApiAuthRoute) {
-    return null
+    return
   }
 
   if (isAuthRoute) {
@@ -26,14 +26,12 @@ export default auth((req) => {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
     }
 
-    return null
+    return
   }
 
   if (!isLoggedIn && isPrivateRoute) {
     return Response.redirect(new URL('/', nextUrl))
   }
-
-  return null
 })
 
 export const config = {
