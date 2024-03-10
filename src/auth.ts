@@ -48,6 +48,40 @@ export const {
         session.user.id = token.sub
       }
 
+      if (token.accessType && session.user) {
+        if (
+          token.accessType === 'FULL_ACCESS' ||
+          token.accessType === 'OWNER' ||
+          token.accessType === 'DASHBOARD_ACCESS'
+        ) {
+          session.user.accessType = token.accessType
+        }
+      }
+
+      if (
+        token.avatar_url &&
+        session.user &&
+        typeof token.avatar_url === 'string'
+      ) {
+        session.user.avatar_url = token.avatar_url
+      }
+
+      if (
+        token.user_link &&
+        session.user &&
+        typeof token.user_link === 'string'
+      ) {
+        session.user.user_link = token.user_link
+      }
+
+      if (token.state && session.user && typeof token.state === 'string') {
+        session.user.state = token.state
+      }
+
+      if (token.city && session.user && typeof token.city === 'string') {
+        session.user.city = token.city
+      }
+
       return session
     },
     async jwt({ token }) {
