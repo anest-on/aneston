@@ -8,7 +8,7 @@ export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
   OptionValues: string[]
   onChange: (value: string) => void
-  value: string
+  value?: string
   inputValue?: (value: boolean) => void
 }
 
