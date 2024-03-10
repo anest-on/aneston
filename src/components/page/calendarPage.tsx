@@ -32,7 +32,7 @@ const CalendarPage = async ({ params }: { params: { user_link: string } }) => {
       </div>
 
       <div className="w-[35%] flex relative my-6 mx-0 p-0 bg-gray-800 border rounded-lg border-solid border-gray-600">
-        <CalendarIntermediary />
+        {/* <CalendarIntermediary /> */}
       </div>
     </div>
   )
