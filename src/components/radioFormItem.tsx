@@ -5,8 +5,10 @@ import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 import { FormControl, FormItem, FormLabel } from './ui/form'
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
   OptionValues: string[]
+  onChange: (value: string) => void
+  value: string
   inputValue?: (value: boolean) => void
 }
 
@@ -16,7 +18,7 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
     ref,
   ) => {
     const [isSelected, setIsSelected] = useState(false)
-    const [otherInputValue, setOtherInputValue] = useState<ChangeEvent<HTMLInputElement>>()
+    const [otherInputValue, setOtherInputValue] = useState<string>()
     const [otherStringInputValue, setOtherStringInputValue] = useState<string | null>(null)
 
     useEffect(() => {
@@ -32,7 +34,7 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
 
     }, [])
 
-    const hadleRadioGroupValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const hadleRadioGroupValueChange = (e: string) => {
       const isOnRadioSelect = OptionValues.find((value) => value === String(e))
 
       // console.log(e.target.value)
@@ -71,12 +73,11 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
           </p>
           {!!prefix && <p className="text-gray-400 ">{prefix}</p>}
           <RadioGroup
-            onValueChange={(value: ChangeEvent<HTMLInputElement>) => hadleRadioGroupValueChange(value)}
+            onValueChange={(value) => hadleRadioGroupValueChange(value)}
             className="mt-5"
             onFocus={() => setIsSelected(() => !isSelected)}
             onBlur={() => setIsSelected(() => !isSelected)}
             ref={ref}
-            {...props}
           >
             {Array.isArray(OptionValues)
               ? OptionValues.map((item, index) =>
@@ -90,8 +91,8 @@ const RadioFormItem = React.forwardRef<HTMLInputElement, InputProps>(
                       className="font-light w-full outline-none border-b-[2px] border-white bg-gray-600 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
                       type="text"
                       // value={otherStringInputValue}
-                      defaultValue={otherStringInputValue}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => hadleRadioGroupValueChange(e)}
+                      defaultValue={otherStringInputValue || ''}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => hadleRadioGroupValueChange(String(e))}
                     />
 
                   </FormItem>
