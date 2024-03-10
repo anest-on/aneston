@@ -4,22 +4,21 @@ import { Plus, Trash } from 'lucide-react'
 import { Input } from './ui/input'
 
 export interface Interval {
-  input1: string
-  input2: string
+  start: string
+  end: string
 }
 
 interface IntervalFormProps {
-  dayOfWeek: string
   onChange: (intervals: Interval[]) => void
 }
 
-const IntervalForm: React.FC<IntervalFormProps> = ({ dayOfWeek, onChange }) => {
+const IntervalForm: React.FC<IntervalFormProps> = ({ onChange }) => {
   const [intervals, setIntervals] = useState<Interval[]>([
-    { input1: '', input2: '' },
+    { start: '', end: '' },
   ])
 
   const addInterval = () => {
-    setIntervals([...intervals, { input1: '', input2: '' }])
+    setIntervals([...intervals, { start: '', end: '' }])
   }
 
   const removeInterval = (index: number) => {
@@ -50,24 +49,6 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ dayOfWeek, onChange }) => {
 
   return (
     <div className="px-5">
-      {/* {showAddButton && (
-        <Button
-          onClick={handleAddClick}
-          size={'sm'}
-          className=" text-white gap-2"
-        >
-          <Plus className="w-[10px] h-[10px]" /> Intervalo
-        </Button>
-      )}
-      {!showAddButton && (
-        <Button
-          size={'sm'}
-          className="text-white gap-2 mb-2"
-          variant={'blocked'}
-        >
-          <Plus className="w-[10px] h-[10px]" /> Intervalo
-        </Button>
-      )} */}
       {intervals.map((interval, index) => (
         <div
           key={index}
@@ -82,9 +63,9 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ dayOfWeek, onChange }) => {
             <Input
               type="time"
               step={60}
-              value={interval.input1}
+              value={interval.start}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleInputChange(index, 'input1', e.target.value)
+                handleInputChange(index, 'start', e.target.value)
               }
               className="w-100"
             />
@@ -95,9 +76,9 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ dayOfWeek, onChange }) => {
             <Input
               type="time"
               step={60}
-              value={interval.input2}
+              value={interval.end}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleInputChange(index, 'input2', e.target.value)
+                handleInputChange(index, 'end', e.target.value)
               }
               className="w-100"
             />
