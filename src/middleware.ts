@@ -34,6 +34,8 @@ export default auth((req) => {
   }
 })
 
+// teste
+
 export const config = {
   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
 }
