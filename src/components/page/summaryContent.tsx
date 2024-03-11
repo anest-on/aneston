@@ -1,9 +1,5 @@
 /* eslint-disable @next/next/no-async-client-component */
 
-import CalendarIntermediary from '@/components/page/calendarIntermediary'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
-import { prisma } from '@/lib/prisma'
-import { useState } from 'react'
 import {
   Form,
   FormControl,
@@ -14,8 +10,7 @@ import {
 } from '../ui/form'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { api } from '@/lib/axios'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -51,6 +46,8 @@ const SummaryContent = ({
   getSummaryData,
   doctorLink,
 }: SummaryProps) => {
+  const router = useRouter()
+
   const form = useForm<z.infer<typeof summaryFormSchema>>({
     resolver: zodResolver(summaryFormSchema),
     defaultValues: {
@@ -107,6 +104,8 @@ const SummaryContent = ({
         cirurgyData?.pacient_anesthetic_complications,
       pacient_procedure_summary: cirurgyData?.pacient_procedure_summary,
     })
+
+    router.push(doctorLink + '/success')
   }
 
   return (
