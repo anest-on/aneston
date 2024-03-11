@@ -28,7 +28,7 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
     null,
   )
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(3)
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
 
   function handleCirurgySubmit(values: cirurgySubmitProps | null) {
     if (values) {
