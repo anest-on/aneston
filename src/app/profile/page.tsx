@@ -1,6 +1,6 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
+import { getSession, useSession } from 'next-auth/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/form'
 import { Header } from '@/components/header'
 import Image from 'next/image'
+import refreshSession from '@/utils/refresh-session'
 
 const updateProfileSchema = z.object({
   user_link: z
@@ -43,17 +44,18 @@ const updateProfileSchema = z.object({
 type UpdateProfileData = z.infer<typeof updateProfileSchema>
 
 const Profile = () => {
-  const session = useSession()
+  // const session = useSession()
   const router = useRouter()
+  const { data: session, update } = useSession()
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      user_link: session.data?.user.user_link || '',
-      name: session.data?.user.name || '',
-      email: session.data?.user.email || '',
-      city: session.data?.user.city || '',
-      state: session.data?.user.state || '',
+      user_link: session?.user.user_link || '',
+      name: session?.user.name || '',
+      email: session?.user.email || '',
+      city: session?.user.city || '',
+      state: session?.user.state || '',
     },
   })
 
@@ -66,13 +68,13 @@ const Profile = () => {
   const handleUpdateProfile = async (data: UpdateProfileData) => {
     try {
       await api.put('/users', data)
-      // router.push(`/register/time-intervals`)
+      update()
     } catch (err) {
-      if (err instanceof AxiosError && err?.response?.data?.message) {
-        setUserLinkAlredyTakenMessage('Esse nome de usuário já está em uso.')
-        return
+      if (err instanceof AxiosError) {
+        setUserLinkAlredyTakenMessage(
+          () => 'Esse nome de usuário já está em uso.',
+        )
       }
-      console.error(err)
     }
   }
 
@@ -88,9 +90,9 @@ const Profile = () => {
           >
             <div className="flex flex-col w-full mr-4">
               <div className="flex w-full justify-center mb-5">
-                {session.data?.user.avatar_url && (
+                {session?.user.avatar_url && (
                   <Image
-                    src={session.data.user.avatar_url}
+                    src={session.user.avatar_url}
                     alt=""
                     width={88}
                     height={88}
@@ -129,9 +131,13 @@ const Profile = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Seu Nome</FormLabel>
+                    <FormLabel>Seu nome</FormLabel>
                     <FormControl>
-                      <Input disabled={isSubmitting} {...field} />
+                      <Input
+                        // prefix="aneston.com/"
+                        disabled={isSubmitting}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
