@@ -65,7 +65,7 @@ const Profile = () => {
 
   const handleUpdateProfile = async (data: UpdateProfileData) => {
     try {
-      // await api.put('/users', data)
+      await api.put('/users', data)
       // router.push(`/register/time-intervals`)
     } catch (err) {
       if (err instanceof AxiosError && err?.response?.data?.message) {
