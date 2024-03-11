@@ -103,7 +103,7 @@ const AccessConfiguration = () => {
   function copyLinkToClipboard() {
     navigator.clipboard.writeText(
       // TODO: Mudar link quando for para produção
-      `http://aneston.com/form/${session.data?.user.user_link}`,
+      `http://aneston.com/login/${session.data?.user.user_link}`,
     )
   }
 
