@@ -71,7 +71,7 @@ const Register = () => {
   function copyLinkToClipboard() {
     navigator.clipboard.writeText(
       // TODO: Mudar link quando for para produção
-      `http://aneston.com/form/${session.data?.user.user_link}`,
+      `https://aneston.vercel.app/form/${session.data?.user.user_link}`,
     )
   }
 
@@ -279,7 +279,7 @@ const Register = () => {
                   copyLinkToClipboard()
                   toast({
                     title: 'Link copiado para a área de transferência!',
-                    description: `Seu Link: http://aneston.com/form/${session.data?.user.user_link}`,
+                    description: `Seu Link: https://aneston.vercel.app/form/${session.data?.user.user_link}`,
                   })
                 }}
               >
