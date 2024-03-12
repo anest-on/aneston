@@ -24,7 +24,7 @@ export default function Dashboard() {
   function copyLinkToClipboard() {
     navigator.clipboard.writeText(
       // TODO: Mudar link quando for para produção
-      `http://aneston.com/form/${session.data?.user.user_link}`,
+      `https://aneston.vercel.app/form/${session.data?.user.user_link}`,
     )
   }
 
@@ -41,7 +41,7 @@ export default function Dashboard() {
     //           copyLinkToClipboard()
     //           toast({
     //             title: 'Link copiado para a área de transferência!',
-    //             description: `Seu Link: http://aneston.com/form/${session.data?.user.user_link}`,
+    //             description: `Seu Link: https://aneston.vercel.app/${session.data?.user.user_link}`,
     //           })
     //         }}
     //       >

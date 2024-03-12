@@ -65,6 +65,13 @@ const AccessConfiguration = () => {
     },
   })
 
+  function copyLinkToClipboard() {
+    navigator.clipboard.writeText(
+      // TODO: Mudar link quando for para produção
+      `https://aneston.vercel.app/login/${session.data?.user.user_link}`,
+    )
+  }
+
   const { isSubmitting } = form.formState
 
   const [patients, setPatients] = useState<formPatientInterface[]>([])
@@ -133,7 +140,7 @@ const AccessConfiguration = () => {
     <main className="max-w-[880px] h-screen mt-10 mx-auto mb-4 py-0 px-4">
       <div className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600">
         <p className="text-white text-center text-2xl font-bold">
-          Configuração de Acessos
+          Gestão de Consultas
         </p>
         <div className="w-full h-[2px] mt-6 px-6 bg-gray-500" />
         <div className="flex flex-col rounded-md bg-gray-800 border border-solid border-gray-600 mt-6">
@@ -171,9 +178,10 @@ const AccessConfiguration = () => {
             variant={'outline'}
             className="text-white border-white hover:bg-gray-600"
             onClick={() => {
+              copyLinkToClipboard()
               toast({
                 title: 'Link copiado para a área de transferência!',
-                description: `Seu Link: http://aneston.com/form/${session.data?.user.user_link}`,
+                description: `Seu Link: https://aneston.vercel.app/form/${session.data?.user.user_link}`,
               })
             }}
           >
