@@ -1,6 +1,6 @@
-import React, { useState, ChangeEvent } from 'react'
-import { Button } from './ui/button'
 import { Plus, Trash } from 'lucide-react'
+import React, { ChangeEvent, useState } from 'react'
+import { Button } from './ui/button'
 import { Input } from './ui/input'
 
 export interface Interval {
@@ -39,7 +39,7 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onChange }) => {
     setIntervals(updatedIntervals)
 
     onChange(updatedIntervals)
-    console.log('Updated Interval in IntervalItem:', updatedIntervals[index])
+    // console.log('Updated Interval in IntervalItem:', updatedIntervals[index])
   }
 
   const handleAddClick = () => {

@@ -53,3 +53,22 @@ export async function POST(req: Request) {
     return new NextResponse('Internal Error', { status: 500 })
   }
 }
+
+export async function GET() {
+  try {
+    const session = await auth()
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 })
+    }
+
+    const patient = await prisma.userTimeInterval.findMany({
+      where: {
+        user_id: session.user.id,
+      },
+    })
+
+    return NextResponse.json(patient)
+  } catch (error) {
+    return new NextResponse('Internal Error', { status: 500 })
+  }
+}
