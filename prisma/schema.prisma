@@ -94,6 +94,9 @@ model UserTimeInterval {
   user_id               String
   user                  User   @relation(fields: [user_id], references: [id])
 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
   DaytimeInterval DaytimeInterval[]
   @@index([user_id])
   @@map("user_time_intervals")
@@ -104,6 +107,9 @@ model DaytimeInterval {
   time_start_interval_in_minutes   Int
   time_end_in_minutes Int
   interval_id String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   user                  UserTimeInterval   @relation(fields: [interval_id], references: [id])
   

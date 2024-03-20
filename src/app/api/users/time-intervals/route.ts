@@ -3,6 +3,11 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
+interface Interval {
+  start: number
+  end: number
+}
+
 export async function POST(req: Request) {
   try {
     const session = await auth()
@@ -27,12 +32,15 @@ export async function POST(req: Request) {
 
     const data = await req.json()
 
+    // console.log(session.user?.id)
+
     await Promise.all(
       data.intervals.map(
         (interval: {
           weekDay: number
           startTimeInMinutes: number
           endTimeInMinutes: number
+          daytimeIntervals: Interval[]
         }) => {
           return prisma.userTimeInterval.create({
             data: {
@@ -43,6 +51,17 @@ export async function POST(req: Request) {
               user_id: session.user?.id,
             },
           })
+
+          // if (interval.daytimeIntervals.length !== 0)
+          //   interval.daytimeIntervals.forEach((element) => {
+          //     prisma.daytimeInterval.create({
+          //       data: {
+          //         time_start_interval_in_minutes: element.start,
+          //         time_end_in_minutes: element.end,
+          //         interval_id: intervalId.id,
+          //       },
+          //     })
+          //   })
         },
       ),
     )

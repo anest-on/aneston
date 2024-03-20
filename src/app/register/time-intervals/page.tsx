@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 'use client'
 
-import IntervalItem, { Interval } from '@/components/intervalItem'
+import IntervalItem from '@/components/intervalItem'
 import { MultiStep } from '@/components/multiStep'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Form } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { api } from '@/lib/axios'
 import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
@@ -75,7 +75,7 @@ const timeIntervalsFormSchema = z.object({
         message:
           'O horário de término para os agendamentos deve ocorrer após o horário de início.',
       },
-    ),
+    ).optional(),
   appointmentTime: z
     .string()
     .transform((appointmentTime) => convertTimeStringToMinutes(appointmentTime))
@@ -93,13 +93,13 @@ const Register = () => {
     resolver: zodResolver(timeIntervalsFormSchema),
     defaultValues: {
       intervals: [
-        { weekDay: 0, enabled: false, startTime: '08:00', endTime: '18:00', daytimeIntervals: [{}] },
-        { weekDay: 1, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [{}] },
-        { weekDay: 2, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [{}] },
-        { weekDay: 3, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [{}] },
-        { weekDay: 4, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [{}] },
-        { weekDay: 5, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [{}] },
-        { weekDay: 6, enabled: false, startTime: '08:00', endTime: '18:00', daytimeIntervals: [{}] },
+        { weekDay: 0, enabled: false, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 1, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 2, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 3, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 4, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 5, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 6, enabled: false, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
       ],
       appointmentTime: '00:30',
       
@@ -119,12 +119,12 @@ const Register = () => {
 
   const intervals = form.watch('intervals')
 
-  const [selectedIntervals, setSelectedIntervals] = useState<Interval[]>([])
+  // const [selectedIntervals, setSelectedIntervals] = useState<Interval[]>([])
 
-  const handleIntervalChange = (intervals: Interval[]) => {
-    console.log(intervals)
-    setSelectedIntervals(intervals)
-  }
+  // const handleIntervalChange = (intervals: Interval[]) => {
+  //   console.log(intervals)
+  //   setSelectedIntervals(intervals)
+  // }
 
   const [showIntervalForms, setShowIntervalForms] = useState<boolean[]>(
     Array(7).fill(false),
@@ -217,14 +217,14 @@ const Register = () => {
                       <Input
                         type="time"
                         step={60}
-                        disabled={intervals[index].enabled === false}
+                        disabled={intervals && intervals[index].enabled === false}
                         {...form.register(`intervals.${index}.startTime`)}
                       />
 
                       <Input
                         type="time"
                         step={60}
-                        disabled={intervals[index].enabled === false}
+                        disabled={intervals && intervals[index].enabled === false}
                         {...form.register(`intervals.${index}.endTime`)}
                       />
 
@@ -241,21 +241,27 @@ const Register = () => {
                   </div>
 
                   {showIntervalForms[index] && (
-                    <Controller
-                      name={`intervals.${index}.daytimeIntervals`}
+                    <FormField
                       control={form.control}
-                      render={({ field }) => {
-                        return (
-                          <IntervalItem
-                    
-                    // {...form.register(``)}
-                          onChange={field.onChange}
-                          />
-
-                        )
-                      }}
+                      name={`intervals.${index}.daytimeIntervals`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <IntervalItem
+                              // name={`intervals.${index}.daytimeIntervals`}
+                              ref={field.ref}
+                              // defaultValue={
+                              //   field.value
+                              //     ? field.value
+                              //     : [{ dose: '', name: '', pills: '' }]
+                              // }
+                              onChange={field.onChange}
+                            />
+                            
+                          </FormControl>
+                        </FormItem>
+                      )}
                     />
-                    
                   )}
                   {index < fields.length - 1 && (
                     <div className="h-[1px] bg-gray-600" />
@@ -267,7 +273,7 @@ const Register = () => {
 
           {form.formState.errors.intervals && (
             <p className="text-sm text-[#F75A68] mb-4">
-              {form.formState.errors.intervals.message}
+              {/* {form.formState.errors.intervals?.message} */}
             </p>
           )}
 
