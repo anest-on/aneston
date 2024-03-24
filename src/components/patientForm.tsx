@@ -187,12 +187,42 @@ export function PatientForm({
               </Form>
             </DialogContent>
           </Dialog>
-          <Trash
-            onClick={() => {
-              onDelete()
-            }}
-            className="w-4 h-4 hover:text-red-500 hover:cursor-pointer"
-          />
+          <Dialog>
+            <DialogTrigger asChild>
+              <Trash className="w-4 h-4 hover:text-red-500 hover:cursor-pointer" />
+            </DialogTrigger>
+            <DialogContent className="bg-gray-800 border-gray-600">
+              <DialogHeader>
+                <DialogTitle className="text-center">
+                  Tem certeza que deseja deletar este paciente?
+                </DialogTitle>
+                <p className="text-center text-white pt-2">
+                  Paciente: {patient.pacient_name}
+                </p>
+                <div className="flex justify-between pt-5 px-16">
+                  <DialogClose>
+                    <Button
+                      className="w-[150px] border-gray-500 text-gray-500 hover:bg-gray-500 hover:text-white"
+                      variant={'outline'}
+                      type="button"
+                    >
+                      Cancelar
+                    </Button>
+                  </DialogClose>
+                  <DialogClose>
+                    <Button
+                      className="w-[150px] border-red-500 text-white bg-red-500 hover:bg-red-500/90"
+                      onClick={() => {
+                        onDelete()
+                      }}
+                    >
+                      Deletar
+                    </Button>
+                  </DialogClose>
+                </div>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
       </TableCell>
     </TableRow>
