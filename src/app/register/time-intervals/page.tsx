@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 'use client'
 
-import IntervalItem, { Interval } from '@/components/intervalItem'
+import IntervalItem from '@/components/intervalItem'
 import { MultiStep } from '@/components/multiStep'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Form } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { api } from '@/lib/axios'
 import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
@@ -17,6 +17,10 @@ import { useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+const daytimeIntervals = z.object({ start: z.string(), end: z.string() })
+    
+    
+
 const timeIntervalsFormSchema = z.object({
   intervals: z
     .array(
@@ -25,6 +29,24 @@ const timeIntervalsFormSchema = z.object({
         enabled: z.boolean(),
         startTime: z.string(),
         endTime: z.string(),
+        daytimeIntervals: z.array(daytimeIntervals).transform((intervals) => {
+          return intervals.map((interval) => {
+            // console.log(interval)
+            return {
+              start: convertTimeStringToMinutes(interval.start),
+              end: convertTimeStringToMinutes(interval.end),
+            }
+          })
+        })
+        .refine(
+          (intervals) => {
+            return intervals.every((interval) => interval.end > interval.start)
+          },
+          {
+            message:
+              'O horário de início do intervalo deve ocorrer antes do horário de término.',
+          },
+        )
       }),
     )
     .length(7)
@@ -39,6 +61,7 @@ const timeIntervalsFormSchema = z.object({
           weekDay: interval.weekDay,
           startTimeInMinutes: convertTimeStringToMinutes(interval.startTime),
           endTimeInMinutes: convertTimeStringToMinutes(interval.endTime),
+          daytimeIntervals: interval.daytimeIntervals
         }
       })
     })
@@ -52,36 +75,14 @@ const timeIntervalsFormSchema = z.object({
         message:
           'O horário de término para os agendamentos deve ocorrer após o horário de início.',
       },
-    ),
+    ).optional(),
   appointmentTime: z
     .string()
     .transform((appointmentTime) => convertTimeStringToMinutes(appointmentTime))
     .refine((appointmentTime) => appointmentTime > 0, {
       message: 'O tempo de duração da consulta deve ser maior que 0 minutos.',
     }),
-  breakIntervals: z
-    .array(
-      z.object({ weekDay: z.string(), start: z.string(), end: z.string() }),
-    )
-    .transform((intervals) => {
-      return intervals.map((interval) => {
-        // console.log(interval)
-        return {
-          weekDay: interval.weekDay,
-          start: convertTimeStringToMinutes(interval.start),
-          end: convertTimeStringToMinutes(interval.end),
-        }
-      })
-    })
-    .refine(
-      (intervals) => {
-        return intervals.every((interval) => interval.end > interval.start)
-      },
-      {
-        message:
-          'O horário de início do intervalo deve ocorrer antes do horário de término.',
-      },
-    ),
+  
 })
 
 type TimeIntervalsFormInput = z.input<typeof timeIntervalsFormSchema>
@@ -92,16 +93,16 @@ const Register = () => {
     resolver: zodResolver(timeIntervalsFormSchema),
     defaultValues: {
       intervals: [
-        { weekDay: 0, enabled: false, startTime: '08:00', endTime: '18:00' },
-        { weekDay: 1, enabled: true, startTime: '08:00', endTime: '18:00' },
-        { weekDay: 2, enabled: true, startTime: '08:00', endTime: '18:00' },
-        { weekDay: 3, enabled: true, startTime: '08:00', endTime: '18:00' },
-        { weekDay: 4, enabled: true, startTime: '08:00', endTime: '18:00' },
-        { weekDay: 5, enabled: true, startTime: '08:00', endTime: '18:00' },
-        { weekDay: 6, enabled: false, startTime: '08:00', endTime: '18:00' },
+        { weekDay: 0, enabled: false, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 1, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 2, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 3, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 4, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 5, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 6, enabled: false, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
       ],
       appointmentTime: '00:30',
-      breakIntervals: [],
+      
     },
   })
 
@@ -118,11 +119,12 @@ const Register = () => {
 
   const intervals = form.watch('intervals')
 
-  const [selectedIntervals, setSelectedIntervals] = useState<Interval[]>([])
+  // const [selectedIntervals, setSelectedIntervals] = useState<Interval[]>([])
 
-  const handleIntervalChange = (intervals: Interval[]) => {
-    setSelectedIntervals(intervals)
-  }
+  // const handleIntervalChange = (intervals: Interval[]) => {
+  //   console.log(intervals)
+  //   setSelectedIntervals(intervals)
+  // }
 
   const [showIntervalForms, setShowIntervalForms] = useState<boolean[]>(
     Array(7).fill(false),
@@ -159,11 +161,11 @@ const Register = () => {
   */
   async function handleSetTimeIntervals(data: unknown) {
     // setSelectedIntervals(data.intervals)
-    // console.log('Intervals from IntervalForm:', data.intervals)
+    
+    console.log(data)
     const { intervals, appointmentTime } = data as TimeIntervalsFormOutput
-    // console.log(intervals, selectedIntervals)
     await api.post('/users/time-intervals', { intervals, appointmentTime })
-    router.push('/register/pricing')
+    // router.push('/register/pricing')
   }
 
   return (
@@ -184,7 +186,7 @@ const Register = () => {
         <form
           onSubmit={form.handleSubmit(handleSetTimeIntervals)}
           className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6 gap-4 text-white"
-        >
+        > 
           <div className="border border-solid border-gray-600 rounded-md mb-4">
             {fields.map((field, index) => {
               return (
@@ -193,6 +195,7 @@ const Register = () => {
                     key={field.id}
                     className="flex items-center justify-between py-3 px-4"
                   >
+
                     <div className="flex items-center gap-3">
                       <Controller
                         name={`intervals.${index}.enabled`}
@@ -214,14 +217,14 @@ const Register = () => {
                       <Input
                         type="time"
                         step={60}
-                        disabled={intervals[index].enabled === false}
+                        disabled={intervals && intervals[index].enabled === false}
                         {...form.register(`intervals.${index}.startTime`)}
                       />
 
                       <Input
                         type="time"
                         step={60}
-                        disabled={intervals[index].enabled === false}
+                        disabled={intervals && intervals[index].enabled === false}
                         {...form.register(`intervals.${index}.endTime`)}
                       />
 
@@ -238,10 +241,26 @@ const Register = () => {
                   </div>
 
                   {showIntervalForms[index] && (
-                    <IntervalItem
-                      // dayOfWeek={getDayOfWeek(index)}
-                      onChange={handleIntervalChange}
-                    // {...form.register(``)}
+                    <FormField
+                      control={form.control}
+                      name={`intervals.${index}.daytimeIntervals`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <IntervalItem
+                              // name={`intervals.${index}.daytimeIntervals`}
+                              ref={field.ref}
+                              // defaultValue={
+                              //   field.value
+                              //     ? field.value
+                              //     : [{ dose: '', name: '', pills: '' }]
+                              // }
+                              onChange={field.onChange}
+                            />
+                            
+                          </FormControl>
+                        </FormItem>
+                      )}
                     />
                   )}
                   {index < fields.length - 1 && (
@@ -254,7 +273,7 @@ const Register = () => {
 
           {form.formState.errors.intervals && (
             <p className="text-sm text-[#F75A68] mb-4">
-              {form.formState.errors.intervals.message}
+              {/* {form.formState.errors.intervals?.message} */}
             </p>
           )}
 
