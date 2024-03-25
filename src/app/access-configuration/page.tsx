@@ -233,6 +233,8 @@ const AccessConfiguration = () => {
                     thirdPartyUser={thirdPartyUser}
                     handleSubmit={handleUpdateProfile}
                     handleDelete={handleDeleteUser}
+                    openModal={openUpdateUser}
+                    setOpenModal={setOpenUpdateUser}
                     key={thirdPartyUser.email}
                   />
                 ))}
@@ -397,7 +399,7 @@ const AccessConfiguration = () => {
               copyLinkToClipboard()
               toast({
                 title: 'Link copiado para a área de transferência!',
-                description: `Seu Link: https://aneston.vercel.app/form/${session.data?.user.user_link}`,
+                description: `Seu Link: https://aneston.vercel.app/login/${session.data?.user.user_link}`,
               })
             }}
           >

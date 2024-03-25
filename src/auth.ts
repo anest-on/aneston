@@ -82,6 +82,14 @@ export const {
         session.user.city = token.city
       }
 
+      if (
+        token.doctor_id &&
+        session.user &&
+        typeof token.doctor_id === 'string'
+      ) {
+        session.user.doctor_id = token.doctor_id
+      }
+
       return session
     },
     async jwt({ token }) {
@@ -95,6 +103,7 @@ export const {
       token.user_link = existingUser.user_link
       token.state = existingUser.state
       token.city = existingUser.city
+      token.doctor_id = existingUser.doctor_id
 
       return token
     },

@@ -68,7 +68,7 @@ const AccessConfiguration = () => {
   function copyLinkToClipboard() {
     navigator.clipboard.writeText(
       // TODO: Mudar link quando for para produção
-      `https://aneston.vercel.app/login/${session.data?.user.user_link}`,
+      `https://aneston.vercel.app/form/${session.data?.user.user_link}`,
     )
   }
 
