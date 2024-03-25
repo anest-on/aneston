@@ -68,36 +68,3 @@ export async function PUT(req: Request) {
     return new NextResponse('Internal Error', { status: 500 })
   }
 }
-
-export async function GET(doctor_id: string) {
-  try {
-    const session = await auth()
-
-    if (!session) {
-      return new NextResponse('Unauthorized', { status: 401 })
-    }
-
-    const isNotDoctor = session.user.doctor_id !== undefined
-
-    if (isNotDoctor) {
-      const user = await prisma.user.findUnique({
-        where: {
-          id: doctor_id,
-        },
-      })
-
-      return NextResponse.json(user)
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: session.user.id,
-      },
-    })
-
-    return NextResponse.json(user)
-  } catch (error) {
-    console.log('[USER_ID]', error)
-    return new NextResponse('Internal Error', { status: 500 })
-  }
-}
