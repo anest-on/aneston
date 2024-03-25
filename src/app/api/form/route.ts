@@ -119,6 +119,23 @@ export async function GET() {
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
+    const isNotDoctor = session.user.doctor_id !== undefined
+    const completeAccess = session.user.accessType === 'FULL_ACCESS'
+
+    if (isNotDoctor) {
+      if (!completeAccess) {
+        return new NextResponse('Unauthorized', { status: 401 })
+      }
+
+      const patient = await prisma.form.findMany({
+        where: {
+          doctor_id: session.user.doctor_id,
+        },
+      })
+
+      return NextResponse.json(patient)
+    }
+
     const patient = await prisma.form.findMany({
       where: {
         doctor_id: session.user.id,
@@ -139,6 +156,31 @@ export async function DELETE(req: Request) {
     }
     const body = await req.json()
     const { name, cellNumber, doctorId } = body
+
+    const isNotDoctor = session.user.doctor_id !== undefined
+    const completeAccess = session.user.accessType === 'FULL_ACCESS'
+
+    if (isNotDoctor) {
+      if (!completeAccess) {
+        return new NextResponse('Unauthorized', { status: 401 })
+      }
+
+      const patient = await prisma.form.findFirst({
+        where: {
+          doctor_id: session.user.doctor_id,
+          pacient_name: name,
+          pacient_number: cellNumber,
+        },
+      })
+
+      if (!patient) {
+        return new NextResponse('Internal Error', { status: 400 })
+      }
+
+      await prisma.form.delete({ where: { id: patient.id } })
+
+      return NextResponse.json(patient)
+    }
 
     const patient = await prisma.form.findFirst({
       where: {
@@ -170,6 +212,38 @@ export async function PUT(req: Request) {
     const body = await req.json()
     const { pacient_name, cirurgy_name, pacient_number, createdAt, doctor_id } =
       body
+
+    const isNotDoctor = session.user.doctor_id !== undefined
+    const completeAccess = session.user.accessType === 'FULL_ACCESS'
+
+    if (isNotDoctor) {
+      if (!completeAccess) {
+        return new NextResponse('Unauthorized', { status: 401 })
+      }
+
+      const patient = await prisma.form.findFirst({
+        where: {
+          doctor_id: session.user.doctor_id,
+          pacient_number,
+        },
+      })
+
+      if (!patient) {
+        return new NextResponse('Internal Error', { status: 400 })
+      }
+
+      const patientUpdated = await prisma.form.update({
+        where: {
+          id: patient?.id,
+        },
+        data: {
+          pacient_name,
+          cirurgy_name,
+          doctor_id: session.user.doctor_id,
+        },
+      })
+      return NextResponse.json(patientUpdated)
+    }
 
     const patient = await prisma.form.findFirst({
       where: {

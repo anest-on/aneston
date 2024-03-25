@@ -61,12 +61,16 @@ interface ThirdPartyUserProps {
   thirdPartyUser: User
   handleSubmit: (data: UpdateUserData) => void
   handleDelete: (data: DeleteUserData) => void
+  openModal: boolean
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export function ThirdPartyUserForm({
   thirdPartyUser,
   handleSubmit,
   handleDelete,
+  openModal,
+  setOpenModal,
 }: ThirdPartyUserProps) {
   const [userEmailAlreadyTakenMessage, setUserEmailAlreadyTakenMessage] =
     useState<string | null>(null)
