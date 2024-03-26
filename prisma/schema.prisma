@@ -90,12 +90,11 @@ model UserTimeInterval {
   time_start_in_minutes Int
   time_end_in_minutes   Int
   appointment_time      Int
-  interval_times        Json?
   user_id               String
   user                  User   @relation(fields: [user_id], references: [id])
 
   created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  updated_at DateTime @default(now()) @updatedAt
 
   DaytimeInterval DaytimeInterval[]
   @@index([user_id])
@@ -107,6 +106,7 @@ model DaytimeInterval {
   time_start_interval_in_minutes   Int
   time_end_in_minutes Int
   interval_id String
+  doctor_id String?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

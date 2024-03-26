@@ -1,195 +1,296 @@
+/* eslint-disable prettier/prettier */
 'use client'
 
-import { useSession } from 'next-auth/react'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-
+import IntervalItem from '@/components/intervalItem'
 import { MultiStep } from '@/components/multiStep'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { api } from '@/lib/axios'
+import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
+import { getWeekDays } from '@/utils/get-week-days'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { api } from '@/lib/axios'
-import { AxiosError } from 'axios'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-const updateProfileSchema = z.object({
-  user_link: z
-    .string()
-    .min(3, { message: 'O link precisa ter pelo menos três letras.' })
-    .regex(/^([a-z\\-]+)$/i, {
-      message: 'O link precisa ter apenas letras e hifens.',
+const daytimeIntervals = z.object({ start: z.string(), end: z.string() })
+    
+    
+
+const timeIntervalsFormSchema = z.object({
+  intervals: z
+    .array(
+      z.object({
+        weekDay: z.number().min(0).max(6),
+        enabled: z.boolean(),
+        startTime: z.string(),
+        endTime: z.string(),
+        daytimeIntervals: z.array(daytimeIntervals).transform((intervals) => {
+          return intervals.map((interval) => {
+            // console.log(interval)
+            return {
+              start: convertTimeStringToMinutes(interval.start),
+              end: convertTimeStringToMinutes(interval.end),
+            }
+          })
+        })
+        .refine(
+          (intervals) => {
+            return intervals.every((interval) => interval.end > interval.start)
+          },
+          {
+            message:
+              'O horário de início do intervalo deve ocorrer antes do horário de término.',
+          },
+        )
+      }),
+    )
+    .length(7)
+    .transform((intervals) => intervals.filter((interval) => interval.enabled))
+    .refine((intervals) => intervals.length > 0, {
+      message: 'Você precisa selecionar pelo menos um dia da semana.',
     })
-    .transform((userLink) => userLink.toLowerCase()),
-  name: z
+    .transform((intervals) => {
+      return intervals.map((interval) => {
+        // console.log(interval)
+        return {
+          weekDay: interval.weekDay,
+          startTimeInMinutes: convertTimeStringToMinutes(interval.startTime),
+          endTimeInMinutes: convertTimeStringToMinutes(interval.endTime),
+          daytimeIntervals: interval.daytimeIntervals
+        }
+      })
+    })
+    .refine(
+      (intervals) => {
+        return intervals.every(
+          (interval) => interval.endTimeInMinutes > interval.startTimeInMinutes,
+        )
+      },
+      {
+        message:
+          'O horário de término para os agendamentos deve ocorrer após o horário de início.',
+      },
+    ).optional(),
+  appointmentTime: z
     .string()
-    .min(3, { message: 'O nome precisa ter pelo menos três letras.' }),
-  email: z.string().email({ message: 'Digite um e-mail válido.' }),
-  city: z.string(),
-  state: z.string().max(2, { message: 'Digite apenas a sigla do estado.' }),
+    .transform((appointmentTime) => convertTimeStringToMinutes(appointmentTime))
+    .refine((appointmentTime) => appointmentTime > 0, {
+      message: 'O tempo de duração da consulta deve ser maior que 0 minutos.',
+    }),
+  
 })
 
-type UpdateProfileData = z.infer<typeof updateProfileSchema>
+type TimeIntervalsFormInput = z.input<typeof timeIntervalsFormSchema>
+type TimeIntervalsFormOutput = z.output<typeof timeIntervalsFormSchema>
 
 const Register = () => {
-  const session = useSession()
-  const router = useRouter()
-
-  const form = useForm<z.infer<typeof updateProfileSchema>>({
-    resolver: zodResolver(updateProfileSchema),
+  const form = useForm<TimeIntervalsFormInput>({
+    resolver: zodResolver(timeIntervalsFormSchema),
     defaultValues: {
-      user_link: session.data?.user.user_link || '',
-      name: session.data?.user.name || '',
-      email: session.data?.user.email || '',
-      city: session.data?.user.city || '',
-      state: session.data?.user.state || '',
+      intervals: [
+        { weekDay: 0, enabled: false, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 1, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 2, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 3, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 4, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 5, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 6, enabled: false, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+      ],
+      appointmentTime: '00:30',
+      
     },
   })
 
   const { isSubmitting } = form.formState
 
-  const [userLinkAlredyTakenMessage, setUserLinkAlredyTakenMessage] = useState<
-    string | null
-  >(null)
+  const router = useRouter()
 
-  const handleUpdateProfile = async (data: UpdateProfileData) => {
-    try {
-      await api.put('/users', data)
-      router.push(`/register/time-intervals`)
-    } catch (err) {
-      if (err instanceof AxiosError && err?.response?.data?.message) {
-        setUserLinkAlredyTakenMessage('Esse nome de usuário já está em uso.')
-        return
-      }
-      console.error(err)
-    }
+  const weekDays = getWeekDays()
+
+  const { fields } = useFieldArray({
+    control: form.control,
+    name: 'intervals',
+  })
+
+  const intervals = form.watch('intervals')
+
+  // const [selectedIntervals, setSelectedIntervals] = useState<Interval[]>([])
+
+  // const handleIntervalChange = (intervals: Interval[]) => {
+  //   console.log(intervals)
+  //   setSelectedIntervals(intervals)
+  // }
+
+  const [showIntervalForms, setShowIntervalForms] = useState<boolean[]>(
+    Array(7).fill(false),
+  )
+
+  const [showButtons, setShowButtons] = useState<boolean[]>(Array(7).fill(true))
+
+  const toggleIntervalForm = (dayIndex: number) => {
+    const updatedVisibility = [...showIntervalForms]
+    updatedVisibility[dayIndex] = !updatedVisibility[dayIndex]
+    setShowIntervalForms(updatedVisibility)
+
+    const updatedButtons = [...showButtons]
+    updatedButtons[dayIndex] = !updatedButtons[dayIndex]
+    setShowButtons(updatedButtons)
+  }
+
+  const getDayOfWeek = (dayIndex: number): string => {
+    const daysOfWeek = [
+      'Domingo',
+      'Segunda-feira',
+      'Terça-feira',
+      'Quarta-feira',
+      'Quinta-feira',
+      'Sexta-feira',
+      'Sábado',
+    ]
+    return daysOfWeek[dayIndex]
+  }
+
+  /*
+    Can`t use 'data: TimeIntervalsFormOutput' because of an error in Typescript
+    after an Zod or ReactHookForm update
+  */
+  async function handleSetTimeIntervals(data: unknown) {
+    // setSelectedIntervals(data.intervals)
+    
+    console.log(data)
+    const { intervals, appointmentTime } = data as TimeIntervalsFormOutput
+    await api.post('/users/time-intervals', { intervals, appointmentTime })
+    // router.push('/register/pricing')
   }
 
   return (
     <main className="max-w-[572px] mt-20 mb-20 mx-auto py-0 px-4">
       <div className="py-0 px-6">
         <strong className="text-2xl text-white">
-          Atualize suas informações
+          Já está quase terminando!
         </strong>
         <p className="mb-6">
-          Já coletamos as informações essenciais para criar sua conta com base
-          nos dados fornecidos pela sua Conta Google. No entanto, se desejar
-          fazer alguma edição em qualquer um desses detalhes, você pode fazê-lo
-          imediatamente!
+          Defina agora os horários que você tem disponível para realizar os seus
+          atendimentos.
         </p>
 
-        <MultiStep size={4} currentStep={2} />
+        <MultiStep size={4} currentStep={3} />
       </div>
+
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(handleUpdateProfile)}
-          className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6 gap-4"
-        >
-          <div className="flex flex-col w-full mr-4">
-            <FormField
-              control={form.control}
-              name="user_link"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Seu Link</FormLabel>
-                  <FormControl>
-                    <Input
-                      prefix="aneston.com/"
-                      disabled={isSubmitting}
-                      {...field}
+          onSubmit={form.handleSubmit(handleSetTimeIntervals)}
+          className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6 gap-4 text-white"
+        > 
+          <div className="border border-solid border-gray-600 rounded-md mb-4">
+            {fields.map((field, index) => {
+              return (
+                <div key={index}>
+                  <div
+                    key={field.id}
+                    className="flex items-center justify-between py-3 px-4"
+                  >
+
+                    <div className="flex items-center gap-3">
+                      <Controller
+                        name={`intervals.${index}.enabled`}
+                        control={form.control}
+                        render={({ field }) => {
+                          return (
+                            <Checkbox
+                              onCheckedChange={(checked) =>
+                                field.onChange(checked === true)
+                              }
+                              checked={field.value}
+                            />
+                          )
+                        }}
+                      />
+                      <p className="text-sm">{weekDays[field.weekDay]}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="time"
+                        step={60}
+                        disabled={intervals && intervals[index].enabled === false}
+                        {...form.register(`intervals.${index}.startTime`)}
+                      />
+
+                      <Input
+                        type="time"
+                        step={60}
+                        disabled={intervals && intervals[index].enabled === false}
+                        {...form.register(`intervals.${index}.endTime`)}
+                      />
+
+                      <Button
+                        type="button"
+                        variant={showButtons[index] ? undefined : 'destructive'}
+                        onClick={() => toggleIntervalForm(index)}
+                      >
+                        <p className="text-xs">
+                          {showButtons[index] ? '+ Intervalo' : 'Cancelar'}
+                        </p>
+                      </Button>
+                    </div>
+                  </div>
+
+                  {showIntervalForms[index] && (
+                    <FormField
+                      control={form.control}
+                      name={`intervals.${index}.daytimeIntervals`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <IntervalItem
+                              // name={`intervals.${index}.daytimeIntervals`}
+                              ref={field.ref}
+                              // defaultValue={
+                              //   field.value
+                              //     ? field.value
+                              //     : [{ dose: '', name: '', pills: '' }]
+                              // }
+                              onChange={field.onChange}
+                            />
+                            
+                          </FormControl>
+                        </FormItem>
+                      )}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {userLinkAlredyTakenMessage && (
-              <p className="text-sm text-[#F75A68] mb-4">
-                {userLinkAlredyTakenMessage}
-              </p>
-            )}
+                  )}
+                  {index < fields.length - 1 && (
+                    <div className="h-[1px] bg-gray-600" />
+                  )}
+                </div>
+              )
+            })}
           </div>
 
-          <div className="flex flex-col">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Seu Nome</FormLabel>
-                  <FormControl>
-                    <Input disabled={isSubmitting} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+          {form.formState.errors.intervals && (
+            <p className="text-sm text-[#F75A68] mb-4">
+              {/* {form.formState.errors.intervals?.message} */}
+            </p>
+          )}
+
+          <div className="flex items-center justify-center border border-solid border-gray-600 gap-5 py-4 px-6 rounded-md mb-4">
+            <p className="text-sm">Tempo de duração da consulta</p>
+            <Input
+              className="w-100"
+              type="time"
+              step={60}
+              {...form.register('appointmentTime')}
             />
           </div>
 
-          <div className="flex flex-col">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Seu E-mail{' '}
-                    <span className="text-gray-200 text-xs">
-                      (Caixa que deseja receber as notificações sobre seus
-                      pacientes)
-                    </span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input disabled={isSubmitting} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="flex">
-            <div className="flex flex-col w-full mr-4">
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Sua Cidade</FormLabel>
-                    <FormControl>
-                      <Input disabled={isSubmitting} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex flex-col w-full mr-4">
-              <FormField
-                control={form.control}
-                name="state"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Seu Estado</FormLabel>
-                    <FormControl>
-                      <Input disabled={isSubmitting} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
+          {/* <div className="flex items-center justify-between border border-solid border-gray-600 py-4 px-6 rounded-md mb-4">
+            <p className="text-sm">Possui intervalos ao longo do dia?</p>
+            <Button variant="outline">Personalizar horários</Button>
+          </div> */}
 
           <Button disabled={isSubmitting}>
             Próximo Passo <ArrowRight className="ml-2 h-4 w-4" />
