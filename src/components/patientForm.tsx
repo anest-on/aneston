@@ -22,8 +22,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from './ui/input'
 import { useState } from 'react'
 import { Button } from './ui/button'
-import { Pencil, Trash } from 'lucide-react'
+import { FileText, Pencil, Trash } from 'lucide-react'
 import { formPatientInterface } from '@/app/appointments-management/page'
+import moment from 'moment'
 
 export type Patient = {
   name: string
@@ -72,7 +73,7 @@ export function PatientForm({
       name: patient.pacient_name,
       surgery: patient.cirurgy_name,
       cellNumber: patient.pacient_number,
-      createdAt: '',
+      createdAt: patient.created_at!,
       doctorId: patient.doctor_id!,
     },
   })
@@ -102,7 +103,7 @@ export function PatientForm({
         {patient.pacient_number}
       </TableCell>
       <TableCell>{patient.pacient_name}</TableCell>
-      <TableCell>{}</TableCell>
+      <TableCell>{moment(patient.created_at).format('DD/MM/YYYY')}</TableCell>
 
       <TableCell>
         <div className="flex gap-4 justify-end">
@@ -187,6 +188,13 @@ export function PatientForm({
               </Form>
             </DialogContent>
           </Dialog>
+          <Button
+            variant={'ghost'}
+            className="p-0 h-[16px] hover:text-gray-400"
+          >
+            <FileText className="w-4 h-4 hover:text-gray-400 hover:cursor-pointer" />
+          </Button>
+
           <Dialog>
             <DialogTrigger asChild>
               <Trash className="w-4 h-4 hover:text-red-500 hover:cursor-pointer" />

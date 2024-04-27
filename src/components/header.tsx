@@ -108,7 +108,13 @@ export function Header() {
                   <div className="flex items-center gap-4 mt-6">
                     {session.data.user.avatar_url ? (
                       <Avatar>
-                        <AvatarImage src={session.data.user.avatar_url} />
+                        {/* <AvatarImage src={session.data.user.avatar_url} /> */}
+                        <Image
+                          src={session.data.user.avatar_url}
+                          alt=""
+                          width={150}
+                          height={150}
+                        />
                       </Avatar>
                     ) : (
                       <></>
@@ -269,7 +275,13 @@ export function Header() {
                   >
                     {session.data.user.avatar_url ? (
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={session.data.user.avatar_url} />
+                        {/* <AvatarImage src={session.data.user.avatar_url} /> */}
+                        <Image
+                          src={session.data.user.avatar_url}
+                          alt=""
+                          width={150}
+                          height={150}
+                        />
                       </Avatar>
                     ) : (
                       <></>
