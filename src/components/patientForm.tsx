@@ -20,11 +20,14 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from './ui/input'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Button } from './ui/button'
 import { FileText, Pencil, Trash } from 'lucide-react'
 import { formPatientInterface } from '@/app/appointments-management/page'
 import moment from 'moment'
+import { api } from '@/lib/axios'
+import { useReactToPrint } from 'react-to-print'
+import PatientInfosPdfButton from './patientInfosPdfButton'
 
 export type Patient = {
   name: string
@@ -188,12 +191,7 @@ export function PatientForm({
               </Form>
             </DialogContent>
           </Dialog>
-          <Button
-            variant={'ghost'}
-            className="p-0 h-[16px] hover:text-gray-400"
-          >
-            <FileText className="w-4 h-4 hover:text-gray-400 hover:cursor-pointer" />
-          </Button>
+          <PatientInfosPdfButton patient={patient} />
 
           <Dialog>
             <DialogTrigger asChild>
