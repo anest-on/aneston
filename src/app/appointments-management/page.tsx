@@ -48,6 +48,7 @@ export interface formPatientInterface
     companionSubmitProps {
   id: string
   doctor_id: string
+  created_at: string
 }
 
 const AccessConfiguration = () => {

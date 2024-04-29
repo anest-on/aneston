@@ -1,9 +1,7 @@
 /* eslint-disable camelcase */
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import { User } from '@prisma/client'
 import { NextResponse } from 'next/server'
-import { useState } from 'react'
 
 interface Interval {
   start: number
@@ -33,6 +31,11 @@ export async function POST(req: Request) {
       })
 
       if (oldSchedules) {
+        await prisma.daytimeInterval.deleteMany({
+          where: {
+            doctor_id: session.user.doctor_id,
+          },
+        })
         await prisma.userTimeInterval.deleteMany({
           where: {
             user_id: session.user.doctor_id,
@@ -46,13 +49,13 @@ export async function POST(req: Request) {
 
       await Promise.all(
         data.intervals.map(
-          (interval: {
+          async (interval: {
             weekDay: number
             startTimeInMinutes: number
             endTimeInMinutes: number
             daytimeIntervals: Interval[]
           }) => {
-            return prisma.userTimeInterval.create({
+            const intervalItem = await prisma.userTimeInterval.create({
               data: {
                 week_day: interval.weekDay,
                 time_start_in_minutes: interval.startTimeInMinutes,
@@ -62,16 +65,18 @@ export async function POST(req: Request) {
               },
             })
 
-            // if (interval.daytimeIntervals.length !== 0)
-            //   interval.daytimeIntervals.forEach((element) => {
-            //     prisma.daytimeInterval.create({
-            //       data: {
-            //         time_start_interval_in_minutes: element.start,
-            //         time_end_in_minutes: element.end,
-            //         interval_id: intervalId.id,
-            //       },
-            //     })
-            //   })
+            if (interval.daytimeIntervals.length !== 0)
+              interval.daytimeIntervals.forEach(async (element) => {
+                await prisma.daytimeInterval.create({
+                  data: {
+                    time_start_interval_in_minutes: element.start,
+                    time_end_in_minutes: element.end,
+                    interval_id: intervalItem.id,
+                    doctor_id: session.user.doctor_id,
+                  },
+                })
+              })
+            return intervalItem
           },
         ),
       )
@@ -86,6 +91,11 @@ export async function POST(req: Request) {
     })
 
     if (oldSchedules) {
+      await prisma.daytimeInterval.deleteMany({
+        where: {
+          doctor_id: session.user.id,
+        },
+      })
       await prisma.userTimeInterval.deleteMany({
         where: {
           user_id: session.user.id,
@@ -99,32 +109,34 @@ export async function POST(req: Request) {
 
     await Promise.all(
       data.intervals.map(
-        (interval: {
+        async (interval: {
           weekDay: number
           startTimeInMinutes: number
           endTimeInMinutes: number
           daytimeIntervals: Interval[]
         }) => {
-          return prisma.userTimeInterval.create({
+          const intervalItem = await prisma.userTimeInterval.create({
             data: {
               week_day: interval.weekDay,
               time_start_in_minutes: interval.startTimeInMinutes,
               time_end_in_minutes: interval.endTimeInMinutes,
               appointment_time: data.appointmentTime,
-              user_id: session.user?.id,
+              user_id: session.user.id,
             },
           })
 
-          // if (interval.daytimeIntervals.length !== 0)
-          //   interval.daytimeIntervals.forEach((element) => {
-          //     prisma.daytimeInterval.create({
-          //       data: {
-          //         time_start_interval_in_minutes: element.start,
-          //         time_end_in_minutes: element.end,
-          //         interval_id: intervalId.id,
-          //       },
-          //     })
-          //   })
+          if (interval.daytimeIntervals.length !== 0)
+            interval.daytimeIntervals.forEach(async (element) => {
+              await prisma.daytimeInterval.create({
+                data: {
+                  time_start_interval_in_minutes: element.start,
+                  time_end_in_minutes: element.end,
+                  interval_id: intervalItem.id,
+                  doctor_id: session.user.id,
+                },
+              })
+            })
+          return intervalItem
         },
       ),
     )
@@ -136,6 +148,23 @@ export async function POST(req: Request) {
   }
 }
 
+type dayTimeIntervalProps = {
+  time_start_in_minutes: number
+  time_end_in_minutes: number
+}
+
+interface userTimeIntervalsGetResponse {
+  id: string
+  week_day: number
+  time_start_in_minutes: number
+  time_end_in_minutes: number
+  appointment_time: number
+  user_id: string
+  day_time_intervals: dayTimeIntervalProps[]
+  created_at: Date
+  updated_at: Date
+}
+
 export async function GET() {
   try {
     const session = await auth()
@@ -143,13 +172,49 @@ export async function GET() {
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
-    const patient = await prisma.userTimeInterval.findMany({
+    const userTimeIntervals = await prisma.userTimeInterval.findMany({
       where: {
         user_id: session.user.id,
       },
     })
 
-    return NextResponse.json(patient)
+    // console.log(userTimeIntervals[0].id)
+
+    const dayTimeIntervals = await prisma.daytimeInterval.findMany({
+      where: {
+        doctor_id: session.user.id,
+      },
+    })
+
+    const data: userTimeIntervalsGetResponse[] = []
+
+    userTimeIntervals.forEach((timeInterval) => {
+      const dayTimeIntervalRepsonse: dayTimeIntervalProps[] = []
+
+      dayTimeIntervals.forEach((dayTimeInterval) => {
+        if (timeInterval.id === dayTimeInterval.interval_id) {
+          dayTimeIntervalRepsonse.push({
+            time_start_in_minutes:
+              dayTimeInterval.time_start_interval_in_minutes,
+            time_end_in_minutes: dayTimeInterval.time_end_in_minutes,
+          })
+        }
+      })
+
+      data.push({
+        id: timeInterval.id,
+        week_day: timeInterval.week_day,
+        time_start_in_minutes: timeInterval.time_start_in_minutes,
+        time_end_in_minutes: timeInterval.time_end_in_minutes,
+        appointment_time: timeInterval.appointment_time,
+        user_id: timeInterval.user_id,
+        day_time_intervals: dayTimeIntervalRepsonse,
+        created_at: timeInterval.created_at,
+        updated_at: timeInterval.updated_at,
+      })
+    })
+
+    return NextResponse.json(data)
   } catch (error) {
     return new NextResponse('Internal Error', { status: 500 })
   }

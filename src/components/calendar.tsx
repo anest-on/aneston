@@ -1,17 +1,10 @@
 /* eslint-disable camelcase */
-import { api } from '@/lib/axios'
 import { getWeekDays } from '@/utils/get-week-days'
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from '@tanstack/react-query'
 import dayjs from 'dayjs'
+import ptBr from 'dayjs/locale/pt-br'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button } from './ui/button'
-import { useSearchParams } from 'next/navigation'
-import { queryClient } from '@/lib/react-query'
 
 interface CalendarWeek {
   week: number
@@ -28,17 +21,65 @@ interface BlockedDates {
   blockedDates: number[]
 }
 
+export type dayTimeIntervalProps = {
+  time_start_in_minutes: number
+  time_end_in_minutes: number
+}
+
+export interface userTimeIntervalsGetResponse {
+  id: string
+  week_day: number
+  time_start_in_minutes: number
+  time_end_in_minutes: number
+  appointment_time: number
+  user_id: string
+  day_time_intervals: dayTimeIntervalProps[]
+  created_at: Date
+  updated_at: Date
+}
+
 interface CalendarProps {
-  selectedDate?: Date | null
+  selectedDate?: userTimeIntervalsGetResponse[] | null
   onDateSelected: (date: Date) => void
 }
 
 export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(() => {
-    return dayjs().set('date', 1)
+    return dayjs().locale(ptBr).set('date', 1)
   })
 
-  const searchParams = useSearchParams()
+  const [weekDays, setWeekDays] = useState<string[]>()
+
+  useEffect(() => {
+    const data: string[] = []
+
+    selectedDate?.forEach((e) => {
+      switch (e.week_day) {
+        case 0:
+          return data.push('domingo')
+
+        case 1:
+          return data.push('segunda-feira')
+
+        case 2:
+          return data.push('terça-feira')
+
+        case 3:
+          return data.push('quarta-feira')
+
+        case 4:
+          return data.push('quinta-feira')
+
+        case 5:
+          return data.push('sexta-feira')
+
+        case 6:
+          return data.push('sábado')
+      }
+    })
+
+    setWeekDays(() => data)
+  }, [selectedDate])
 
   function handlePreviousMonth() {
     const previousMonthDate = currentDate.subtract(1, 'month')
@@ -50,31 +91,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
     setCurrentDate(nextMonthDate)
   }
 
-  const currentMonth = currentDate.format('MMMM')
-  const currentYear = currentDate.format('YYYY')
-
-  // searchParams.get('user_link')
-  const user_link = 'matheusadorno'
-
-  // const { data: blockedDates } = useQuery<BlockedDates>(
-  //   ['blockedDates', currentDate.get('year'), currentDate.get('month')],
-  //   async () => {
-  //     const response = await api.get(`/users/${user_link}/blocked-dates`, {
-  //       params: {
-  //         year: currentDate.get('year'),
-  //         month: String(currentDate.get('month') + 1).padStart(2, '0'),
-  //       },
-  //     })
-
-  //     return response.data
-  //   },
-  // )
-
   const calendarWeeks = useMemo(() => {
-    // if (!blockedDates) {
-    //   return []
-    // }
-
     const daysInMonthArray = Array.from({
       length: currentDate.daysInMonth(),
     }).map((_, i) => {
@@ -111,9 +128,9 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
       ...daysInMonthArray.map((date) => {
         return {
           date,
-          disabled: date.endOf('day').isBefore(new Date()),
-          // blockedDates.blockedWeekDays.includes(date.get('day')) ||
-          // blockedDates.blockedDates.includes(date.get('date')),
+          disabled:
+            date.endOf('day').isBefore(new Date()) ||
+            !weekDays?.includes(date.locale(ptBr).format('dddd')),
         }
       }),
       ...nextMonthFillArray.map((date) => {
@@ -138,15 +155,17 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
     )
 
     return calendarWeeks
-  }, [currentDate])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentDate, weekDays, selectedDate])
 
   const shortWeekDays = getWeekDays({ short: true })
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="flex flex-col gap-6 p-6 max-w-[280px]">
       <div className="flex items-center justify-between">
         <p className="font-medium capitalize text-white">
-          {currentMonth} <span className="text-gray-200">{currentYear}</span>
+          {currentDate.format('MMMM')}{' '}
+          <span className="text-gray-200">{currentDate.format('YYYY')}</span>
         </p>
 
         <div className="flex gap-2 text-gray-200">
@@ -181,7 +200,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
                   return (
                     <td className="box-border" key={date.toString()}>
                       <button
-                        className="w-[95%] mb-1 aspect-square text-white bg-gray-600 text-center cursor-pointer rounded-lg hover:bg-gray-500 hover:opacity-60 disabled:bg-gray-800 disabled:hover:bg-gray-800 disabled:cursor-default disabled:opacity-40"
+                        className="w-[95%] mb-1 aspect-square text-white bg-gray-600 item-center justify-center text-center cursor-pointer rounded-lg hover:bg-gray-500 hover:opacity-60 disabled:bg-gray-800 disabled:hover:bg-gray-800 disabled:cursor-default disabled:opacity-40"
                         disabled={disabled}
                         onClick={() => onDateSelected(date.toDate())}
                       >

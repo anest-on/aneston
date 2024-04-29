@@ -1,18 +1,12 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 import { MultiStep } from '@/components/multiStep'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { ArrowRight } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { api } from '@/lib/axios'
-import { AxiosError } from 'axios'
 import {
   Form,
   FormControl,
@@ -21,6 +15,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { api } from '@/lib/axios'
+import { AxiosError } from 'axios'
+import { ArrowRight } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 const updateProfileSchema = z.object({
   user_link: z

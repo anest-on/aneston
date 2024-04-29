@@ -64,7 +64,7 @@ const SummaryContent = ({
     await api.post('/form', {
       doctor_url: doctorLink,
       pacient_name: data.pacient_name,
-      pacient_birthdate: pacientData?.pacient_name,
+      pacient_birthdate: pacientData?.pacient_birthdate,
       pacient_gender: pacientData?.pacient_gender,
       pacient_email: pacientData?.pacient_email,
       pacient_number: data.pacient_contact,
