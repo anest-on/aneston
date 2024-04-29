@@ -148,6 +148,23 @@ export async function POST(req: Request) {
   }
 }
 
+type dayTimeIntervalProps = {
+  time_start_in_minutes: number
+  time_end_in_minutes: number
+}
+
+interface userTimeIntervalsGetResponse {
+  id: string
+  week_day: number
+  time_start_in_minutes: number
+  time_end_in_minutes: number
+  appointment_time: number
+  user_id: string
+  day_time_intervals: dayTimeIntervalProps[]
+  created_at: Date
+  updated_at: Date
+}
+
 export async function GET() {
   try {
     const session = await auth()
@@ -155,10 +172,46 @@ export async function GET() {
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
-    const data = await prisma.userTimeInterval.findMany({
+    const userTimeIntervals = await prisma.userTimeInterval.findMany({
       where: {
         user_id: session.user.id,
       },
+    })
+
+    // console.log(userTimeIntervals[0].id)
+
+    const dayTimeIntervals = await prisma.daytimeInterval.findMany({
+      where: {
+        doctor_id: session.user.id,
+      },
+    })
+
+    const data: userTimeIntervalsGetResponse[] = []
+
+    userTimeIntervals.forEach((timeInterval) => {
+      const dayTimeIntervalRepsonse: dayTimeIntervalProps[] = []
+
+      dayTimeIntervals.forEach((dayTimeInterval) => {
+        if (timeInterval.id === dayTimeInterval.interval_id) {
+          dayTimeIntervalRepsonse.push({
+            time_start_in_minutes:
+              dayTimeInterval.time_start_interval_in_minutes,
+            time_end_in_minutes: dayTimeInterval.time_end_in_minutes,
+          })
+        }
+      })
+
+      data.push({
+        id: timeInterval.id,
+        week_day: timeInterval.week_day,
+        time_start_in_minutes: timeInterval.time_start_in_minutes,
+        time_end_in_minutes: timeInterval.time_end_in_minutes,
+        appointment_time: timeInterval.appointment_time,
+        user_id: timeInterval.user_id,
+        day_time_intervals: dayTimeIntervalRepsonse,
+        created_at: timeInterval.created_at,
+        updated_at: timeInterval.updated_at,
+      })
     })
 
     return NextResponse.json(data)

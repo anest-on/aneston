@@ -1,16 +1,17 @@
 'use client'
 
 import { MultiStep } from '@/components/multiStep'
+import CirurgyPage, { cirurgySubmitProps } from '@/components/page/cirurgyPage'
 import CompanionPage, {
   companionSubmitProps,
 } from '@/components/page/companionPage'
 import PacientPage, { pacientSubmitProps } from '@/components/page/pacientPage'
-import CirurgyPage, { cirurgySubmitProps } from '@/components/page/cirurgyPage'
 import { Button } from '@/components/ui/button'
 
-import { useEffect, useState } from 'react'
-import SummaryPage, { doctorProps } from '@/components/page/summaryPage'
+import CalendarPage from '@/components/page/calendarPage'
 import { summarySubmitProps } from '@/components/page/summaryContent'
+import SummaryPage, { doctorProps } from '@/components/page/summaryPage'
+import { useEffect, useState } from 'react'
 
 const FormBody = ({ doctor }: { doctor: doctorProps }) => {
   const [pacientData, setPacientData] = useState<pacientSubmitProps | null>(
@@ -28,7 +29,7 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
     null,
   )
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(4)
 
   function handleCirurgySubmit(values: cirurgySubmitProps | null) {
     if (values) {
@@ -133,7 +134,7 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
               ),
               4: (
                 <div className="flex flex-col gap-4">
-                  Work in progress
+                  <CalendarPage doctor={doctor} />
                   <Button onClick={() => setStep(3)}>Voltar</Button>
                   <Button onClick={() => setStep(5)}>próximo</Button>
                 </div>
@@ -152,7 +153,6 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
                   getSummaryData={handleSummarySubmit}
                 />
               ),
-              // 5: '',
             }[step]
           }
         </div>

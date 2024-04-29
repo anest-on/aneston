@@ -39,6 +39,8 @@ CREATE TABLE "Form" (
     "pacient_has_anesthetic_complication" TEXT,
     "pacient_anesthetic_complications" TEXT[],
     "pacient_procedure_summary" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Form_pkey" PRIMARY KEY ("id")
 );
@@ -69,10 +71,24 @@ CREATE TABLE "user_time_intervals" (
     "time_start_in_minutes" INTEGER NOT NULL,
     "time_end_in_minutes" INTEGER NOT NULL,
     "appointment_time" INTEGER NOT NULL,
-    "interval_times" JSONB,
     "user_id" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "user_time_intervals_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "daytime_intervals" (
+    "id" TEXT NOT NULL,
+    "time_start_interval_in_minutes" INTEGER NOT NULL,
+    "time_end_in_minutes" INTEGER NOT NULL,
+    "interval_id" TEXT NOT NULL,
+    "doctor_id" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "daytime_intervals_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -100,6 +116,9 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE INDEX "user_time_intervals_user_id_idx" ON "user_time_intervals"("user_id");
+
+-- CreateIndex
+CREATE INDEX "daytime_intervals_interval_id_idx" ON "daytime_intervals"("interval_id");
 
 -- CreateIndex
 CREATE INDEX "Account_user_id_idx" ON "Account"("user_id");

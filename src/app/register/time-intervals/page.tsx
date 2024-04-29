@@ -18,8 +18,8 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 const daytimeIntervals = z.object({ start: z.string(), end: z.string() })
-    
-    
+
+
 
 const timeIntervalsFormSchema = z.object({
   intervals: z
@@ -38,15 +38,15 @@ const timeIntervalsFormSchema = z.object({
             }
           })
         })
-        .refine(
-          (intervals) => {
-            return intervals.every((interval) => interval.end > interval.start)
-          },
-          {
-            message:
-              'O horário de início do intervalo deve ocorrer antes do horário de término.',
-          },
-        )
+          .refine(
+            (intervals) => {
+              return intervals.every((interval) => interval.end > interval.start)
+            },
+            {
+              message:
+                'O horário de início do intervalo deve ocorrer antes do horário de término.',
+            },
+          )
       }),
     )
     .length(7)
@@ -82,7 +82,7 @@ const timeIntervalsFormSchema = z.object({
     .refine((appointmentTime) => appointmentTime > 0, {
       message: 'O tempo de duração da consulta deve ser maior que 0 minutos.',
     }),
-  
+
 })
 
 type TimeIntervalsFormInput = z.input<typeof timeIntervalsFormSchema>
@@ -102,7 +102,7 @@ const Register = () => {
         { weekDay: 6, enabled: false, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
       ],
       appointmentTime: '00:30',
-      
+
     },
   })
 
@@ -161,11 +161,11 @@ const Register = () => {
   */
   async function handleSetTimeIntervals(data: unknown) {
     // setSelectedIntervals(data.intervals)
-    
-    console.log(data)
+
+    console.log('data')
     const { intervals, appointmentTime } = data as TimeIntervalsFormOutput
     await api.post('/users/time-intervals', { intervals, appointmentTime })
-    // router.push('/register/pricing')
+    router.push('/register/pricing')
   }
 
   return (
@@ -186,7 +186,7 @@ const Register = () => {
         <form
           onSubmit={form.handleSubmit(handleSetTimeIntervals)}
           className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6 gap-4 text-white"
-        > 
+        >
           <div className="border border-solid border-gray-600 rounded-md mb-4">
             {fields.map((field, index) => {
               return (
@@ -257,7 +257,7 @@ const Register = () => {
                               // }
                               onChange={field.onChange}
                             />
-                            
+
                           </FormControl>
                         </FormItem>
                       )}
@@ -293,7 +293,7 @@ const Register = () => {
           </div> */}
 
           <Button disabled={isSubmitting}>
-            Próximo Passo <ArrowRight className="ml-2 h-4 w-4" />
+            Próximo Passo<ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </form>
       </Form>

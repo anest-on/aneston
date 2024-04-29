@@ -1,17 +1,17 @@
 /* eslint-disable @next/next/no-async-client-component */
-
-import CalendarIntermediary from '@/components/page/calendarIntermediary'
+'use client'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
-import { prisma } from '@/lib/prisma'
-import { useState } from 'react'
+import CalendarIntermediary from './calendarIntermediary'
 
-const CalendarPage = async ({ params }: { params: { user_link: string } }) => {
-  const doctor = await prisma.user.findFirst({
-    where: {
-      user_link: params.user_link,
-    },
-  })
+export interface doctorProps {
+  avatar_url: string
+  name: string
+  state: string
+  city: string
+  user_link: string
+}
 
+const CalendarPage = ({ doctor }: { doctor: doctorProps }) => {
   return (
     <div className="flex flex-col items-center mt-10">
       <div className="max-w-[852px] py-0 px-4 my-4 mx-20">
@@ -31,8 +31,8 @@ const CalendarPage = async ({ params }: { params: { user_link: string } }) => {
         </div>
       </div>
 
-      <div className="w-[35%] flex relative my-6 mx-0 p-0 bg-gray-800 border rounded-lg border-solid border-gray-600">
-        {/* <CalendarIntermediary /> */}
+      <div className="flex relative my-6 mx-0 p-0 bg-gray-900 border rounded-lg border-solid border-gray-600">
+        <CalendarIntermediary />
       </div>
     </div>
   )

@@ -45,7 +45,7 @@ const IntervalForm = React.forwardRef<HTMLInputElement, IntervalFormProps>(
         [inputName]: value,
       }
       setIntervals(updatedIntervals)
-      console.log(updatedIntervals)
+      // console.log(updatedIntervals)
 
       const filteredIntervals: Interval[] = []
 
