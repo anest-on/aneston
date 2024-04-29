@@ -32,7 +32,7 @@ const CalendarIntermediary = ({
   const [availability, setAvailability] = useState<number[]>([])
 
   useMemo(async () => {
-    const request = await api.get('/users/time-intervals')
+    const request = await api.get('/time-intervals')
     console.log(request.data)
     request &&
       setIntervals(() => request.data as userTimeIntervalsGetResponse[])

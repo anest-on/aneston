@@ -146,9 +146,7 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
                   companionData={companionData}
                   pacientData={pacientData}
                   setObservationsData={{
-                    observation: summaryData?.pacient_observations
-                      ? summaryData?.pacient_observations
-                      : '',
+                    observation: summaryData?.pacient_observations ?? '',
                   }}
                   getSummaryData={handleSummarySubmit}
                 />
