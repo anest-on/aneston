@@ -32,7 +32,7 @@ const CalendarIntermediary = ({
   const [availability, setAvailability] = useState<number[]>([])
 
   useMemo(async () => {
-    const request = await api.get('https://aneston.vercel.app/time-intervals')
+    const request = await api.get('https://aneston.vercel.app/api/time-intervals')
     console.log(request.data)
     request &&
       setIntervals(() => request.data as userTimeIntervalsGetResponse[])
