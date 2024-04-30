@@ -167,14 +167,14 @@ interface userTimeIntervalsGetResponse {
 
 export async function GET() {
   try {
-    const session = await auth()
-    if (!session) {
-      return new NextResponse('Unauthorized', { status: 401 })
-    }
+    // const session = await auth()
+    // if (!session) {
+    //   return new NextResponse('Unauthorized', { status: 401 })
+    // }
 
     const userTimeIntervals = await prisma.userTimeInterval.findMany({
       where: {
-        user_id: session.user.id,
+        user_id: 'f9be6f6b-f0d1-43fe-a5c0-7259b7a90d27',
       },
     })
 
@@ -182,7 +182,7 @@ export async function GET() {
 
     const dayTimeIntervals = await prisma.daytimeInterval.findMany({
       where: {
-        doctor_id: session.user.id,
+        doctor_id: 'f9be6f6b-f0d1-43fe-a5c0-7259b7a90d27',
       },
     })
 
