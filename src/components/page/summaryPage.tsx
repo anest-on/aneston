@@ -3,10 +3,6 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import SummaryContent, { SummaryProps } from './summaryContent'
 
-import { pacientSubmitProps } from './pacientPage'
-import { companionSubmitProps } from './companionPage'
-import { cirurgySubmitProps } from './cirurgyPage'
-
 export interface doctorProps {
   avatar_url: string
   name: string
@@ -26,6 +22,7 @@ const SummaryPage = ({
   cirurgyData,
   setObservationsData,
   getSummaryData,
+  scheduleData,
 }: SummaryPageProps) => {
   return (
     <div className="flex flex-col items-center">
@@ -53,6 +50,7 @@ const SummaryPage = ({
         pacientData={pacientData}
         setObservationsData={setObservationsData}
         getSummaryData={getSummaryData}
+        scheduleData={scheduleData}
         doctorLink={doctor.user_link}
       />
     </div>

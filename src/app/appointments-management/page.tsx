@@ -1,7 +1,9 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 'use client'
 
+import { DeletePatientData, PatientForm } from '@/components/patientForm'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -10,25 +12,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useToast } from '@/components/ui/use-toast'
 import { api } from '@/lib/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AxiosError } from 'axios'
 import { Copy } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { useToast } from '@/components/ui/use-toast'
-import { useSession } from 'next-auth/react'
-import {
-  DeletePatientData,
-  Patient,
-  PatientForm,
-  UpdatePatientData,
-} from '@/components/patientForm'
-import { pacientSubmitProps } from '../../components/page/pacientPage'
-import { companionSubmitProps } from '../../components/page/companionPage'
 import { cirurgySubmitProps } from '../../components/page/cirurgyPage'
+import { companionSubmitProps } from '../../components/page/companionPage'
+import { pacientSubmitProps } from '../../components/page/pacientPage'
 
 const patientSchema = z.object({
   name: z
@@ -44,8 +39,8 @@ const patientSchema = z.object({
 
 export interface formPatientInterface
   extends pacientSubmitProps,
-    cirurgySubmitProps,
-    companionSubmitProps {
+  cirurgySubmitProps,
+  companionSubmitProps {
   id: string
   doctor_id: string
   created_at: string

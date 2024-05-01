@@ -162,7 +162,7 @@ const Register = () => {
   async function handleSetTimeIntervals(data: unknown) {
     // setSelectedIntervals(data.intervals)
 
-    console.log('data')
+    // console.log('data')
     const { intervals, appointmentTime } = data as TimeIntervalsFormOutput
     await api.post('/time-intervals', { intervals, appointmentTime })
     router.push('/register/pricing')

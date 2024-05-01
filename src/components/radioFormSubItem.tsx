@@ -1,11 +1,8 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, ChangeEvent } from 'react'
-import { Button } from './ui/button'
-import { Plus, Trash } from 'lucide-react'
-import { Input } from './ui/input'
 import { cn } from '@/lib/utils'
-import { RadioGroup, RadioGroupItem } from './ui/radio-group'
+import React, { ChangeEvent, useState } from 'react'
 import { Label } from './ui/label'
+import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 
 export interface SubItemCheckboxProps
   extends Omit<
@@ -37,7 +34,7 @@ const RadioFormSubItem = React.forwardRef<HTMLInputElement, SubItemCheckboxProps
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       setInputValue(e.target.value)
-      console.log(children)
+      // console.log(children)
     }
 
     const hadleRadioGroupValueChange = (value: string) => {

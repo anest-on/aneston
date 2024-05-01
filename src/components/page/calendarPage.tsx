@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-async-client-component */
 'use client'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '../ui/button'
 import CalendarIntermediary from './calendarIntermediary'
 
 export interface doctorProps {
@@ -11,7 +12,21 @@ export interface doctorProps {
   user_link: string
 }
 
-const CalendarPage = ({ doctor }: { doctor: doctorProps }) => {
+interface CalendarPageProps {
+  doctor: doctorProps
+  setCalendarSchedule?: Date | null
+  getCalendarSchedule: (value: Date | null) => void
+}
+
+const CalendarPage = ({
+  doctor,
+  setCalendarSchedule,
+  getCalendarSchedule,
+}: CalendarPageProps) => {
+  const handleSelectedDate = (value: Date) => {
+    console.log(value)
+  }
+
   return (
     <div className="flex flex-col items-center mt-10">
       <div className="max-w-[852px] py-0 px-4 my-4 mx-20">
@@ -32,8 +47,22 @@ const CalendarPage = ({ doctor }: { doctor: doctorProps }) => {
       </div>
 
       <div className="flex relative my-6 mx-0 p-0 bg-gray-900 border rounded-lg border-solid border-gray-600">
-        <CalendarIntermediary />
+        <CalendarIntermediary
+          userLink={doctor.user_link}
+          onSelectDateTime={getCalendarSchedule}
+        />
       </div>
+
+      <Button
+        variant={'circle'}
+        className="w-[150px] rounded-md"
+        onClick={() => getCalendarSchedule(null)}
+      >
+        Voltar
+      </Button>
+      {/* <Button variant={'default'} className="w-[150px]" type="submit">
+          Continuar
+        </Button> */}
     </div>
   )
 }

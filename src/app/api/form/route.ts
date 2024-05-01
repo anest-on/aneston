@@ -1,13 +1,13 @@
 /* eslint-disable camelcase */
+import { auth } from '@/auth'
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from 'next/server'
-import { auth } from '@/auth'
 
 const prisma = new PrismaClient()
 
 export async function POST(req: Request) {
   const body = await req.json()
-  console.log(body)
+  // console.log(body)
   const {
     doctor_url,
     pacient_name,

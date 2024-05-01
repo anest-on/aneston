@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 interface Interval {
   start: number
@@ -165,24 +165,27 @@ interface userTimeIntervalsGetResponse {
   updated_at: Date
 }
 
-export async function GET() {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { user_link: string } },
+) {
   try {
-    const session = await auth()
-    if (!session) {
-      return new NextResponse('Unauthorized', { status: 401 })
-    }
-
-    const userTimeIntervals = await prisma.userTimeInterval.findMany({
+    const user_link = String(params.user_link)
+    const user = await prisma.user.findFirst({
       where: {
-        user_id: session.user.id,
+        user_link,
       },
     })
 
-    // console.log(userTimeIntervals[0].id)
+    const userTimeIntervals = await prisma.userTimeInterval.findMany({
+      where: {
+        user_id: user?.id,
+      },
+    })
 
     const dayTimeIntervals = await prisma.daytimeInterval.findMany({
       where: {
-        doctor_id: session.user.id,
+        doctor_id: user?.id,
       },
     })
 

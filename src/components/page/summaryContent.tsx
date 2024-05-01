@@ -1,5 +1,14 @@
 /* eslint-disable @next/next/no-async-client-component */
 
+import { api } from '@/lib/axios'
+import { zodResolver } from '@hookform/resolvers/zod'
+import dayjs from 'dayjs'
+import ptBr from 'dayjs/locale/pt-br'
+import { Calendar, Clock } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { Button } from '../ui/button'
 import {
   Form,
   FormControl,
@@ -9,17 +18,10 @@ import {
   FormMessage,
 } from '../ui/form'
 import { Input } from '../ui/input'
-import { Button } from '../ui/button'
-import { useRouter } from 'next/navigation'
-import { api } from '@/lib/axios'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Calendar, Clock } from 'lucide-react'
 import { Textarea } from '../ui/textarea'
-import { pacientSubmitProps } from './pacientPage'
-import { companionSubmitProps } from './companionPage'
 import { cirurgySubmitProps } from './cirurgyPage'
+import { companionSubmitProps } from './companionPage'
+import { pacientSubmitProps } from './pacientPage'
 
 const summaryFormSchema = z.object({
   pacient_name: z.string(),
@@ -33,6 +35,7 @@ export interface SummaryProps {
   pacientData: pacientSubmitProps | null
   companionData: companionSubmitProps | null
   cirurgyData: cirurgySubmitProps | null
+  scheduleData: Date | null
   setObservationsData?: { observation: string } | null
   getSummaryData: (value: summarySubmitProps | null) => void
   doctorLink?: string
@@ -45,6 +48,7 @@ const SummaryContent = ({
   setObservationsData,
   getSummaryData,
   doctorLink,
+  scheduleData,
 }: SummaryProps) => {
   const router = useRouter()
 
@@ -113,10 +117,17 @@ const SummaryContent = ({
       <div className="flex flex-row items-center justify-center text-[0.8rem] gap-10 mt-8">
         <div className="flex items-center">
           <Calendar size={18} />
-          <p className="ml-1 text-gray-100">22 de setembro de 2023</p>
+          <p className="ml-1 text-gray-100">
+            {dayjs(scheduleData)
+              .locale(ptBr)
+              .format('DD[ de ] MMMM[ de ] YYYY')}
+          </p>
         </div>
         <div className="flex items-center">
-          <Clock size={18} /> <p className="ml-1 text-gray-100">11:00</p>
+          <Clock size={18} />{' '}
+          <p className="ml-1 text-gray-100">
+            {dayjs(scheduleData).locale(ptBr).format('HH[:]mm')}
+          </p>
         </div>
       </div>
       <Form {...form}>
