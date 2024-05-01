@@ -1,6 +1,6 @@
 'use client'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
-import { ChevronLeft, ChevronRight, Circle } from 'lucide-react'
 
 import { Button } from './ui/button'
 
@@ -12,12 +12,12 @@ export default function Carousel({ children: slides }: carouselProps) {
   const [curr, setCurr] = useState(0)
 
   const prev = () => {
-    console.log(curr, slides.length - 1)
+    // console.log(curr, slides.length - 1)
     setCurr((curr) => (curr === 0 ? pageCounter() : curr - 1))
   }
 
   const next = () => {
-    console.log(curr, slides.length - 1)
+    // console.log(curr, slides.length - 1)
     setCurr((curr) => (curr === pageCounter() ? 0 : curr + 1))
   }
 

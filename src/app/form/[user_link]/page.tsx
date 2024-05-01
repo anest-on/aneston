@@ -1,5 +1,5 @@
-import FormBody from './_components/formBody'
 import { prisma } from '@/lib/prisma'
+import FormBody from './_components/formBody'
 
 const Form = async ({ params }: { params: { user_link: string } }) => {
   const doctor = await prisma.user.findFirst({

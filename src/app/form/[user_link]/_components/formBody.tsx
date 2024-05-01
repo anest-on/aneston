@@ -6,7 +6,6 @@ import CompanionPage, {
   companionSubmitProps,
 } from '@/components/page/companionPage'
 import PacientPage, { pacientSubmitProps } from '@/components/page/pacientPage'
-import { Button } from '@/components/ui/button'
 
 import CalendarPage from '@/components/page/calendarPage'
 import { summarySubmitProps } from '@/components/page/summaryContent'
@@ -29,7 +28,9 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
     null,
   )
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(4)
+  const [scheduleData, setScheduleData] = useState<Date | null>(null)
+
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
 
   function handleCirurgySubmit(values: cirurgySubmitProps | null) {
     if (values) {
@@ -56,6 +57,15 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
     }
   }
 
+  function handleCalendarSubmit(values: Date | null) {
+    if (values) {
+      setScheduleData(values)
+      setStep(5)
+    } else {
+      setStep(3)
+    }
+  }
+
   function handleSummarySubmit(values: summarySubmitProps | null) {
     if (values) {
       setSummaryData(values)
@@ -70,13 +80,14 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
     console.log(companionData)
     console.log(cirurgyData)
     console.log(summaryData)
+    console.log(scheduleData)
 
     // pacientData && companionData
     //   ? setStep(3)
     //   : pacientData && !companionData
     //     ? setStep(2)
     //     : setStep(1)
-  }, [cirurgyData, companionData, pacientData, summaryData])
+  }, [cirurgyData, companionData, pacientData, summaryData, scheduleData])
 
   return (
     <main className="max-w-[800px] justify-center items-center mx-auto my-20  ">
@@ -134,9 +145,12 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
               ),
               4: (
                 <div className="flex flex-col gap-4">
-                  <CalendarPage doctor={doctor} />
-                  <Button onClick={() => setStep(3)}>Voltar</Button>
-                  <Button onClick={() => setStep(5)}>próximo</Button>
+                  <CalendarPage
+                    doctor={doctor}
+                    getCalendarSchedule={handleCalendarSubmit}
+                  />
+                  {/* <Button onClick={() => setStep(3)}>Voltar</Button>
+                  <Button onClick={() => setStep(5)}>próximo</Button> */}
                 </div>
               ),
               5: (
@@ -145,6 +159,7 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
                   cirurgyData={cirurgyData}
                   companionData={companionData}
                   pacientData={pacientData}
+                  scheduleData={scheduleData}
                   setObservationsData={{
                     observation: summaryData?.pacient_observations ?? '',
                   }}

@@ -12,9 +12,12 @@ import {
   userTimeIntervalsGetResponse
 } from '../calendar'
 
+import { BASE_URL as baseUrl } from '@/constants/strings'
+
 interface CalendarStepProps {
   onSelectDateTime?: (date: Date) => void
   isScheduleConfirmed?: boolean
+  userLink: string
 }
 
 interface weekDayProps {
@@ -25,6 +28,7 @@ interface weekDayProps {
 const CalendarIntermediary = ({
   onSelectDateTime,
   isScheduleConfirmed,
+  userLink
 }: CalendarStepProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [intervals, setIntervals] = useState<userTimeIntervalsGetResponse[]>([])
@@ -32,8 +36,8 @@ const CalendarIntermediary = ({
   const [availability, setAvailability] = useState<number[]>([])
 
   useMemo(async () => {
-    const request = await api.get('https://aneston.vercel.app/api/time-intervals')
-    console.log(request.data)
+    const request = await api.get(`${baseUrl}api/time-intervals/${userLink}`)
+    // console.log(request.data)
     request &&
       setIntervals(() => request.data as userTimeIntervalsGetResponse[])
   }, [])
@@ -69,14 +73,14 @@ const CalendarIntermediary = ({
 
 
   function handleSelectTime(value: number) {
-    // const dateWithTime = dayjs(selectedDate)
-    //   .locale(ptBr)
-    //   .set('hour', hour)
-    //   .set('minute', Math.round((hour - Math.floor(hour)) * 60))
-    //   .set('second', 0)
-    //   .toDate()
-    console.log(value)
-    // onSelectDateTime && onSelectDateTime(dateWithTime)
+    const hour = value / 60
+
+    const dateWithTime = dayjs(selectedDate)
+      .set('hour', hour)
+      .set('minute', Math.round((hour - Math.floor(hour)) * 60))
+      .set('second', 0)
+      .toDate()
+    onSelectDateTime && onSelectDateTime(dateWithTime)
   }
 
   return (

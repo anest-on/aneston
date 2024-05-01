@@ -3,7 +3,10 @@ const nextConfig = {
   images: {
     domains: ['lh3.googleusercontent.com'],
   },
-  webpack5: true,
+  reactStrictMode: true,
+  env: {
+    BASE_URL: process.env.BASE_URL,
+  },
   webpack: (config) => {
     config.resolve.fallback = { fs: false }
 

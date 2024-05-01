@@ -14,8 +14,8 @@ const Form = async ({ params }: { params: { user_link: string } }) => {
             Formulário enviado com sucesso!
           </strong>
           <p className="mb-6">
-            Em breve o Dr {doctor?.name} entrará em contato para agendar sua
-            consulta.
+            Em breve o Dr. {doctor?.name} entrará em contato para confirmar a
+            sua consulta.
           </p>
         </div>
       </div>
