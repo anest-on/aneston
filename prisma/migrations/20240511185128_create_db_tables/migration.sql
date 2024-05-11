@@ -4,6 +4,7 @@ CREATE TABLE "Form" (
     "doctor_id" TEXT NOT NULL,
     "pacient_name" TEXT NOT NULL,
     "pacient_birthdate" TEXT NOT NULL,
+    "pacient_cpf" TEXT NOT NULL,
     "pacient_gender" TEXT NOT NULL,
     "pacient_email" TEXT NOT NULL,
     "pacient_number" TEXT NOT NULL,

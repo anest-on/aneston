@@ -126,7 +126,7 @@ export default function PacientPage({
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <DateFormItem {...field}>Qual o seu CPF?</DateFormItem>
+                <TextFormItem {...field}>Qual o seu CPF?</TextFormItem>
               </FormControl>
             </FormItem>
           )}

@@ -70,6 +70,7 @@ const SummaryContent = ({
       pacient_name: data.pacient_name,
       pacient_birthdate: pacientData?.pacient_birthdate,
       pacient_gender: pacientData?.pacient_gender,
+      pacient_cpf: pacientData?.pacient_cpf,
       pacient_email: pacientData?.pacient_email,
       pacient_number: data.pacient_contact,
       pacient_healthInsurance: pacientData?.pacient_healthInsurance,
