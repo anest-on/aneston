@@ -4,6 +4,9 @@ import { ColumnDef } from '@tanstack/react-table'
 
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 
+import { cirurgySubmitProps } from '@/components/page/cirurgyPage'
+import { companionSubmitProps } from '@/components/page/companionPage'
+import { pacientSubmitProps } from '@/components/page/pacientPage'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -13,22 +16,48 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import dayjs from 'dayjs'
+import ptBr from 'dayjs/locale/pt-br'
 
 // Nome, email, contato, data consulta
-export type Payment = {
+// export interface Patient
+//   extends cirurgySubmitProps,
+//     companionSubmitProps,
+//     pacientSubmitProps {
+//   id: string
+//   doctor_url: string
+//   schedule_date: string
+// }
+
+export interface Patient
+  extends pacientSubmitProps,
+    cirurgySubmitProps,
+    companionSubmitProps {
   id: string
-  amount: number
-  status: 'pending' | 'processing' | 'success' | 'failed'
-  email: string
+  doctor_id: string
+  doctor_url: string
+  schedule_date: string
+  created_at: string
+  updated_at: string
 }
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Patient>[] = [
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: 'pacient_name',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Nome
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
-    accessorKey: 'email',
+    accessorKey: 'pacient_email',
     // header: 'Email',
     header: ({ column }) => {
       return (
@@ -43,13 +72,34 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
-    accessorKey: 'amount',
-    header: 'Amount',
+    accessorKey: 'schedule_date',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Data da consulta
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const patient = row.original
+
+      return (
+        <div className="text-left font-medium">
+          {dayjs(patient.schedule_date)
+            .locale(ptBr)
+            .format('DD[/]MM[/]YYYY [ às ] HH[h]mm')}
+        </div>
+      )
+    },
   },
   {
     id: 'actions',
     cell: ({ row }) => {
-      const payment = row.original
+      const patient = row.original
 
       return (
         <DropdownMenu>
@@ -65,7 +115,7 @@ export const columns: ColumnDef<Payment>[] = [
           >
             <DropdownMenuLabel>Ações com paciente</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(patient.id)}
             >
               Ver informações
             </DropdownMenuItem>

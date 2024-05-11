@@ -40,6 +40,7 @@ CREATE TABLE "Form" (
     "pacient_has_anesthetic_complication" TEXT,
     "pacient_anesthetic_complications" TEXT[],
     "pacient_procedure_summary" TEXT,
+    "schedule_date" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

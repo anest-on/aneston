@@ -13,7 +13,6 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
   Table,
@@ -25,10 +24,11 @@ import {
 } from '@/components/ui/table'
 
 import { useState } from 'react'
+import { DataTablePagination } from './data-table-pagination'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  data?: TData[]
 }
 
 export function DataTable<TData, TValue>({
@@ -39,7 +39,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
   const table = useReactTable({
-    data,
+    data: data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -58,9 +58,9 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center py-4">
         <Input
           placeholder="Buscar paciente"
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("pacient_name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("pacient_name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -112,7 +112,8 @@ export function DataTable<TData, TValue>({
     </div>
 
     <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
+      <DataTablePagination table={table} />
+        {/* <Button
           variant="circle"
           size="sm"
           onClick={() => table.previousPage()} 
@@ -127,7 +128,7 @@ export function DataTable<TData, TValue>({
           disabled={!table.getCanNextPage()}
         >
           Próximo
-        </Button>
+        </Button> */}
       </div>
     </div>
   )
