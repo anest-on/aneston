@@ -108,6 +108,7 @@ const SummaryContent = ({
       pacient_anesthetic_complications:
         cirurgyData?.pacient_anesthetic_complications,
       pacient_procedure_summary: cirurgyData?.pacient_procedure_summary,
+      schedule_date: scheduleData,
     })
 
     router.push(doctorLink + '/success')

@@ -6,13 +6,13 @@ import dayjs from 'dayjs'
 import ptBr from 'dayjs/locale/pt-br'
 import { X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { BASE_URL as baseUrl } from '../../constants/strings'
 import {
   Calendar,
   dayTimeIntervalProps,
   userTimeIntervalsGetResponse
 } from '../calendar'
 
-import { BASE_URL as baseUrl } from '@/constants/strings'
 
 interface CalendarStepProps {
   onSelectDateTime?: (date: Date) => void
@@ -37,7 +37,8 @@ const CalendarIntermediary = ({
 
   useMemo(async () => {
     const request = await api.get(`${baseUrl}api/time-intervals/${userLink}`)
-    // console.log(request.data)
+    // const request = await api.get(`http://localhost:3000/api/time-intervals/joaopedro`)
+    console.log(request.data)
     request &&
       setIntervals(() => request.data as userTimeIntervalsGetResponse[])
   }, [])
