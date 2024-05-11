@@ -47,6 +47,7 @@ export async function POST(req: Request) {
     pacient_has_anesthetic_complication,
     pacient_anesthetic_complications,
     pacient_procedure_summary,
+    schedule_date,
   } = body
 
   // FAZER VERIFICAÇÃO DOS CAMPOS OBRIGATÓRIOS
@@ -106,6 +107,7 @@ export async function POST(req: Request) {
       pacient_has_anesthetic_complication,
       pacient_anesthetic_complications,
       pacient_procedure_summary,
+      schedule_date,
     },
   })
 
@@ -210,8 +212,7 @@ export async function PUT(req: Request) {
     }
 
     const body = await req.json()
-    const { pacient_name, cirurgy_name, pacient_number, createdAt, doctor_id } =
-      body
+    const { pacient_name, cirurgy_name, pacient_number, doctor_id } = body
 
     const isNotDoctor = session.user.doctor_id !== undefined
     const completeAccess = session.user.accessType === 'FULL_ACCESS'

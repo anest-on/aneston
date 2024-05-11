@@ -164,6 +164,7 @@ const Register = () => {
 
     // console.log('data')
     const { intervals, appointmentTime } = data as TimeIntervalsFormOutput
+    // const request = await api.get(`${baseUrl}api/time-intervals/${userLink}`)
     await api.post('/time-intervals', { intervals, appointmentTime })
     router.push('/register/pricing')
   }
