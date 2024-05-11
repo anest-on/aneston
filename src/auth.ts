@@ -90,6 +90,18 @@ export const {
         session.user.doctor_id = token.doctor_id
       }
 
+      if (
+        token.easy_scheduling &&
+        session.user &&
+        typeof token.easy_scheduling === 'boolean'
+      ) {
+        session.user.easy_scheduling = token.easy_scheduling
+      }
+
+      if (token.message && session.user && typeof token.message === 'string') {
+        session.user.message = token.message
+      }
+
       return session
     },
     async jwt({ token }) {
@@ -104,6 +116,8 @@ export const {
       token.state = existingUser.state
       token.city = existingUser.city
       token.doctor_id = existingUser.doctor_id
+      token.easy_scheduling = existingUser.easy_scheduling
+      token.message = existingUser.message
 
       return token
     },

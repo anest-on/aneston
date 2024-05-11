@@ -57,6 +57,8 @@ CREATE TABLE "User" (
     "access_type" TEXT,
     "password" TEXT,
     "confirm_password" TEXT,
+    "easy_scheduling" BOOLEAN NOT NULL DEFAULT true,
+    "message" TEXT,
     "doctor_id" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,

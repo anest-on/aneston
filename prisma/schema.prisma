@@ -73,6 +73,8 @@ model User {
   access_type      String?
   password         String?
   confirm_password String?
+  easy_scheduling  Boolean @default(true)
+  message          String?
 
   doctor_id String?
 

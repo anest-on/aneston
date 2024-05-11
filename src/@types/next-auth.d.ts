@@ -12,6 +12,8 @@ declare module 'next-auth' {
     password: string
     confirm_password: string
     access_type: string
+    easy_scheduling: boolean
+    message: string
     doctor_id: string
   }
   interface Session {
