@@ -37,6 +37,7 @@ const updateProfileSchema = z.object({
     .string()
     .min(3, { message: 'O nome precisa ter pelo menos três letras.' }),
   email: z.string().email({ message: 'Digite um e-mail válido.' }),
+  crm: z.string(),
   city: z.string(),
   state: z.string().max(2, { message: 'Digite apenas a sigla do estado.' }),
 })
@@ -54,6 +55,7 @@ const Profile = () => {
       user_link: session?.user.user_link || '',
       name: session?.user.name || '',
       email: session?.user.email || '',
+      crm: session?.user.crm || '',
       city: session?.user.city || '',
       state: session?.user.state || '',
     },
@@ -138,6 +140,22 @@ const Profile = () => {
                         disabled={isSubmitting}
                         {...field}
                       />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <FormField
+                control={form.control}
+                name="crm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Seu CRM</FormLabel>
+                    <FormControl>
+                      <Input disabled={isSubmitting} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

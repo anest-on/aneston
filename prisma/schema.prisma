@@ -16,6 +16,7 @@ model Form {
   doctor_id                   String
   pacient_name                String
   pacient_birthdate           String
+  pacient_cpf                 String
   pacient_gender              String
   pacient_email               String
   pacient_number              String
@@ -66,6 +67,7 @@ model User {
   id               String  @id @default(uuid())
   name             String
   email            String  @unique
+  crm              String?
   user_link        String?
   city             String?
   state            String?

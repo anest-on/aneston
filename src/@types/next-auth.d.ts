@@ -5,6 +5,7 @@ declare module 'next-auth' {
     id: string
     name: string
     email: string
+    crm: string
     user_link: string
     city: string
     state: string

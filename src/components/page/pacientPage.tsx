@@ -26,6 +26,7 @@ const formSchema = z.object({
     message: 'user_link must be at least 2 characters.',
   }),
   pacient_birthdate: z.string(),
+  pacient_cpf: z.string(),
   pacient_gender: z.string(),
   pacient_email: z.string().email(),
   pacient_number: z.string(),
@@ -37,6 +38,7 @@ const formSchema = z.object({
 export interface pacientSubmitProps {
   pacient_name: string
   pacient_birthdate: string
+  pacient_cpf: string
   pacient_gender: string
   pacient_email: string
   pacient_number: string
@@ -62,6 +64,7 @@ export default function PacientPage({
     defaultValues: {
       pacient_name: setPacientData?.pacient_name || '',
       pacient_birthdate: setPacientData?.pacient_birthdate || '',
+      pacient_cpf: setPacientData?.pacient_cpf || '',
       pacient_gender: setPacientData?.pacient_gender || '',
       pacient_email: setPacientData?.pacient_email || '',
       pacient_number: setPacientData?.pacient_number || '',
@@ -112,6 +115,18 @@ export default function PacientPage({
                 <DateFormItem {...field}>
                   Qual a sua data de nascimento?
                 </DateFormItem>
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="pacient_cpf"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <DateFormItem {...field}>Qual o seu CPF?</DateFormItem>
               </FormControl>
             </FormItem>
           )}

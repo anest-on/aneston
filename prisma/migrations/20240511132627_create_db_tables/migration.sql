@@ -50,6 +50,7 @@ CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "crm" TEXT,
     "user_link" TEXT,
     "city" TEXT,
     "state" TEXT,

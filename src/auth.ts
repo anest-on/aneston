@@ -102,6 +102,10 @@ export const {
         session.user.message = token.message
       }
 
+      if (token.crm && session.user && typeof token.crm === 'string') {
+        session.user.crm = token.crm
+      }
+
       return session
     },
     async jwt({ token }) {
@@ -118,6 +122,7 @@ export const {
       token.doctor_id = existingUser.doctor_id
       token.easy_scheduling = existingUser.easy_scheduling
       token.message = existingUser.message
+      token.crm = existingUser.crm
 
       return token
     },
