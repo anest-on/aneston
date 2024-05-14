@@ -12,6 +12,10 @@ import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { api } from '@/lib/axios'
 import { AxiosError } from 'axios'
+import { SignatureDoctor } from '@/components/signatureDoctor'
+import Image from 'next/image'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { useState } from 'react'
 
 const settingsSchema = z.object({
   message: z.string(),
@@ -22,6 +26,9 @@ type SettingsData = z.infer<typeof settingsSchema>
 
 const AccessConfiguration = () => {
   const session = useSession()
+  const doctor = session.data?.user
+
+  const [open, setOpen] = useState(false)
 
   const form = useForm<z.infer<typeof settingsSchema>>({
     resolver: zodResolver(settingsSchema),
@@ -45,7 +52,7 @@ const AccessConfiguration = () => {
   }
 
   return (
-    <main className="w-[700px] h-screen mt-10 mx-auto mb-4 py-0 px-4">
+    <main className="w-[700px] h-full mt-10 mx-auto mb-4 py-0 px-4">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleUpdateSettings)}
@@ -107,6 +114,61 @@ const AccessConfiguration = () => {
                 </FormItem>
               )}
             />
+          </div>
+
+          <div className="flex flex-col mt-12 gap-2 ">
+            <div className="md:flex gap-10">
+              <p className="text-white font-bold">Assinatura</p>
+            </div>
+            <p>
+              Assinatura que ficará registrada na Certificação de Realização de
+              Consulta.
+            </p>
+
+            {doctor?.signature_url ? (
+              <div className="flex flex-col md:flex-row items-center justify-between px-4 mt-4 gap-4">
+                <div className="w-[300px] h-[150px] self-center md:self-start  bg-white flex border-gray-900 border-1">
+                  <Image
+                    src={doctor?.signature_url}
+                    alt="signature"
+                    width={300}
+                    height={150}
+                  />
+                </div>
+                <div className="mt-2 md:mt-0 md:mr-12">
+                  <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant={'outline'}>Alterar assinatura</Button>
+                    </DialogTrigger>
+                    <DialogContent className="flex flex-col w-[400px] h-[300px] justify-start bg-gray-800 border-gray-600 text-gray-200">
+                      <p className="font-bold">
+                        Realize aqui a sua nova assinatura
+                      </p>
+                      <div className="self-center w-[300px] h-[150px] ">
+                        <SignatureDoctor setOpen={setOpen} />
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between px-4 mt-4 gap-4">
+                <p className="text-center text-white font-bold">
+                  Você ainda não cadastrou uma assinatura!
+                </p>
+                <Dialog open={open} onOpenChange={setOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant={'outline'}>Cadastrar assinatura</Button>
+                  </DialogTrigger>
+                  <DialogContent className="flex flex-col w-[400px] h-[300px] justify-start bg-gray-800 border-gray-600 text-gray-200">
+                    <p className="font-bold">Realize aqui a sua assinatura</p>
+                    <div className="self-center w-[300px] h-[150px] ">
+                      <SignatureDoctor setOpen={setOpen} />
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            )}
           </div>
 
           <Button disabled={isSubmitting} className="mt-8">

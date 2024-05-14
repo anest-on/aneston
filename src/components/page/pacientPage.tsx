@@ -45,6 +45,7 @@ export interface pacientSubmitProps {
   pacient_healthInsurance: string
   pacient_healthInsuranceName?: string
   pacient_healthInsuranceId?: string
+  pacient_signature?: string
 }
 
 interface pacientPageProps {

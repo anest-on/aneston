@@ -23,6 +23,7 @@ model Form {
   pacient_healthInsurance     String
   pacient_healthInsuranceName String?
   pacient_healthInsuranceId   String?
+  pacient_signature           String?
 
   companion_name    String
   companion_kinship String
@@ -78,6 +79,7 @@ model User {
   confirm_password String?
   easy_scheduling  Boolean @default(true)
   message          String?
+  signature_url    String?
 
   doctor_id String?
 

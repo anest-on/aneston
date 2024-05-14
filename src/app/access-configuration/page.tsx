@@ -53,6 +53,7 @@ import {
   ThirdPartyUserForm,
   UpdateUserData,
 } from '@/components/thirdPartyUserForm'
+import Image from 'next/image'
 
 const createUserSchema = z.object({
   name: z

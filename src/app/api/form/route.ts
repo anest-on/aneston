@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     pacient_healthInsurance,
     pacient_healthInsuranceName,
     pacient_healthInsuranceId,
+    pacient_signature,
     companion_name,
     companion_kinship,
     companion_email,
@@ -80,6 +81,7 @@ export async function POST(req: Request) {
       pacient_healthInsurance,
       pacient_healthInsuranceName,
       pacient_healthInsuranceId,
+      pacient_signature,
       companion_name,
       companion_kinship,
       companion_email,
@@ -270,6 +272,36 @@ export async function PUT(req: Request) {
       },
     })
     return NextResponse.json(patientUpdated)
+  } catch (error) {
+    return new NextResponse('Internal Error', { status: 500 })
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json()
+    const { id, pacient_signature } = body
+
+    const form = await prisma.form.findFirst({
+      where: {
+        id,
+      },
+    })
+
+    if (!form) {
+      return new NextResponse('Internal Error', { status: 400 })
+    }
+
+    const formUpdated = await prisma.form.update({
+      where: {
+        id,
+      },
+      data: {
+        pacient_signature,
+      },
+    })
+
+    return NextResponse.json(formUpdated)
   } catch (error) {
     return new NextResponse('Internal Error', { status: 500 })
   }
