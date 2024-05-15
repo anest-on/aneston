@@ -19,18 +19,16 @@ async function uploadFileToS3(buffer: Buffer, fileName: string) {
     ContentType: 'image/png',
   }
 
-  console.log('before sending s3:', params)
-
-  const command = new PutObjectCommand(params)
-  await s3Client.send(command)
-
-  console.log('after sending s3')
+  try {
+    const command = new PutObjectCommand(params)
+    await s3Client.send(command)
+  } catch (err) {
+    console.log(err)
+  }
 
   const fixedUrl = `https://${params.Bucket}.s3.${process.env.S3_REGION}.amazonaws.com/`
   const encodedUrl = encodeURIComponent(`${params.Key}`)
   const finalUrl = `${fixedUrl}${encodedUrl}`
-
-  console.log('final', finalUrl)
 
   return finalUrl
 }
