@@ -18,6 +18,10 @@ export function PrismaAdapter(): Adapter {
           confirm_password: user.confirm_password!,
           access_type: user.access_type!,
           doctor_id: user.doctor_id!,
+          crm: user.crm!,
+          message: user.message!,
+          signature_url: user.signature_url!,
+          easy_scheduling: user.easy_scheduling!,
         },
       })
 
@@ -34,6 +38,10 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
+        crm: user.crm!,
+        message: user.message!,
+        signature_url: user.signature_url!,
+        easy_scheduling: user.easy_scheduling!,
       }
     },
 
@@ -61,6 +69,10 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
+        crm: user.crm!,
+        message: user.message!,
+        signature_url: user.signature_url!,
+        easy_scheduling: user.easy_scheduling!,
       }
     },
 
@@ -88,6 +100,10 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
+        crm: user.crm!,
+        message: user.message!,
+        signature_url: user.signature_url!,
+        easy_scheduling: user.easy_scheduling!,
       }
     },
     async getUserByAccount({ providerAccountId, provider }) {
@@ -122,6 +138,10 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
+        crm: user.crm!,
+        message: user.message!,
+        signature_url: user.signature_url!,
+        easy_scheduling: user.easy_scheduling!,
       }
     },
 
@@ -141,6 +161,10 @@ export function PrismaAdapter(): Adapter {
           confirm_password: user.confirm_password!,
           access_type: user.access_type!,
           doctor_id: user.doctor_id!,
+          crm: user.crm!,
+          message: user.message!,
+          signature_url: user.signature_url!,
+          easy_scheduling: user.easy_scheduling!,
         },
       })
 
@@ -157,6 +181,10 @@ export function PrismaAdapter(): Adapter {
         access_type: user.access_type!,
         doctor_id: user.doctor_id!,
         emailVerified: null,
+        crm: user.crm!,
+        message: user.message!,
+        signature_url: user.signature_url!,
+        easy_scheduling: user.easy_scheduling!,
       }
     },
 
