@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       react: EmailTemplate({
         firstName: form.pacient_name,
         message: session.user.message,
-        consultationCertificate: `http://localhost:3000/consultation-certificate/${form.id}`,
+        consultationCertificate: `https://aneston.vercel.app/consultation-certificate/${form.id}`,
       }),
     })
 
