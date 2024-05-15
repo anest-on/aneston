@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     }
 
     const { data, error } = await resend.emails.send({
-      from: 'AnestOn <onboarding@resend.dev>',
+      from: 'AnestOn <contato@matheusadorno.com>',
       to: form.pacient_email,
       subject: 'AnestOn - Certificado de Consulta',
       html: '',
