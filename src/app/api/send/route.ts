@@ -33,6 +33,7 @@ export async function POST(req: Request) {
       from: 'AnestOn <onboarding@resend.dev>',
       to: form.pacient_email,
       subject: 'AnestOn - Certificado de Consulta',
+      html: '',
       react: EmailTemplate({
         firstName: form.pacient_name,
         message: session.user.message,
