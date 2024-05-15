@@ -31,6 +31,10 @@ export default {
           doctor_id: '',
           password: '',
           confirm_password: '',
+          crm: '',
+          message: '',
+          signature_url: '',
+          easy_scheduling: false,
         }
       },
     }),
@@ -80,7 +84,9 @@ export default {
             message: user.message ? user.message : '',
             crm: user.crm ? user.crm : '',
             signature_url: user.signature_url ? user.signature_url : '',
-            easy_scheduling: user.easy_scheduling ? user.easy_scheduling : '',
+            easy_scheduling: user.easy_scheduling
+              ? user.easy_scheduling
+              : false,
             password: user.password ? user.password : '',
             confirm_password: user.confirm_password
               ? user.confirm_password
