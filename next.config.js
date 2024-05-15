@@ -1,11 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['lh3.googleusercontent.com'],
-  },
-  reactStrictMode: true,
-  env: {
-    BASE_URL: process.env.BASE_URL,
+    domains: [
+      'lh3.googleusercontent.com',
+      'aneston-signatures.s3.us-east-2.amazonaws.com',
+    ],
   },
   webpack: (config) => {
     config.resolve.fallback = { fs: false }

@@ -16,6 +16,9 @@ type ExtendedUser = DefaultSession['user'] & {
   password: string
   confirm_password: string
   accessType: 'OWNER' | 'FULL_ACCESS' | 'DASHBOARD_ACCESS'
+  easy_scheduling: boolean
+  message: string
+  signature_url: string
   doctor_id: string
 }
 
@@ -90,6 +93,30 @@ export const {
         session.user.doctor_id = token.doctor_id
       }
 
+      if (
+        token.easy_scheduling &&
+        session.user &&
+        typeof token.easy_scheduling === 'boolean'
+      ) {
+        session.user.easy_scheduling = token.easy_scheduling
+      }
+
+      if (token.message && session.user && typeof token.message === 'string') {
+        session.user.message = token.message
+      }
+
+      if (token.crm && session.user && typeof token.crm === 'string') {
+        session.user.crm = token.crm
+      }
+
+      if (
+        token.signature_url &&
+        session.user &&
+        typeof token.signature_url === 'string'
+      ) {
+        session.user.signature_url = token.signature_url
+      }
+
       return session
     },
     async jwt({ token }) {
@@ -104,6 +131,10 @@ export const {
       token.state = existingUser.state
       token.city = existingUser.city
       token.doctor_id = existingUser.doctor_id
+      token.easy_scheduling = existingUser.easy_scheduling
+      token.message = existingUser.message
+      token.crm = existingUser.crm
+      token.signature_url = existingUser.signature_url
 
       return token
     },

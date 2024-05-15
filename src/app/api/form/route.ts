@@ -13,11 +13,13 @@ export async function POST(req: Request) {
     pacient_name,
     pacient_birthdate,
     pacient_gender,
+    pacient_cpf,
     pacient_email,
     pacient_number,
     pacient_healthInsurance,
     pacient_healthInsuranceName,
     pacient_healthInsuranceId,
+    pacient_signature,
     companion_name,
     companion_kinship,
     companion_email,
@@ -47,6 +49,7 @@ export async function POST(req: Request) {
     pacient_has_anesthetic_complication,
     pacient_anesthetic_complications,
     pacient_procedure_summary,
+    schedule_date,
   } = body
 
   // FAZER VERIFICAÇÃO DOS CAMPOS OBRIGATÓRIOS
@@ -72,11 +75,13 @@ export async function POST(req: Request) {
       pacient_name,
       pacient_birthdate,
       pacient_gender,
+      pacient_cpf,
       pacient_email,
       pacient_number,
       pacient_healthInsurance,
       pacient_healthInsuranceName,
       pacient_healthInsuranceId,
+      pacient_signature,
       companion_name,
       companion_kinship,
       companion_email,
@@ -106,6 +111,7 @@ export async function POST(req: Request) {
       pacient_has_anesthetic_complication,
       pacient_anesthetic_complications,
       pacient_procedure_summary,
+      schedule_date,
     },
   })
 
@@ -210,8 +216,7 @@ export async function PUT(req: Request) {
     }
 
     const body = await req.json()
-    const { pacient_name, cirurgy_name, pacient_number, createdAt, doctor_id } =
-      body
+    const { pacient_name, cirurgy_name, pacient_number, doctor_id } = body
 
     const isNotDoctor = session.user.doctor_id !== undefined
     const completeAccess = session.user.accessType === 'FULL_ACCESS'
@@ -267,6 +272,36 @@ export async function PUT(req: Request) {
       },
     })
     return NextResponse.json(patientUpdated)
+  } catch (error) {
+    return new NextResponse('Internal Error', { status: 500 })
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json()
+    const { id, pacient_signature } = body
+
+    const form = await prisma.form.findFirst({
+      where: {
+        id,
+      },
+    })
+
+    if (!form) {
+      return new NextResponse('Internal Error', { status: 400 })
+    }
+
+    const formUpdated = await prisma.form.update({
+      where: {
+        id,
+      },
+      data: {
+        pacient_signature,
+      },
+    })
+
+    return NextResponse.json(formUpdated)
   } catch (error) {
     return new NextResponse('Internal Error', { status: 500 })
   }

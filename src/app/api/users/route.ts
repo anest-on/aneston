@@ -53,6 +53,7 @@ export async function PUT(req: Request) {
     if (userLinkAlreadyExists && userLinkAlreadyExists.id !== session.user.id) {
       return new NextResponse('Internal Error', { status: 400 })
     }
+    // console.log('teste')
 
     const user = await prisma.user.update({
       where: {
@@ -64,6 +65,7 @@ export async function PUT(req: Request) {
     })
     return NextResponse.json(user)
   } catch (error) {
+    console.log(error)
     // console.log('[USER_ID]', error)
     return new NextResponse('Internal Error', { status: 500 })
   }

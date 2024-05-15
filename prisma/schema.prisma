@@ -16,12 +16,14 @@ model Form {
   doctor_id                   String
   pacient_name                String
   pacient_birthdate           String
+  pacient_cpf                 String
   pacient_gender              String
   pacient_email               String
   pacient_number              String
   pacient_healthInsurance     String
   pacient_healthInsuranceName String?
   pacient_healthInsuranceId   String?
+  pacient_signature           String?
 
   companion_name    String
   companion_kinship String
@@ -53,6 +55,7 @@ model Form {
   pacient_has_anesthetic_complication  String?
   pacient_anesthetic_complications     String[]
   pacient_procedure_summary            String?
+  schedule_date                        String
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -66,6 +69,7 @@ model User {
   id               String  @id @default(uuid())
   name             String
   email            String  @unique
+  crm              String?
   user_link        String?
   city             String?
   state            String?
@@ -73,6 +77,9 @@ model User {
   access_type      String?
   password         String?
   confirm_password String?
+  easy_scheduling  Boolean @default(true)
+  message          String?
+  signature_url    String?
 
   doctor_id String?
 
