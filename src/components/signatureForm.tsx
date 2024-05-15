@@ -10,20 +10,20 @@ interface signatureProps {
   formId: string
 }
 
-const getUrlExtension = (url) => {
-  return url.split(/[#?]/)[0].split('.').pop().trim()
+const getUrlExtension = (url: string) => {
+  return url?.split(/[#?]/)[0]?.split('.')?.pop()?.trim()
 }
 
-const onImageEdit = async (imgUrl) => {
+const onImageEdit = async (imgUrl: string) => {
   const imgExt = getUrlExtension(imgUrl)
 
   const response = await fetch(imgUrl)
   const blob = await response.blob()
+
+  if (!imgExt) return
   const file = new File([blob], imgExt, {
     type: blob.type,
   })
-
-  console.log(file)
 
   return file
 }
