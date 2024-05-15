@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-import { api } from '@/lib/axios'
 
 const s3Client = new S3Client({
   region: process.env.S3_REGION as string,
@@ -20,12 +19,18 @@ async function uploadFileToS3(buffer: Buffer, fileName: string) {
     ContentType: 'image/png',
   }
 
+  console.log('before sending s3:', params)
+
   const command = new PutObjectCommand(params)
   await s3Client.send(command)
+
+  console.log('after sending s3')
 
   const fixedUrl = `https://${params.Bucket}.s3.${process.env.S3_REGION}.amazonaws.com/`
   const encodedUrl = encodeURIComponent(`${params.Key}`)
   const finalUrl = `${fixedUrl}${encodedUrl}`
+
+  console.log('final', finalUrl)
 
   return finalUrl
 }
