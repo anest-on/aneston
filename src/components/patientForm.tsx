@@ -28,6 +28,7 @@ import moment from 'moment'
 import { api } from '@/lib/axios'
 import { useReactToPrint } from 'react-to-print'
 import PatientInfosPdfButton from './patientInfosPdfButton'
+import PatientSendEmailCertificateButton from './patientSendEmailCertificateButton'
 
 export type Patient = {
   name: string
@@ -192,6 +193,7 @@ export function PatientForm({
             </DialogContent>
           </Dialog>
           <PatientInfosPdfButton patient={patient} />
+          <PatientSendEmailCertificateButton formId={patient.id} />
 
           <Dialog>
             <DialogTrigger asChild>
