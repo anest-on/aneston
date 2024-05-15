@@ -77,6 +77,10 @@ export default {
             state: user.state ? user.state : '',
             avatar_url: user.avatar_url ? user.avatar_url : '',
             access_type: user.access_type ? user.access_type : '',
+            message: user.message ? user.message : '',
+            crm: user.crm ? user.crm : '',
+            signature_url: user.signature_url ? user.signature_url : '',
+            easy_scheduling: user.easy_scheduling ? user.easy_scheduling : '',
             password: user.password ? user.password : '',
             confirm_password: user.confirm_password
               ? user.confirm_password
