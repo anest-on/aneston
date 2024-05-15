@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { api } from '@/lib/axios'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import SignatureCanvas from 'react-signature-canvas'
 import { useToast } from './ui/use-toast'
 
@@ -31,18 +31,24 @@ const onImageEdit = async (imgUrl: string) => {
 
 export function SignatureDoctor({ setOpen }: SignatureDoctorProps) {
   const [sign, setSign] = useState()
-  const [url, setUrl] = useState()
+  const [url, setUrl] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
 
   const { toast } = useToast()
   const router = useRouter()
 
+  const padRef = React.useRef<SignatureCanvas>(null)
+
   const handleClear = () => {
-    sign?.clear()
+    padRef.current?.clear()
   }
 
-  const handleGenerate = async (event) => {
-    setUrl(sign?.getTrimmedCanvas().toDataURL('image/png'))
+  const handleGenerate = async (event: React.SyntheticEvent<EventTarget>) => {
+    const settingUrl = padRef.current?.getTrimmedCanvas().toDataURL('image/png')
+
+    if (settingUrl) setUrl(settingUrl)
+
+    if (!url) return
 
     const input = document.getElementById('file')
     if (input && url) input.setAttribute('value', url)
@@ -51,6 +57,8 @@ export function SignatureDoctor({ setOpen }: SignatureDoctorProps) {
     if (!input?.getAttribute('value')) return
 
     const file = await onImageEdit(url)
+
+    if (!file) return
 
     const formData = new FormData()
     formData.append('file', file)
@@ -87,7 +95,7 @@ export function SignatureDoctor({ setOpen }: SignatureDoctorProps) {
       <div className="items-center justify-center border-solid border-gray-600 border-2 bg-white">
         <SignatureCanvas
           canvasProps={{ width: 300, height: 150 }}
-          ref={(data) => setSign(data)}
+          ref={padRef}
         />
       </div>
       <div className="flex justify-between p-2">
