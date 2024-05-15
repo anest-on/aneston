@@ -9,12 +9,12 @@ const s3Client = new S3Client({
   },
 })
 
-async function uploadFileToS3(buffer: Buffer, fileName: string) {
+async function uploadFileToS3(buffer: Buffer) {
   const fileBuffer = buffer
 
   const params = {
     Bucket: process.env.S3_BUCKET_NAME as string,
-    Key: `${fileName}-${Date.now()}`,
+    Key: `${Date.now()}`,
     Body: fileBuffer,
     ContentType: 'image/png',
   }
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer())
-    const fileName = await uploadFileToS3(buffer, file.name)
+    const fileName = await uploadFileToS3(buffer)
 
     return NextResponse.json({ fileName })
   } catch (err) {
