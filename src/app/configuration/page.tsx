@@ -15,8 +15,9 @@ import { AxiosError } from 'axios'
 import { SignatureDoctor } from '@/components/signatureDoctor'
 import Image from 'next/image'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
+import { User } from '@prisma/client'
 
 const settingsSchema = z.object({
   message: z.string(),
@@ -28,17 +29,37 @@ type SettingsData = z.infer<typeof settingsSchema>
 const AccessConfiguration = () => {
   const session = useSession()
   const { toast } = useToast()
-  const doctor = session.data?.user
+
+  const [doctor, setDoctor] = useState({} as User)
+
+  console.log(doctor.message)
 
   const [open, setOpen] = useState(false)
 
   const form = useForm<z.infer<typeof settingsSchema>>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
-      message: session.data?.user.message || '',
-      easy_scheduling: session.data?.user.easy_scheduling,
+      message: doctor.message || '',
+      easy_scheduling: doctor?.easy_scheduling,
     },
   })
+
+  useEffect(() => {
+    async function searchingDoctor() {
+      const doctor = await api.get('doctor')
+      setDoctor(doctor.data)
+    }
+    searchingDoctor()
+
+    form.setValue('easy_scheduling', doctor?.easy_scheduling)
+    if (doctor?.message) form.setValue('message', doctor?.message)
+  }, [
+    session.data?.user.accessType,
+    session.data?.user.doctor_id,
+    doctor.message,
+    doctor?.easy_scheduling,
+    form,
+  ])
 
   const { isSubmitting } = form.formState
 
