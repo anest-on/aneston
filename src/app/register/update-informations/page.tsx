@@ -89,7 +89,7 @@ const Register = () => {
           imediatamente!
         </p>
 
-        <MultiStep size={4} currentStep={2} />
+        <MultiStep size={3} currentStep={2} />
       </div>
       <Form {...form}>
         <form

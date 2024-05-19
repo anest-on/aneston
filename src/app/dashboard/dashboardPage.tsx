@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Patient, columns } from './columns'
 import { DataTable } from './data-table'
+import { User } from '@prisma/client'
 
 const patientSchema = z.object({
   name: z
@@ -44,14 +45,16 @@ const DashboardPage = ( ) => {
   const session = useSession()
   const { toast } = useToast()
 
-  // useMemo(async () => {
-  //   const data  = await api.get('/form')
-  //   setPatient(() => data)
-  // }, [])
+  const [doctor, setDoctor] = useState({} as User)
 
-  // const data = getData()
+  useEffect(() => {
+    async function searchingDoctor() {
+      const doctor = await api.get('doctor')
+      setDoctor(doctor.data)
+    }
+    searchingDoctor()
 
-  // console.log(patient)
+  },[session.data?.user.accessType, session.data?.user.doctor_id])
 
 
   const form = useForm<z.infer<typeof patientSchema>>({
@@ -68,7 +71,7 @@ const DashboardPage = ( ) => {
   function copyLinkToClipboard() {
     navigator.clipboard.writeText(
       // TODO: Mudar link quando for para produção
-      `https://aneston.vercel.app/form/${session.data?.user.user_link}`,
+      `https://aneston.vercel.app/form/${doctor.user_link}`,
     )
   }
 
@@ -154,7 +157,7 @@ const DashboardPage = ( ) => {
               copyLinkToClipboard()
               toast({
                 title: 'Link copiado para a área de transferência!',
-                description: `Seu Link: https://aneston.vercel.app/form/${session.data?.user.user_link}`,
+                description: `Seu Link: https://aneston.vercel.app/form/${doctor.user_link}`,
               })
             }}
           >

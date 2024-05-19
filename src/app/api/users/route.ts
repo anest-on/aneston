@@ -20,9 +20,19 @@ export async function PUT(req: Request) {
         return new NextResponse('Unauthorized', { status: 401 })
       }
 
+      const doctor = await prisma.user.findFirst({
+        where: {
+          id: session.user.doctor_id,
+        },
+      })
+
+      if (!doctor) {
+        return new NextResponse('Internal Error', { status: 400 })
+      }
+
       const userLinkAlreadyExists = await prisma.user.findFirst({
         where: {
-          user_link: data.user_link,
+          user_link: doctor.user_link,
         },
       })
 

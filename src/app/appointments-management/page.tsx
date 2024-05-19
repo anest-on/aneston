@@ -24,6 +24,9 @@ import { z } from 'zod'
 import { cirurgySubmitProps } from '../../components/page/cirurgyPage'
 import { companionSubmitProps } from '../../components/page/companionPage'
 import { pacientSubmitProps } from '../../components/page/pacientPage'
+import { prisma } from '@/lib/prisma'
+import { User } from '@prisma/client'
+
 
 const patientSchema = z.object({
   name: z
@@ -44,12 +47,29 @@ export interface formPatientInterface
   id: string
   doctor_id: string
   created_at: string
+  schedule_date: string
 }
+
 
 const AccessConfiguration = () => {
   const session = useSession()
   const { toast } = useToast()
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [doctor, setDoctor] = useState({} as User)
+
+  useEffect(() => {
+    async function searchingDoctor() {
+      const doctor = await api.get('doctor')
+      setDoctor(doctor.data)
+    }
+    searchingDoctor()
+
+    console.log(doctor.access_type)
+
+  },[session.data?.user.accessType, session.data?.user.doctor_id, doctor.access_type])
+
+ 
   const form = useForm<z.infer<typeof patientSchema>>({
     resolver: zodResolver(patientSchema),
     defaultValues: {
@@ -64,7 +84,7 @@ const AccessConfiguration = () => {
   function copyLinkToClipboard() {
     navigator.clipboard.writeText(
       // TODO: Mudar link quando for para produção
-      `https://aneston.vercel.app/form/${session.data?.user.user_link}`,
+      `https://aneston.vercel.app/form/${doctor.user_link}`,
     )
   }
 
@@ -88,11 +108,12 @@ const AccessConfiguration = () => {
   const [openUpdateUser, setOpenUpdateUser] = useState(false)
 
   const handleUpdatePatient = async (data: formPatientInterface) => {
-    const doctorId = session.data?.user.id
-    if (doctorId) data.doctor_id = doctorId
+    // const doctorId = session.data?.user.id
+    // if (doctorId) data.doctor_id = doctorId
 
     try {
       await api.put('/form', data)
+      console.log('oi')
 
       const response = await api.get('form')
 
@@ -177,7 +198,7 @@ const AccessConfiguration = () => {
               copyLinkToClipboard()
               toast({
                 title: 'Link copiado para a área de transferência!',
-                description: `Seu Link: https://aneston.vercel.app/form/${session.data?.user.user_link}`,
+                description: `Seu Link: https://aneston.vercel.app/form/${doctor.user_link}`,
               })
             }}
           >

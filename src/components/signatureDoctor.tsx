@@ -30,7 +30,6 @@ const onImageEdit = async (imgUrl: string) => {
 }
 
 export function SignatureDoctor({ setOpen }: SignatureDoctorProps) {
-  const [sign, setSign] = useState()
   const [url, setUrl] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
 

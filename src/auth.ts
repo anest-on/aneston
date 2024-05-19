@@ -15,7 +15,7 @@ type ExtendedUser = DefaultSession['user'] & {
   avatar_url: string
   password: string
   confirm_password: string
-  accessType: 'OWNER' | 'FULL_ACCESS' | 'DASHBOARD_ACCESS'
+  accessType: 'OWNER' | 'FULL_ACCESS' | 'DASHBOARD_ACCESS' | ''
   easy_scheduling: boolean
   message: string
   signature_url: string
