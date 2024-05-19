@@ -126,13 +126,8 @@ export async function GET() {
     }
 
     const isNotDoctor = session.user.doctor_id !== undefined
-    const completeAccess = session.user.accessType === 'FULL_ACCESS'
 
     if (isNotDoctor) {
-      if (!completeAccess) {
-        return new NextResponse('Unauthorized', { status: 401 })
-      }
-
       const patient = await prisma.form.findMany({
         where: {
           doctor_id: session.user.doctor_id,
@@ -216,7 +211,13 @@ export async function PUT(req: Request) {
     }
 
     const body = await req.json()
-    const { pacient_name, cirurgy_name, pacient_number, doctor_id } = body
+    const {
+      pacient_name,
+      cirurgy_name,
+      pacient_number,
+      doctor_id,
+      pacient_email,
+    } = body
 
     const isNotDoctor = session.user.doctor_id !== undefined
     const completeAccess = session.user.accessType === 'FULL_ACCESS'
@@ -228,8 +229,8 @@ export async function PUT(req: Request) {
 
       const patient = await prisma.form.findFirst({
         where: {
-          doctor_id: session.user.doctor_id,
-          pacient_number,
+          doctor_id,
+          pacient_email,
         },
       })
 
@@ -244,7 +245,7 @@ export async function PUT(req: Request) {
         data: {
           pacient_name,
           cirurgy_name,
-          doctor_id: session.user.doctor_id,
+          pacient_number,
         },
       })
       return NextResponse.json(patientUpdated)
@@ -253,7 +254,7 @@ export async function PUT(req: Request) {
     const patient = await prisma.form.findFirst({
       where: {
         doctor_id,
-        pacient_number,
+        pacient_email,
       },
     })
 
@@ -268,7 +269,7 @@ export async function PUT(req: Request) {
       data: {
         pacient_name,
         cirurgy_name,
-        doctor_id,
+        pacient_number,
       },
     })
     return NextResponse.json(patientUpdated)

@@ -41,14 +41,13 @@ export async function POST(req: Request) {
       }),
     })
 
-    console.log(form.pacient_email)
-
     if (error) {
       return Response.json({ error }, { status: 500 })
     }
 
     return Response.json(data)
   } catch (error) {
+    console.log(error)
     return Response.json({ error }, { status: 500 })
   }
 }

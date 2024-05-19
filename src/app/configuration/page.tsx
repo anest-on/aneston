@@ -16,6 +16,7 @@ import { SignatureDoctor } from '@/components/signatureDoctor'
 import Image from 'next/image'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { useState } from 'react'
+import { useToast } from '@/components/ui/use-toast'
 
 const settingsSchema = z.object({
   message: z.string(),
@@ -26,6 +27,7 @@ type SettingsData = z.infer<typeof settingsSchema>
 
 const AccessConfiguration = () => {
   const session = useSession()
+  const { toast } = useToast()
   const doctor = session.data?.user
 
   const [open, setOpen] = useState(false)
@@ -43,10 +45,18 @@ const AccessConfiguration = () => {
   const handleUpdateSettings = async (data: SettingsData) => {
     try {
       await api.put('/users', data)
+      toast({
+        title: 'Informação atualizada com sucesso!',
+        variant: 'success',
+      })
     } catch (err) {
       if (err instanceof AxiosError && err?.response?.data?.message) {
         return
       }
+      toast({
+        title: 'Falha para atualizar as informações!',
+        variant: 'destructive',
+      })
       console.error(err)
     }
   }
@@ -116,60 +126,64 @@ const AccessConfiguration = () => {
             />
           </div>
 
-          <div className="flex flex-col mt-12 gap-2 ">
-            <div className="md:flex gap-10">
-              <p className="text-white font-bold">Assinatura</p>
-            </div>
-            <p>
-              Assinatura que ficará registrada na Certificação de Realização de
-              Consulta.
-            </p>
+          {(session.data?.user.accessType === '' ||
+            session.data?.user.accessType === null ||
+            session.data?.user.accessType === undefined) && (
+            <div className="flex flex-col mt-12 gap-2 ">
+              <div className="md:flex gap-10">
+                <p className="text-white font-bold">Assinatura</p>
+              </div>
+              <p>
+                Assinatura que ficará registrada na Certificação de Realização
+                de Consulta.
+              </p>
 
-            {doctor?.signature_url ? (
-              <div className="flex flex-col md:flex-row items-center justify-between px-4 mt-4 gap-4">
-                <div className="w-[300px] h-[150px] self-center md:self-start  bg-white flex border-gray-900 border-1">
-                  <Image
-                    src={doctor?.signature_url}
-                    alt="signature"
-                    width={300}
-                    height={150}
-                  />
+              {doctor?.signature_url ? (
+                <div className="flex flex-col md:flex-row items-center justify-between px-4 mt-4 gap-4">
+                  <div className="w-[300px] h-[150px] self-center md:self-start  bg-white flex border-gray-900 border-1">
+                    <Image
+                      src={doctor?.signature_url}
+                      alt="signature"
+                      width={300}
+                      height={150}
+                    />
+                  </div>
+                  <div className="mt-2 md:mt-0 md:mr-12">
+                    <Dialog open={open} onOpenChange={setOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant={'outline'}>Alterar assinatura</Button>
+                      </DialogTrigger>
+                      <DialogContent className="flex flex-col w-[400px] h-[300px] justify-start bg-gray-800 border-gray-600 text-gray-200">
+                        <p className="font-bold">
+                          Realize aqui a sua nova assinatura
+                        </p>
+                        <div className="self-center w-[300px] h-[150px] ">
+                          <SignatureDoctor setOpen={setOpen} />
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                 </div>
-                <div className="mt-2 md:mt-0 md:mr-12">
+              ) : (
+                <div className="flex items-center justify-between px-4 mt-4 gap-4">
+                  <p className="text-center text-white font-bold">
+                    Você ainda não cadastrou uma assinatura!
+                  </p>
                   <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
-                      <Button variant={'outline'}>Alterar assinatura</Button>
+                      <Button variant={'outline'}>Cadastrar assinatura</Button>
                     </DialogTrigger>
                     <DialogContent className="flex flex-col w-[400px] h-[300px] justify-start bg-gray-800 border-gray-600 text-gray-200">
-                      <p className="font-bold">
-                        Realize aqui a sua nova assinatura
-                      </p>
+                      <p className="font-bold">Realize aqui a sua assinatura</p>
                       <div className="self-center w-[300px] h-[150px] ">
                         <SignatureDoctor setOpen={setOpen} />
                       </div>
                     </DialogContent>
                   </Dialog>
                 </div>
-              </div>
-            ) : (
-              <div className="flex items-center justify-between px-4 mt-4 gap-4">
-                <p className="text-center text-white font-bold">
-                  Você ainda não cadastrou uma assinatura!
-                </p>
-                <Dialog open={open} onOpenChange={setOpen}>
-                  <DialogTrigger asChild>
-                    <Button variant={'outline'}>Cadastrar assinatura</Button>
-                  </DialogTrigger>
-                  <DialogContent className="flex flex-col w-[400px] h-[300px] justify-start bg-gray-800 border-gray-600 text-gray-200">
-                    <p className="font-bold">Realize aqui a sua assinatura</p>
-                    <div className="self-center w-[300px] h-[150px] ">
-                      <SignatureDoctor setOpen={setOpen} />
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
           <Button disabled={isSubmitting} className="mt-8">
             Salvar Informações

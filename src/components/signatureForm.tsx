@@ -29,7 +29,6 @@ const onImageEdit = async (imgUrl: string) => {
 }
 
 export function SignatureForm({ formId }: signatureProps) {
-  const [url, setUrl] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
 
   const router = useRouter()
@@ -43,17 +42,15 @@ export function SignatureForm({ formId }: signatureProps) {
   const handleGenerate = async (event: React.SyntheticEvent<EventTarget>) => {
     const settingUrl = padRef.current?.getTrimmedCanvas().toDataURL('image/png')
 
-    if (settingUrl) setUrl(settingUrl)
-
-    if (!url) return
+    if (!settingUrl) return
 
     const input = document.getElementById('file')
-    if (input && url) input.setAttribute('value', url)
+    if (input) input.setAttribute('value', settingUrl)
 
-    await event.preventDefault()
+    event.preventDefault()
     if (!input?.getAttribute('value')) return
 
-    const file = await onImageEdit(url)
+    const file = await onImageEdit(settingUrl)
 
     if (!file) return
 

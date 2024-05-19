@@ -1,15 +1,12 @@
 'use client'
 
-import { getSession, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import { MultiStep } from '@/components/multiStep'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { ArrowRight } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { api } from '@/lib/axios'
 import { AxiosError } from 'axios'
@@ -23,7 +20,7 @@ import {
 } from '@/components/ui/form'
 import { Header } from '@/components/header'
 import Image from 'next/image'
-import refreshSession from '@/utils/refresh-session'
+import { useToast } from '@/components/ui/use-toast'
 
 const updateProfileSchema = z.object({
   user_link: z
@@ -45,8 +42,7 @@ const updateProfileSchema = z.object({
 type UpdateProfileData = z.infer<typeof updateProfileSchema>
 
 const Profile = () => {
-  // const session = useSession()
-  const router = useRouter()
+  const { toast } = useToast()
   const { data: session, update } = useSession()
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
@@ -71,12 +67,20 @@ const Profile = () => {
     try {
       await api.put('/users', data)
       update()
+      toast({
+        title: 'Perfil atualizado com sucesso!',
+        variant: 'success',
+      })
     } catch (err) {
       if (err instanceof AxiosError) {
         setUserLinkAlredyTakenMessage(
           () => 'Esse nome de usuário já está em uso.',
         )
       }
+      toast({
+        title: 'Erro ao atualizar perfil!',
+        variant: 'destructive',
+      })
     }
   }
 

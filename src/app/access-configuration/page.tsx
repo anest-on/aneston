@@ -78,6 +78,16 @@ const AccessConfiguration = () => {
   const session = useSession()
   const { toast } = useToast()
 
+  const [doctor, setDoctor] = useState({} as User)
+
+  useEffect(() => {
+    async function searchingDoctor() {
+      const doctor = await api.get('doctor')
+      setDoctor(doctor.data)
+    }
+    searchingDoctor()
+  }, [session.data?.user.accessType, session.data?.user.doctor_id])
+
   const form = useForm<z.infer<typeof createUserSchema>>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
@@ -104,7 +114,7 @@ const AccessConfiguration = () => {
   function copyLinkToClipboard() {
     navigator.clipboard.writeText(
       // TODO: Mudar link quando for para produção
-      `https://aneston.vercel.app/login/${session.data?.user.user_link}`,
+      `https://aneston.vercel.app/login/${doctor.user_link}`,
     )
   }
 
@@ -400,7 +410,7 @@ const AccessConfiguration = () => {
               copyLinkToClipboard()
               toast({
                 title: 'Link copiado para a área de transferência!',
-                description: `Seu Link: https://aneston.vercel.app/login/${session.data?.user.user_link}`,
+                description: `Seu Link: https://aneston.vercel.app/login/${doctor.user_link}`,
               })
             }}
           >

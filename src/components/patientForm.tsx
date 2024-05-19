@@ -20,15 +20,14 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from './ui/input'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { Button } from './ui/button'
-import { FileText, Pencil, Trash } from 'lucide-react'
+import { Pencil, Trash } from 'lucide-react'
 import { formPatientInterface } from '@/app/appointments-management/page'
 import moment from 'moment'
-import { api } from '@/lib/axios'
-import { useReactToPrint } from 'react-to-print'
 import PatientInfosPdfButton from './patientInfosPdfButton'
 import PatientSendEmailCertificateButton from './patientSendEmailCertificateButton'
+import ConsultationCertificatePdfButton from './consultationCertificatePdfButton'
 
 export type Patient = {
   name: string
@@ -193,6 +192,7 @@ export function PatientForm({
             </DialogContent>
           </Dialog>
           <PatientInfosPdfButton patient={patient} />
+          <ConsultationCertificatePdfButton patient={patient} />
           <PatientSendEmailCertificateButton formId={patient.id} />
 
           <Dialog>

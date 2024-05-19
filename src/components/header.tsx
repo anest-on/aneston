@@ -18,7 +18,6 @@ import { useEffect, useState } from 'react'
 import { Menu } from 'lucide-react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { Avatar } from './ui/avatar'
-import { AvatarImage } from '@radix-ui/react-avatar'
 import {
   Menubar,
   MenubarContent,
@@ -32,6 +31,9 @@ export function Header() {
   const [aboutUsButton, setaboutUsButton] = useState('')
   const [patientsButton, setPatientsButton] = useState('')
   const [schedulesButton, setSchedulesButton] = useState('')
+  const [profileButton, setProfileButton] = useState('')
+  const [accessConfigurationButton, setAccessConfigurationButton] = useState('')
+  const [settingsButton, setSettingsButton] = useState('')
 
   const path = usePathname()
   const session = useSession()
@@ -52,34 +54,79 @@ export function Header() {
     if (path === '/') {
       setHomeButton(
         () =>
-          ' text-green-500 font-bold lg:border-solid lg:border-b-2 lg:border-green-500 h-full',
+          ' text-green-500 font-bold border-solid border-b-2 border-green-500 h-full',
       )
       setaboutUsButton(() => '')
       setPatientsButton(() => '')
       setSchedulesButton(() => '')
-    } else if (path === '/aboutUs') {
+      setProfileButton(() => '')
+      setAccessConfigurationButton(() => '')
+      setSettingsButton(() => '')
+    } else if (path === '/not-found') {
       setHomeButton(() => '')
       setaboutUsButton(
         () =>
-          ' text-green-500 font-bold lg:border-solid lg:border-b-2 lg:border-green-500 h-full',
+          ' text-green-500 font-bold border-solid border-b-2 border-green-500 h-full',
       )
       setPatientsButton(() => '')
       setSchedulesButton(() => '')
-    } else if (path === '/patients') {
+      setProfileButton(() => '')
+      setAccessConfigurationButton(() => '')
+      setSettingsButton(() => '')
+    } else if (path === '/dashboard') {
       setHomeButton(() => '')
       setaboutUsButton(() => '')
       setPatientsButton(
         () =>
-          ' text-green-500 font-bold lg:border-solid lg:border-b-2 lg:border-green-500 h-full',
+          ' text-green-500 font-bold border-solid border-b-2 border-green-500 h-full',
       )
       setSchedulesButton(() => '')
-    } else if (path === '/schedules') {
+      setProfileButton(() => '')
+      setAccessConfigurationButton(() => '')
+      setSettingsButton(() => '')
+    } else if (path === '/time-intervals') {
       setHomeButton(() => '')
       setaboutUsButton(() => '')
       setPatientsButton(() => '')
       setSchedulesButton(
         () =>
-          ' text-green-500 font-bold lg:border-solid lg:border-b-2 lg:border-green-500 h-full',
+          ' text-green-500 font-bold border-solid border-b-2 border-green-500 h-full',
+      )
+      setProfileButton(() => '')
+      setAccessConfigurationButton(() => '')
+      setSettingsButton(() => '')
+    } else if (path === '/profile') {
+      setHomeButton(() => '')
+      setaboutUsButton(() => '')
+      setPatientsButton(() => '')
+      setSchedulesButton(() => '')
+      setProfileButton(
+        () =>
+          ' text-green-500 font-bold border-solid border-b-2 border-green-500 lg:border-none h-full hover:text-green-500 hover:bg-red-500',
+      )
+      setAccessConfigurationButton(() => '')
+      setSettingsButton(() => '')
+    } else if (path === '/access-configuration') {
+      setHomeButton(() => '')
+      setaboutUsButton(() => '')
+      setPatientsButton(() => '')
+      setSchedulesButton(() => '')
+      setProfileButton(() => '')
+      setAccessConfigurationButton(
+        () =>
+          ' text-green-500 font-bold border-solid border-b-2 border-green-500 lg:border-none h-full hover:text-green-500',
+      )
+      setSettingsButton(() => '')
+    } else if (path === '/configuration') {
+      setHomeButton(() => '')
+      setaboutUsButton(() => '')
+      setPatientsButton(() => '')
+      setSchedulesButton(() => '')
+      setProfileButton(() => '')
+      setAccessConfigurationButton(() => '')
+      setSettingsButton(
+        () =>
+          ' text-green-500 font-bold border-solid border-b-2 border-green-500 lg:border-none h-full hover:text-green-500',
       )
     }
   }, [path])
@@ -129,53 +176,72 @@ export function Header() {
                   <div className="w-full h-[1px] mt-4 bg-gray-500" />
                   <Button
                     onClick={() => {
-                      router.push('/')
+                      router.push('/dashboard')
                     }}
                     variant={'ghost'}
-                    className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
+                    className={`${patientsButton} h-full text-md flex justify-start mt-4 p-0 rounded-none font-normal hover:text-green-500`}
                   >
                     Pacientes
                   </Button>
 
-                  <Button
-                    onClick={() => {
-                      router.push('/time-intervals')
-                    }}
-                    variant={'ghost'}
-                    className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
-                  >
-                    Meus horários
-                  </Button>
+                  {(session.data.user.accessType === '' ||
+                    session.data.user.accessType === null ||
+                    session.data.user.accessType === undefined ||
+                    session.data.user.accessType === 'FULL_ACCESS') && (
+                    <Button
+                      onClick={() => {
+                        router.push('/time-intervals')
+                      }}
+                      variant={'ghost'}
+                      className={`${schedulesButton} h-full text-md flex justify-start mt-4 rounded-none p-0 font-normal hover:text-green-500`}
+                    >
+                      Meus horários
+                    </Button>
+                  )}
 
-                  <Button
-                    onClick={() => {
-                      router.push('/profile')
-                    }}
-                    variant={'ghost'}
-                    className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
-                  >
-                    Meu perfil
-                  </Button>
+                  {(session.data.user.accessType === '' ||
+                    session.data.user.accessType === null ||
+                    session.data.user.accessType === undefined) && (
+                    <Button
+                      onClick={() => {
+                        router.push('/profile')
+                      }}
+                      variant={'ghost'}
+                      className={`${profileButton} h-full text-md flex justify-start mt-4 p-0 rounded-none font-normal hover:text-green-500`}
+                    >
+                      Meu perfil
+                    </Button>
+                  )}
 
-                  <Button
-                    onClick={() => {
-                      router.push('/access-configuration')
-                    }}
-                    variant={'ghost'}
-                    className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
-                  >
-                    Config. Acessos
-                  </Button>
+                  {(session.data.user.accessType === '' ||
+                    session.data.user.accessType === null ||
+                    session.data.user.accessType === undefined ||
+                    session.data.user.accessType === 'FULL_ACCESS') && (
+                    <Button
+                      onClick={() => {
+                        router.push('/access-configuration')
+                      }}
+                      variant={'ghost'}
+                      className={`${accessConfigurationButton} h-full text-md flex justify-start mt-4 p-0 rounded-none font-normal hover:text-green-500`}
+                    >
+                      Config. Acessos
+                    </Button>
+                  )}
 
-                  <Button
-                    onClick={() => {
-                      router.push('/configuration')
-                    }}
-                    variant={'ghost'}
-                    className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
-                  >
-                    Configurações
-                  </Button>
+                  {(session.data.user.accessType === '' ||
+                    session.data.user.accessType === null ||
+                    session.data.user.accessType === undefined ||
+                    session.data.user.accessType === 'FULL_ACCESS') && (
+                    <Button
+                      onClick={() => {
+                        router.push('/configuration')
+                      }}
+                      variant={'ghost'}
+                      className={`${settingsButton} h-full text-md flex justify-start mt-4 p-0 rounded-none font-normal hover:text-green-500`}
+                    >
+                      Configurações
+                    </Button>
+                  )}
 
                   <Button
                     onClick={() => {
@@ -202,7 +268,7 @@ export function Header() {
                       router.push('/')
                     }}
                     variant={'ghost'}
-                    className={`${homeButton} h-full text-md flex justify-start mt-6 p-0 text-white font-normal hover:text-green-500`}
+                    className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 rounded-none font-normal hover:text-green-500`}
                   >
                     Produto
                   </Button>
@@ -212,7 +278,7 @@ export function Header() {
                       router.push('/not-found')
                     }}
                     variant={'ghost'}
-                    className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
+                    className={`${aboutUsButton} h-full text-md flex justify-start mt-4 p-0 rounded-none font-normal hover:text-green-500`}
                   >
                     Sobre nós
                   </Button>
@@ -255,15 +321,21 @@ export function Header() {
               >
                 Pacientes
               </Button>
-              <Button
-                onClick={() => {
-                  router.push('/time-intervals')
-                }}
-                variant={'ghost'}
-                className={`${schedulesButton} h-full rounded-none flex items-center text-md hover:text-green-500`}
-              >
-                Meus horários
-              </Button>
+
+              {(session.data.user.accessType === '' ||
+                session.data.user.accessType === null ||
+                session.data.user.accessType === undefined ||
+                session.data.user.accessType === 'FULL_ACCESS') && (
+                <Button
+                  onClick={() => {
+                    router.push('/time-intervals')
+                  }}
+                  variant={'ghost'}
+                  className={`${schedulesButton} h-full rounded-none flex items-center text-md hover:text-green-500`}
+                >
+                  Meus horários
+                </Button>
+              )}
             </div>
 
             <Menubar>
@@ -289,40 +361,57 @@ export function Header() {
                     Minha conta
                   </Button>
                 </MenubarTrigger>
-                <MenubarContent className="rounded-md w-[220px] bg-gray-800 p-4 mt-6">
-                  <MenubarItem className="flex justify-center">
-                    <Button
-                      className="text-sm w-[180px] justify-start hover:bg-gray-600"
-                      variant={'ghost'}
-                      onClick={() => {
-                        router.push('/profile')
-                      }}
-                    >
-                      Meu perfil
-                    </Button>
-                  </MenubarItem>
-                  <MenubarItem className="flex justify-center mt-2">
-                    <Button
-                      className="text-sm w-[180px] justify-start hover:bg-gray-600"
-                      variant={'ghost'}
-                      onClick={() => {
-                        router.push('/access-configuration')
-                      }}
-                    >
-                      Config. Acessos
-                    </Button>
-                  </MenubarItem>
-                  <MenubarItem className="flex justify-center mt-2">
-                    <Button
-                      className="text-sm w-[180px] justify-start hover:bg-gray-600"
-                      variant={'ghost'}
-                      onClick={() => {
-                        router.push('/configuration')
-                      }}
-                    >
-                      Configurações
-                    </Button>
-                  </MenubarItem>
+                <MenubarContent className="rounded-md w-[220px] bg-gray-800 p-4 mt-6 border border-gray-600">
+                  {(session.data.user.accessType === '' ||
+                    session.data.user.accessType === null ||
+                    session.data.user.accessType === undefined) && (
+                    <MenubarItem className="flex justify-center">
+                      <Button
+                        className={`${profileButton} text-sm w-[180px] justify-start hover:bg-gray-600`}
+                        variant={'ghost'}
+                        onClick={() => {
+                          router.push('/profile')
+                        }}
+                      >
+                        Meu perfil
+                      </Button>
+                    </MenubarItem>
+                  )}
+
+                  {(session.data.user.accessType === '' ||
+                    session.data.user.accessType === null ||
+                    session.data.user.accessType === undefined ||
+                    session.data.user.accessType === 'FULL_ACCESS') && (
+                    <MenubarItem className="flex justify-center mt-2">
+                      <Button
+                        className={`${accessConfigurationButton} text-sm w-[180px] justify-start hover:bg-gray-600`}
+                        variant={'ghost'}
+                        onClick={() => {
+                          router.push('/access-configuration')
+                        }}
+                      >
+                        Config. Acessos
+                      </Button>
+                    </MenubarItem>
+                  )}
+
+                  {(session.data.user.accessType === '' ||
+                    session.data.user.accessType === null ||
+                    session.data.user.accessType === undefined ||
+                    session.data.user.accessType === 'FULL_ACCESS') && (
+                    <MenubarItem className="flex justify-center mt-2">
+                      <Button
+                        className={`${settingsButton} text-sm w-[180px] justify-start hover:bg-gray-600`}
+                        variant={'ghost'}
+                        onClick={() => {
+                          router.push('/configuration')
+                        }}
+                      >
+                        Configurações
+                      </Button>
+                    </MenubarItem>
+                  )}
+
                   <MenubarItem className="flex justify-center mt-2">
                     <Button
                       className="text-sm w-[180px] justify-start hover:bg-gray-600"
