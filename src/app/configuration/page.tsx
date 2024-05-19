@@ -127,7 +127,8 @@ const AccessConfiguration = () => {
           </div>
 
           {(session.data?.user.accessType === '' ||
-            session.data?.user.accessType === null) && (
+            session.data?.user.accessType === null ||
+            session.data?.user.accessType === undefined) && (
             <div className="flex flex-col mt-12 gap-2 ">
               <div className="md:flex gap-10">
                 <p className="text-white font-bold">Assinatura</p>

@@ -6,6 +6,7 @@ import { NextResponse } from 'next/server'
 export async function PUT(req: Request) {
   try {
     const session = await auth()
+
     if (!session) {
       return new NextResponse('Unauthorized', { status: 401 })
     }
@@ -54,16 +55,20 @@ export async function PUT(req: Request) {
       return NextResponse.json(user)
     }
 
-    const userLinkAlreadyExists = await prisma.user.findFirst({
-      where: {
-        user_link: data.user_link,
-      },
-    })
+    if (data.user_link !== undefined) {
+      const userLinkAlreadyExists = await prisma.user.findFirst({
+        where: {
+          user_link: data.user_link,
+        },
+      })
 
-    if (userLinkAlreadyExists && userLinkAlreadyExists.id !== session.user.id) {
-      return new NextResponse('Internal Error', { status: 400 })
+      if (
+        userLinkAlreadyExists &&
+        userLinkAlreadyExists.id !== session.user.id
+      ) {
+        return new NextResponse('Internal Error', { status: 400 })
+      }
     }
-    // console.log('teste')
 
     const user = await prisma.user.update({
       where: {
