@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { api } from '@/lib/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { User } from '@prisma/client'
 import { AxiosError } from 'axios'
 import { Copy } from 'lucide-react'
 import { useSession } from 'next-auth/react'
@@ -16,7 +17,6 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Patient, columns } from './columns'
 import { DataTable } from './data-table'
-import { User } from '@prisma/client'
 
 const patientSchema = z.object({
   name: z
@@ -81,7 +81,7 @@ const DashboardPage = ( ) => {
   const patientsList = useCallback(async () => {
     const response = await api.get('/form')
 
-    console.log(response.data)
+    console.log(response.data.appointment_status)
 
     setPatients(response.data)
   }, [])

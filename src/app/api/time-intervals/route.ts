@@ -45,8 +45,6 @@ export async function POST(req: Request) {
 
       const data = await req.json()
 
-      // console.log(session.user?.id)
-
       await Promise.all(
         data.intervals.map(
           async (interval: {
@@ -105,8 +103,6 @@ export async function POST(req: Request) {
 
     const data = await req.json()
 
-    // console.log(session.user?.id)
-
     await Promise.all(
       data.intervals.map(
         async (interval: {
@@ -143,7 +139,6 @@ export async function POST(req: Request) {
 
     return new NextResponse('Success', { status: 201 })
   } catch (error) {
-    console.log('[USER_ID]', error)
     return new NextResponse('Internal Error', { status: 500 })
   }
 }

@@ -30,8 +30,6 @@ export async function GET() {
 
     return NextResponse.json(thisUser)
   } catch (error) {
-    console.log(error)
-    // console.log('[USER_ID]', error)
     return new NextResponse('Internal Error', { status: 500 })
   }
 }

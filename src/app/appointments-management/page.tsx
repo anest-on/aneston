@@ -15,6 +15,7 @@ import {
 import { useToast } from '@/components/ui/use-toast'
 import { api } from '@/lib/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { User } from '@prisma/client'
 import { AxiosError } from 'axios'
 import { Copy } from 'lucide-react'
 import { useSession } from 'next-auth/react'
@@ -24,8 +25,6 @@ import { z } from 'zod'
 import { cirurgySubmitProps } from '../../components/page/cirurgyPage'
 import { companionSubmitProps } from '../../components/page/companionPage'
 import { pacientSubmitProps } from '../../components/page/pacientPage'
-import { prisma } from '@/lib/prisma'
-import { User } from '@prisma/client'
 
 
 const patientSchema = z.object({
@@ -65,7 +64,6 @@ const AccessConfiguration = () => {
     }
     searchingDoctor()
 
-    console.log(doctor.access_type)
 
   },[session.data?.user.accessType, session.data?.user.doctor_id, doctor.access_type])
 
@@ -95,7 +93,6 @@ const AccessConfiguration = () => {
   const patientsList = useCallback(async () => {
     const response = await api.get('form')
 
-    console.log(response.data)
 
     setPatients(response.data)
   }, [])
@@ -113,7 +110,6 @@ const AccessConfiguration = () => {
 
     try {
       await api.put('/form', data)
-      console.log('oi')
 
       const response = await api.get('form')
 

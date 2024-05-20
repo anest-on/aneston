@@ -80,8 +80,6 @@ export async function PUT(req: Request) {
     })
     return NextResponse.json(user)
   } catch (error) {
-    console.log(error)
-    // console.log('[USER_ID]', error)
     return new NextResponse('Internal Error', { status: 500 })
   }
 }
