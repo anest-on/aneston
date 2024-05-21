@@ -1,26 +1,6 @@
-import { cirurgySubmitProps } from '@/components/page/cirurgyPage'
-import { companionSubmitProps } from '@/components/page/companionPage'
-import { pacientSubmitProps } from '@/components/page/pacientPage'
+import { AppointmentStatusEnum } from '@prisma/client'
 import { FilterFn } from '@tanstack/react-table'
-
-enum AppointmentStatusEnum {
-  DONE = 'DONE',
-  UNDONE = 'UNDONE',
-  CANCELED = 'CANCELED',
-}
-
-export interface Patient
-  extends pacientSubmitProps,
-    cirurgySubmitProps,
-    companionSubmitProps {
-  id: string
-  appointment_status: AppointmentStatusEnum
-  doctor_id: string
-  doctor_url: string
-  schedule_date: string
-  created_at: string
-  updated_at: string
-}
+import { Patient } from './columns'
 
 export const RangeDateFn: FilterFn<Patient> = (
   row,
@@ -36,17 +16,40 @@ export const RangeDateFn: FilterFn<Patient> = (
 
   console.log(date, start, end)
   // If one filter defined and date is null filter it
-  if ((start || end) && !date) return false
+  if ((start || end) && !isNaN(end) && !date) return false
   if (date)
-    if (start && !end) {
+    if (start && (!end || isNaN(end))) {
       return date.getTime() >= start.getTime()
-    } else if (!start && end) {
+    } else if (!start && end && !isNaN(end)) {
       return date.getTime() <= end.getTime()
-    } else if (start && end) {
+    } else if (start && end && !isNaN(end)) {
       return (
         date.getTime() >= start.getTime() && date.getTime() <= end.getTime()
       )
     } else return true
 
   return true
+}
+
+export const StatusFilterFn: FilterFn<Patient> = (
+  row,
+  columnId,
+  filterValue,
+  addMeta,
+) => {
+  const patient = row.getValue(columnId) as Patient
+
+  const status = patient.appointment_status
+
+  const { done, undone, canceled } = filterValue
+
+  if (done && status === AppointmentStatusEnum.CONCLUDED) {
+    return true
+  } else if (undone && status === AppointmentStatusEnum.UNDONE) {
+    return true
+  } else if (canceled && status === AppointmentStatusEnum.CANCELED) {
+    return true
+  }
+
+  return false
 }

@@ -12,7 +12,7 @@ datasource db {
 }
 
 enum AppointmentStatusEnum {
-  DONE
+  CONCLUDED
   UNDONE
   CANCELED
 }

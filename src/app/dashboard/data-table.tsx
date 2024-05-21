@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 'use client'
 
 import {
@@ -27,13 +28,19 @@ import {
 import { Button } from '@/components/ui/button'
 import dayjs from 'dayjs'
 import ptBr from 'dayjs/locale/pt-br'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DataTablePagination } from './data-table-pagination'
-import { RangeDateFn } from './filters'
+import { RangeDateFn, StatusFilterFn } from './filters'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data?: TData[]
+}
+
+interface appointmentFilterProps {
+  done: boolean
+  undone: boolean
+  canceled: boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -41,9 +48,14 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [filterDisplay, setFilterdisplay] = useState(false)
-  const [startDate, setStartDate] = useState<Date>(new Date())
+  const [startDate, setStartDate] = useState<Date>()
   const [finalDate, setFinalDate] = useState<Date | null>(null)
-
+  const [appointmentFilter, setAppointmentFilter] =
+    useState<appointmentFilterProps>({
+      done: true,
+      undone: true,
+      canceled: false,
+    })
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: 'schedule_date',
@@ -51,6 +63,11 @@ export function DataTable<TData, TValue>({
     },
   ])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+
+  useEffect(() => {
+    table.getColumn('appointment_status')?.setFilterValue(appointmentFilter)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appointmentFilter])
 
   const table = useReactTable({
     data: data || [],
@@ -63,6 +80,7 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     filterFns: {
       RangeDate: RangeDateFn,
+      StatusFilter: StatusFilterFn,
     },
     state: {
       sorting,
@@ -99,7 +117,7 @@ export function DataTable<TData, TValue>({
             <Input
               type="date"
               label="Data de início:"
-              defaultValue={dayjs(startDate)
+              defaultValue={dayjs(new Date())
                 .locale(ptBr)
                 .format('YYYY[-]MM[-]DD')}
               onChange={(value) => {
@@ -126,48 +144,102 @@ export function DataTable<TData, TValue>({
                   ])
               }}
             />
-            {/* <Button
-              variant="circle"
-              className="w-[80px]"
-              onClick={() => {
-                table.getColumn('schedule_date')
-              }}
-            >
-              Filtrar
-            </Button> */}
           </div>
         </div>
       )}
+
+      <div className="flex flex-row items-center justify-center gap-4 mb-2">
+        <Button
+          variant={`badge${appointmentFilter.undone ? 'Active' : ''}`}
+          className="gap-2 "
+          onClick={() =>
+            setAppointmentFilter((data) => {
+              return {
+                done: data.done,
+                canceled: data.canceled,
+                undone: !data.undone,
+              }
+            })
+          }
+        >
+          <div className="h-4 w-4 bg-yellow-500 rounded-lg" />
+          Não realizada
+        </Button>
+        <Button
+          variant={`badge${appointmentFilter.canceled ? 'Active' : ''}`}
+          className="gap-2 "
+          onClick={() =>
+            setAppointmentFilter((data) => {
+              return {
+                done: data.done,
+                canceled: !data.canceled,
+                undone: data.undone,
+              }
+            })
+          }
+        >
+          <div className="h-4 w-4 bg-red-500 rounded-lg" />
+          Cancelada
+        </Button>
+        <Button
+          variant={`badge${appointmentFilter.done ? 'Active' : ''}`}
+          className="gap-2 "
+          onClick={() =>
+            setAppointmentFilter((data) => {
+              return {
+                done: !data.done,
+                canceled: data.canceled,
+                undone: data.undone,
+              }
+            })
+          }
+        >
+          <div className="h-4 w-4 bg-green-500 rounded-lg" />
+          Concluída
+        </Button>
+      </div>
 
       <div className="flex rounded-lg flex-col gap-5">
         <Table className="rounded-lg bg-gray-900">
           <TableHeader className="rounded-lg border-none">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="rounded-md border-none">
+              <TableRow
+                key={headerGroup.id}
+                className="flex flex-row rounded-md border-none items-center justify-center"
+              >
                 {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  )
+                  const isDisplayed =
+                    header.id.includes('actions') ||
+                    header.id.includes('pacient_email')
+
+                  if (!isDisplayed)
+                    return (
+                      <TableHead
+                        key={header.id}
+                        className="flex flex-col items-center justify-center"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </TableHead>
+                    )
+                  else return null
                 })}
               </TableRow>
             ))}
           </TableHeader>
         </Table>
         <Table className="w-full">
-          <TableBody className="flex flex-col gap-2 items-center w-full ">
+          <TableBody className="flex flex-col gap-2 items-center ">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  className=" flex bg-gray-600 rounded-md w-full items-center justify-between"
+                  className=" grid grid-cols-4 bg-gray-600 rounded-md w-full items-center"
                 >
                   {row.getVisibleCells().map((cell) => {
                     const isDisplayed = cell.id.includes('pacient_name')

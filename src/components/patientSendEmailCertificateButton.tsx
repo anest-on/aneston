@@ -1,18 +1,16 @@
-import { useRef } from 'react'
-import { useReactToPrint } from 'react-to-print'
-import { formPatientInterface } from '@/app/appointments-management/page'
-import { Button } from './ui/button'
-import { FileSymlink } from 'lucide-react'
-import { PrintablePatientTemplate } from './printablePatientTemplate'
 import { api } from '@/lib/axios'
+import { FileSymlink } from 'lucide-react'
+import { Button } from './ui/button'
 import { useToast } from './ui/use-toast'
 
 interface PatientSendEmailCertificateButtonProps {
   formId: string
+  children?: React.ReactNode
 }
 
 export default function PatientSendEmailCertificateButton({
   formId,
+  children,
 }: PatientSendEmailCertificateButtonProps) {
   const { toast } = useToast()
 
@@ -29,16 +27,15 @@ export default function PatientSendEmailCertificateButton({
   }
 
   return (
-    <>
-      <Button
-        variant={'ghost'}
-        className="p-0 h-[16px] hover:text-gray-400"
-        onClick={() => {
-          sendEmail(formId)
-        }}
-      >
-        <FileSymlink className="w-4 h-4 hover:text-gray-400 hover:cursor-pointer" />
-      </Button>
-    </>
+    <Button
+      variant={'ghost'}
+      className="hover:text-gray-40 w-full h-full gap-1 flex fles-row justify-start p-2"
+      onClick={() => {
+        sendEmail(formId)
+      }}
+    >
+      <FileSymlink className="w-4 h-4 hover:text-gray-400 hover:cursor-pointer" />
+      {children}
+    </Button>
   )
 }

@@ -3,13 +3,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 'use client'
 
-import { DeletePatientData } from '@/components/patientForm'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { api } from '@/lib/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { User } from '@prisma/client'
-import { AxiosError } from 'axios'
 import { Copy } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useCallback, useEffect, useState } from 'react'
@@ -89,55 +87,6 @@ const DashboardPage = ( ) => {
   useEffect(() => {
     patientsList()
   }, [patientsList])
-
-  const [openCreateUser, setOpenCreateUser] = useState(false)
-  const [openUpdateUser, setOpenUpdateUser] = useState(false)
-
-  const handleUpdatePatient = async (data: Patient) => {
-    const doctorId = session.data?.user.id
-    if (doctorId) data.doctor_id = doctorId
-
-    try {
-      await api.put('/form', data)
-
-      const response = await api.get('form')
-
-      setPatients(response.data)
-
-      toast({
-        title: 'Dados do paciente modificados com sucesso!',
-        variant: 'success',
-      })
-
-      setOpenUpdateUser(false)
-    } catch (err) {
-      if (err instanceof AxiosError && err?.response?.data?.message) {
-        return
-      }
-      console.error(err)
-    }
-  }
-
-  const handleDeletePatient = async (data: DeletePatientData) => {
-    const doctorId = session.data?.user.id
-    if (doctorId) data.doctorId = doctorId
-
-
-    try {
-      await api.delete('/form', { data })
-
-      const response = await api.get('form')
-
-      setPatients(response.data)
-
-      toast({
-        title: 'Paciente deletado com sucesso!',
-        variant: 'destructive',
-      })
-    } catch (err) {
-      console.error(err)
-    }
-  }
 
   return (
     <main className="max-w-[880px] h-full mt-10 mx-auto mb-10 py-0 px-4">
