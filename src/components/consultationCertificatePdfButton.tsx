@@ -1,4 +1,4 @@
-import { formPatientInterface } from '@/app/appointments-management/page'
+import { Patient } from '@/app/dashboard/columns'
 import { ScrollText } from 'lucide-react'
 import { useRef } from 'react'
 import { useReactToPrint } from 'react-to-print'
@@ -6,7 +6,7 @@ import { PrintableConsultationCertificateTemplate } from './printableConsultatio
 import { Button } from './ui/button'
 
 interface ConsultationCertificatePdfButtonProps {
-  patient: formPatientInterface
+  patient: Patient
   children?: React.ReactNode
 }
 
