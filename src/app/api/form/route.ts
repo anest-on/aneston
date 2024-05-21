@@ -7,7 +7,6 @@ const prisma = new PrismaClient()
 
 export async function POST(req: Request) {
   const body = await req.json()
-  // console.log(body)
   const {
     doctor_url,
     pacient_name,
@@ -66,8 +65,6 @@ export async function POST(req: Request) {
   if (!userExists) {
     return new NextResponse('Internal Error', { status: 400 })
   }
-
-  // console.log(userExists)
 
   const form = await prisma.form.create({
     data: {

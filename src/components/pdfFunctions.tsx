@@ -1,7 +1,7 @@
-import { formPatientInterface } from '@/app/appointments-management/page'
+import { Patient } from '@/app/dashboard/columns'
 import { getAgeFromDate } from '@/utils/calculate-years'
 
-export function CreateMedicinesString(patient: formPatientInterface) {
+export function CreateMedicinesString(patient: Patient) {
   let medicines = ''
 
   if (patient.pacient_medicines && patient.pacient_medicines[0].name === '') {
@@ -17,7 +17,7 @@ export function CreateMedicinesString(patient: formPatientInterface) {
   return medicines
 }
 
-export function CreateCirurgiesString(patient: formPatientInterface) {
+export function CreateCirurgiesString(patient: Patient) {
   let cirurgies = ''
 
   if (!patient.pacient_did_cirurgy) {
@@ -33,7 +33,7 @@ export function CreateCirurgiesString(patient: formPatientInterface) {
   return cirurgies
 }
 
-export function PatientSmokeString(patient: formPatientInterface) {
+export function PatientSmokeString(patient: Patient) {
   let smoke = ''
 
   if (!patient.pacient_smoke) {
@@ -62,7 +62,7 @@ export function PatientSmokeString(patient: formPatientInterface) {
   }
 }
 
-export function CreatePhysicalActivitiesString(patient: formPatientInterface) {
+export function CreatePhysicalActivitiesString(patient: Patient) {
   let physicalActivities = ''
 
   if (!patient.pacient_do_physical_activity) {

@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { formPatientInterface } from '@/app/appointments-management/page'
-import { Button } from './ui/button'
-import { FileText } from 'lucide-react'
-import React, { useState } from 'react'
-import Image from 'next/image'
+import { Patient } from '@/app/dashboard/columns'
 import logoPDF from '@/images/LogoPDF.png'
-import { roboto } from '../app/fonts'
 import { getAgeFromDate } from '@/utils/calculate-years'
+import Image from 'next/image'
+import React from 'react'
+import { roboto } from '../app/fonts'
 import {
   CreateCirurgiesString,
   CreateMedicinesString,
@@ -15,7 +13,7 @@ import {
 } from './pdfFunctions'
 
 interface Props {
-  patient: formPatientInterface
+  patient: Patient
 }
 
 const PrintablePatientTemplate = React.forwardRef<HTMLDivElement, Props>(

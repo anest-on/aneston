@@ -2,22 +2,22 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { useSession } from 'next-auth/react'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Textarea } from '@/components/ui/textarea'
-import { z } from 'zod'
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
-import { api } from '@/lib/axios'
-import { AxiosError } from 'axios'
 import { SignatureDoctor } from '@/components/signatureDoctor'
-import Image from 'next/image'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import { useEffect, useState } from 'react'
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
+import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
+import { api } from '@/lib/axios'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { User } from '@prisma/client'
+import { AxiosError } from 'axios'
+import { useSession } from 'next-auth/react'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const settingsSchema = z.object({
   message: z.string(),
@@ -31,8 +31,6 @@ const AccessConfiguration = () => {
   const { toast } = useToast()
 
   const [doctor, setDoctor] = useState({} as User)
-
-  console.log(doctor.message)
 
   const [open, setOpen] = useState(false)
 

@@ -1,16 +1,18 @@
+import { formPatientInterface } from '@/app/appointments-management/page'
+import { ScrollText } from 'lucide-react'
 import { useRef } from 'react'
 import { useReactToPrint } from 'react-to-print'
-import { formPatientInterface } from '@/app/appointments-management/page'
-import { Button } from './ui/button'
-import { ScrollText } from 'lucide-react'
 import { PrintableConsultationCertificateTemplate } from './printableConsultationCertificateTemplate'
+import { Button } from './ui/button'
 
 interface ConsultationCertificatePdfButtonProps {
   patient: formPatientInterface
+  children?: React.ReactNode
 }
 
 export default function ConsultationCertificatePdfButton({
   patient,
+  children,
 }: ConsultationCertificatePdfButtonProps) {
   const documentRef = useRef(null)
   const handlePrint = useReactToPrint({
@@ -20,20 +22,19 @@ export default function ConsultationCertificatePdfButton({
   })
 
   return (
-    <>
-      <Button
-        variant={'ghost'}
-        className="p-0 h-[16px] hover:text-gray-400"
-        onClick={() => {
-          handlePrint()
-        }}
-      >
-        <ScrollText className="w-4 h-4 hover:text-gray-400 hover:cursor-pointer" />
-      </Button>
+    <Button
+      variant={'ghost'}
+      className="hover:text-gray-40 w-full h-full gap-1 flex fles-row justify-start p-2"
+      onClick={() => {
+        handlePrint()
+      }}
+    >
+      <ScrollText className="w-4 h-4 hover:text-gray-400 hover:cursor-pointer" />
+      {children}
       <PrintableConsultationCertificateTemplate
         ref={documentRef}
         patient={patient}
       />
-    </>
+    </Button>
   )
 }

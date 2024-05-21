@@ -38,7 +38,6 @@ const CalendarIntermediary = ({
   useMemo(async () => {
     const request = await api.get(`${baseUrl}api/time-intervals/${userLink}`)
     // const request = await api.get(`http://localhost:3000/api/time-intervals/joaopedro`)
-    console.log(request.data)
     request &&
       setIntervals(() => request.data as userTimeIntervalsGetResponse[])
   }, [])

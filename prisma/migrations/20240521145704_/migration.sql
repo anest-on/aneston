@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "AppointmentStatusEnum" AS ENUM ('CONCLUDED', 'UNDONE', 'CANCELED');
+
 -- CreateTable
 CREATE TABLE "Form" (
     "id" TEXT NOT NULL,
@@ -12,6 +15,7 @@ CREATE TABLE "Form" (
     "pacient_healthInsuranceName" TEXT,
     "pacient_healthInsuranceId" TEXT,
     "pacient_signature" TEXT,
+    "appointment_status" "AppointmentStatusEnum" NOT NULL DEFAULT 'UNDONE',
     "companion_name" TEXT NOT NULL,
     "companion_kinship" TEXT NOT NULL,
     "companion_email" TEXT NOT NULL,

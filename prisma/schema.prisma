@@ -11,6 +11,12 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum AppointmentStatusEnum {
+  CONCLUDED
+  UNDONE
+  CANCELED
+}
+
 model Form {
   id                          String  @id @default(uuid())
   doctor_id                   String
@@ -24,6 +30,8 @@ model Form {
   pacient_healthInsuranceName String?
   pacient_healthInsuranceId   String?
   pacient_signature           String?
+
+  appointment_status AppointmentStatusEnum @default(UNDONE)
 
   companion_name    String
   companion_kinship String
