@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import { formPatientInterface } from '@/app/appointments-management/page'
-import React, { useEffect, useState } from 'react'
-import { roboto } from '../app/fonts'
+import { Patient } from '@/app/dashboard/columns'
+import { api } from '@/lib/axios'
+import { User } from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { User } from '@prisma/client'
-import { api } from '@/lib/axios'
+import React, { useEffect, useState } from 'react'
+import { roboto } from '../app/fonts'
 interface Props {
-  patient: formPatientInterface
+  patient: Patient
 }
 
 const PrintableConsultationCertificateTemplate = React.forwardRef<
