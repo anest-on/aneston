@@ -243,15 +243,6 @@ export function Header() {
                     </Button>
                   )}
 
-                  <Button
-                    onClick={() => {
-                      router.push('/appointments-management')
-                    }}
-                    variant={'ghost'}
-                    className={`${homeButton} h-full text-md flex justify-start mt-4 p-0 text-white font-normal hover:text-green-500`}
-                  >
-                    Gestão de consultas
-                  </Button>
                   <div className="w-full h-[1px] mt-4 bg-gray-500" />
                   <Button
                     className="text-gray mt-4 text-md px-0 font-normal hover:text-red-500"
@@ -411,18 +402,6 @@ export function Header() {
                       </Button>
                     </MenubarItem>
                   )}
-
-                  <MenubarItem className="flex justify-center mt-2">
-                    <Button
-                      className="text-sm w-[180px] justify-start hover:bg-gray-600"
-                      variant={'ghost'}
-                      onClick={() => {
-                        router.push('/appointments-management')
-                      }}
-                    >
-                      Gestão de consultas
-                    </Button>
-                  </MenubarItem>
 
                   <div className="w-full h-[1px] mt-2 bg-gray-500" />
 
