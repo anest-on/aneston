@@ -7,6 +7,25 @@ const Form = async ({ params }: { params: { user_link: string } }) => {
       user_link: params.user_link,
     },
   })
+
+  if (!doctor) {
+    return (
+      <main className="max-w-[572px] w-full items-center justify-center mt-20 mx-auto py-20 px-10">
+        <div className="flex flex-col justify-center gap-5">
+          <strong className="text-2xl text-white">
+            Médico não Encontrado!
+          </strong>
+          <p>
+            O link que você tentou acessar não corresponde a um médico
+            registrado em nossa plataforma. Por favor, verifique o link
+            fornecido ou entre em contato diretamente com seu anestesista para
+            obter mais informações e assistência.
+          </p>
+        </div>
+      </main>
+    )
+  }
+
   return (
     <FormBody
       doctor={{

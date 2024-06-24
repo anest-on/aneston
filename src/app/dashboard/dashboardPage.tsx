@@ -71,6 +71,21 @@ const DashboardPage = ( ) => {
       // TODO: Mudar link quando for para produção
       `https://aneston.vercel.app/form/${doctor.user_link}`,
     )
+
+    if (!doctor.user_link) {
+      toast({
+        title: 'Você não possui um link cadastrado!',
+        variant: 'destructive',
+        description: `Entre em 'Meu Perfil' e atualize o seu link de agendamentos.`,
+      })
+    }
+
+    if (doctor.user_link) {
+      toast({
+        title: 'Link copiado para a área de transferência!',
+        description: `Seu Link: https://aneston.vercel.app/form/${doctor.user_link}`,
+      })
+    }
   }
 
   const { isSubmitting } = form.formState
@@ -104,10 +119,7 @@ const DashboardPage = ( ) => {
             className="text-white border-white hover:bg-gray-600"
             onClick={() => {
               copyLinkToClipboard()
-              toast({
-                title: 'Link copiado para a área de transferência!',
-                description: `Seu Link: https://aneston.vercel.app/form/${doctor.user_link}`,
-              })
+              
             }}
           >
             Link para Agendamentos
