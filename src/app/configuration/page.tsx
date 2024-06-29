@@ -91,7 +91,7 @@ const AccessConfiguration = () => {
             Configurações
           </p>
           <div className="w-full h-[2px] mt-6 px-6 bg-gray-500" />
-          <div className="flex flex-col mt-6 gap-2">
+          {/* <div className="flex flex-col mt-6 gap-2">
             <div className="flex justify-between">
               <p className="text-white font-bold">
                 Agendamento de consulta facilitado
@@ -117,9 +117,9 @@ const AccessConfiguration = () => {
               formulário. Ao final será perguntado o dia e a hora que deseja
               realizar a consulta
             </p>
-          </div>
+          </div> */}
 
-          <div className="flex flex-col mt-12 gap-2">
+          <div className="flex flex-col mt-6 gap-2">
             <div className="md:flex items-center gap-10 ">
               <p className="text-white font-bold">
                 Mensagem de finalização da consulta

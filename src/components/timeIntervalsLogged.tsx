@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable prettier/prettier */
 'use client'
 
@@ -10,14 +11,17 @@ import { api } from '@/lib/axios'
 import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
 import { getWeekDays } from '@/utils/get-week-days'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useToast } from './ui/use-toast'
+import { User } from '@prisma/client'
+import { useSession } from 'next-auth/react'
 
 const daytimeIntervals = z.object({ start: z.string(), end: z.string() })
 
 const timeIntervalsFormSchema = z.object({
+  easy_scheduling: z.boolean(),
   intervals: z
     .array(
       z.object({
@@ -85,11 +89,16 @@ type TimeIntervalsFormInput = z.input<typeof timeIntervalsFormSchema>
 type TimeIntervalsFormOutput = z.output<typeof timeIntervalsFormSchema>
 
 const TimeIntervals = () => {
+  const session = useSession()
   const {toast} = useToast()
+
+  const [doctor, setDoctor] = useState({} as User)
+  const [easyScheduling, setEasyScheduling] = useState(false)
 
   const form = useForm<TimeIntervalsFormInput>({
     resolver: zodResolver(timeIntervalsFormSchema),
     defaultValues: {
+      easy_scheduling: doctor?.easy_scheduling,
       intervals: [
         { weekDay: 0, enabled: false, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
         { weekDay: 1, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
@@ -103,6 +112,16 @@ const TimeIntervals = () => {
 
     },
   })
+
+  useEffect(() => {
+    const doctorFromDB = session.data?.user
+    if (doctorFromDB) {
+      setDoctor(doctorFromDB)
+
+      form.setValue('easy_scheduling', doctor.easy_scheduling)
+      setEasyScheduling(doctor?.easy_scheduling)
+    }
+  }, [form, session.data?.user, doctor])
 
   const { isSubmitting } = form.formState
 
@@ -156,8 +175,9 @@ const TimeIntervals = () => {
   */
   async function handleSetTimeIntervals(data: unknown) {
     try{
-      const { intervals, appointmentTime } = data as TimeIntervalsFormOutput
+      const { intervals, appointmentTime, easy_scheduling } = data as TimeIntervalsFormOutput
       await api.post('/time-intervals', { intervals, appointmentTime })
+      await api.put('/users', { easy_scheduling })
   
       toast({
         title: 'Novos horários cadastrados com sucesso!',
@@ -171,6 +191,7 @@ const TimeIntervals = () => {
     }
     
   }
+  // console.log('easyScheduling' + easyScheduling)
 
   return (
     <main className="max-w-[572px] mx-auto py-0 px-4">
@@ -179,6 +200,35 @@ const TimeIntervals = () => {
           onSubmit={form.handleSubmit(handleSetTimeIntervals)}
           className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6 gap-4 text-white"
         >
+          <div className="flex flex-col mt-6 gap-2">
+            <div className="flex justify-between">
+              <p className="text-white font-bold">
+                Agendamento de consulta facilitado
+              </p>
+              <FormField
+                control={form.control}
+                name="easy_scheduling"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Checkbox
+                        disabled={isSubmitting}
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        onClick={() => setEasyScheduling(!field.value)}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <p>
+              Ao ativar o paciente pode agendar sua consulta ao acessar o
+              formulário. Ao final será perguntado o dia e a hora que deseja
+              realizar a consulta
+            </p>
+          </div>
+          <div className="w-full h-[2px] my-2 px-6 bg-gray-500" />
           <div className="border border-solid border-gray-600 rounded-md mb-4">
             {fields.map((field, index) => {
               return (
@@ -199,6 +249,7 @@ const TimeIntervals = () => {
                                 field.onChange(checked === true)
                               }
                               checked={field.value}
+                              disabled={easyScheduling === false}
                             />
                           )
                         }}
@@ -209,14 +260,14 @@ const TimeIntervals = () => {
                       <Input
                         type="time"
                         step={60}
-                        disabled={intervals && intervals[index].enabled === false}
+                        disabled={intervals && intervals[index].enabled === false || easyScheduling === false}
                         {...form.register(`intervals.${index}.startTime`)}
                       />
 
                       <Input
                         type="time"
                         step={60}
-                        disabled={intervals && intervals[index].enabled === false}
+                        disabled={intervals && intervals[index].enabled === false || easyScheduling === false}
                         {...form.register(`intervals.${index}.endTime`)}
                       />
 
@@ -224,6 +275,7 @@ const TimeIntervals = () => {
                         type="button"
                         variant={showButtons[index] ? undefined : 'destructive'}
                         onClick={() => toggleIntervalForm(index)}
+                        disabled={easyScheduling === false}
                       >
                         <p className="text-xs">
                           {showButtons[index] ? '+ Intervalo' : 'Cancelar'}
@@ -276,6 +328,7 @@ const TimeIntervals = () => {
               type="time"
               step={60}
               {...form.register('appointmentTime')}
+              disabled={easyScheduling === false}
             />
           </div>
 

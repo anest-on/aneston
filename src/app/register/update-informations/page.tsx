@@ -21,6 +21,7 @@ import { AxiosError } from 'axios'
 import { ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { useToast } from '@/components/ui/use-toast'
 
 const updateProfileSchema = z.object({
   user_link: z
@@ -34,9 +35,12 @@ const updateProfileSchema = z.object({
     .string()
     .min(3, { message: 'O nome precisa ter pelo menos três letras.' }),
   email: z.string().email({ message: 'Digite um e-mail válido.' }),
-  crm: z.string(),
-  city: z.string(),
-  state: z.string().max(2, { message: 'Digite apenas a sigla do estado.' }),
+  crm: z.string().min(1, { message: 'O CRM é obrigatório.' }),
+  city: z.string().min(1, { message: 'A cidade é obrigatória.' }),
+  state: z
+    .string()
+    .min(1, { message: 'O estado é obrigatório.' })
+    .max(2, { message: 'Digite apenas a sigla do estado.' }),
 })
 
 type UpdateProfileData = z.infer<typeof updateProfileSchema>
@@ -44,6 +48,8 @@ type UpdateProfileData = z.infer<typeof updateProfileSchema>
 const Register = () => {
   const session = useSession()
   const router = useRouter()
+
+  const { toast } = useToast()
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
@@ -66,7 +72,11 @@ const Register = () => {
   const handleUpdateProfile = async (data: UpdateProfileData) => {
     try {
       await api.put('/users', data)
-      router.push(`/register/time-intervals`)
+      router.push('/')
+      toast({
+        title: 'Cadastro realizado com sucesso!',
+        variant: 'success',
+      })
     } catch (err) {
       if (err instanceof AxiosError && err?.response?.data?.message) {
         setUserLinkAlredyTakenMessage('Esse nome de usuário já está em uso.')
@@ -89,7 +99,7 @@ const Register = () => {
           imediatamente!
         </p>
 
-        <MultiStep size={3} currentStep={2} />
+        <MultiStep size={2} currentStep={2} />
       </div>
       <Form {...form}>
         <form
