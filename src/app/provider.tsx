@@ -1,6 +1,7 @@
 'use client'
-
 import { SessionProvider } from 'next-auth/react'
+
+// Crie o contexto
 
 type Props = {
   children?: React.ReactNode

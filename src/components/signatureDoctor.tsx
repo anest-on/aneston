@@ -9,6 +9,7 @@ import { useToast } from './ui/use-toast'
 
 interface SignatureDoctorProps {
   setOpen: (open: boolean) => void
+  onSave: () => void
 }
 
 const getUrlExtension = (url: string) => {
@@ -29,7 +30,7 @@ const onImageEdit = async (imgUrl: string) => {
   return file
 }
 
-export function SignatureDoctor({ setOpen }: SignatureDoctorProps) {
+export function SignatureDoctor({ setOpen, onSave }: SignatureDoctorProps) {
   const [isUploading, setIsUploading] = useState(false)
 
   const { toast } = useToast()
@@ -72,6 +73,9 @@ export function SignatureDoctor({ setOpen }: SignatureDoctorProps) {
 
       setOpen(false)
 
+      // Chame a callback onSave para atualizar o estado no componente pai
+      onSave()
+
       // refreshSession() with new SignatureUrl
       const event = new Event('visibilitychange')
       document.dispatchEvent(event)
@@ -84,7 +88,6 @@ export function SignatureDoctor({ setOpen }: SignatureDoctorProps) {
     }
   }
 
-  // console.log(url)
   return (
     <div>
       <input type="file" id="file" className="hidden" accept="image/*" />

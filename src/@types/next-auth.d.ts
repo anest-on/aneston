@@ -17,7 +17,7 @@ declare module 'next-auth' {
     easy_scheduling: boolean
     message: string
     doctor_id: string
-    created_at: Date
+    created_at: Date 
     updated_at: Date
   }
   interface Session {

@@ -113,15 +113,42 @@ const TimeIntervals = () => {
     },
   })
 
-  useEffect(() => {
-    const doctorFromDB = session.data?.user
-    if (doctorFromDB) {
-      setDoctor(doctorFromDB)
-
-      form.setValue('easy_scheduling', doctor.easy_scheduling)
-      setEasyScheduling(doctor?.easy_scheduling)
+  const fetchDoctorData = async () => {
+    try {
+      const response = await api.get('/doctor'); // Ajuste a rota conforme necessário
+      const doctorFromDB = response.data;
+  
+      console.log('Fetched doctor data:', doctorFromDB); // Log da resposta do servidor
+  
+      if (doctorFromDB && typeof doctorFromDB.easy_scheduling === 'boolean') {
+        form.setValue('easy_scheduling', doctorFromDB.easy_scheduling);
+  
+        setDoctor(doctorFromDB);
+        setEasyScheduling(doctorFromDB.easy_scheduling);
+      } else {
+        console.error('Invalid doctor data structure:', doctorFromDB);
+      }
+    } catch (error) {
+      console.error('Failed to fetch doctor data:', error);
     }
-  }, [form, session.data?.user, doctor])
+  };
+
+  // useEffect(() => {
+  //   const doctorFromDB = session.data?.user
+  //   if (doctorFromDB) {
+  //     setDoctor(doctorFromDB)
+
+  //     form.setValue('easy_scheduling', doctor.easy_scheduling)
+  //     setEasyScheduling(doctor?.easy_scheduling)
+  //   }
+  // }, [form, session.data?.user, doctor, ])
+
+  useEffect(() => {
+    if (session.data?.user) {
+      fetchDoctorData()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session.data?.user])
 
   const { isSubmitting } = form.formState
 
@@ -178,7 +205,7 @@ const TimeIntervals = () => {
       const { intervals, appointmentTime, easy_scheduling } = data as TimeIntervalsFormOutput
       await api.post('/time-intervals', { intervals, appointmentTime })
       await api.put('/users', { easy_scheduling })
-  
+
       toast({
         title: 'Novos horários cadastrados com sucesso!',
         variant: 'success',
@@ -189,7 +216,7 @@ const TimeIntervals = () => {
         variant: 'destructive',
       })
     }
-    
+
   }
   // console.log('easyScheduling' + easyScheduling)
 
