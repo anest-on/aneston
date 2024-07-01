@@ -35,6 +35,8 @@ export default {
           message: '',
           signature_url: '',
           easy_scheduling: false,
+          created_at: new Date(),
+          updated_at: new Date(),
         }
       },
     }),
