@@ -93,11 +93,7 @@ export const {
         session.user.doctor_id = token.doctor_id
       }
 
-      if (
-        token.easy_scheduling &&
-        session.user &&
-        typeof token.easy_scheduling === 'boolean'
-      ) {
+      if (session.user && typeof token.easy_scheduling === 'boolean') {
         session.user.easy_scheduling = token.easy_scheduling
       }
 

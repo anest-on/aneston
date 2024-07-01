@@ -214,6 +214,7 @@ export async function PUT(req: Request) {
       pacient_number,
       doctor_id,
       pacient_email,
+      appointment_status,
     } = body
 
     const isNotDoctor = session.user.doctor_id !== undefined
@@ -243,6 +244,7 @@ export async function PUT(req: Request) {
           pacient_name,
           cirurgy_name,
           pacient_number,
+          appointment_status,
         },
       })
       return NextResponse.json(patientUpdated)
@@ -267,6 +269,7 @@ export async function PUT(req: Request) {
         pacient_name,
         cirurgy_name,
         pacient_number,
+        appointment_status,
       },
     })
     return NextResponse.json(patientUpdated)

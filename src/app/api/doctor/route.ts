@@ -26,7 +26,13 @@ export async function GET() {
       return NextResponse.json(doctor)
     }
 
-    const thisUser = session.user
+    const doctor = await prisma.user.findFirst({
+      where: {
+        id: session.user.id,
+      },
+    })
+
+    const thisUser = doctor
 
     return NextResponse.json(thisUser)
   } catch (error) {

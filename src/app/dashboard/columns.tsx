@@ -200,20 +200,20 @@ export const columns: ColumnDef<Patient>[] = [
               <DropdownMenuItem className="p-0"></DropdownMenuItem>
               <DropdownMenuItem className="p-0">
                 <PatientInfosPdfButton patient={patient}>
-                  Informações do paciente
+                  Resposta do paciente
                 </PatientInfosPdfButton>
               </DropdownMenuItem>
 
               <DropdownMenuItem className="p-0">
-                <ConsultationCertificatePdfButton patient={patient}>
-                  Gerar Cerfinado
-                </ConsultationCertificatePdfButton>
+                <PatientSendEmailCertificateButton formId={patient.id}>
+                  Enviar o certificado de consulta ao paciente
+                </PatientSendEmailCertificateButton>
               </DropdownMenuItem>
 
               <DropdownMenuItem className="p-0">
-                <PatientSendEmailCertificateButton formId={patient.id}>
-                  Enviar certificado p/ paciente
-                </PatientSendEmailCertificateButton>
+                <ConsultationCertificatePdfButton patient={patient}>
+                  Conferir o certificado
+                </ConsultationCertificatePdfButton>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

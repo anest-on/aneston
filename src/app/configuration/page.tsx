@@ -4,7 +4,6 @@
 
 import { SignatureDoctor } from '@/components/signatureDoctor'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { Textarea } from '@/components/ui/textarea'
@@ -27,11 +26,10 @@ const settingsSchema = z.object({
 type SettingsData = z.infer<typeof settingsSchema>
 
 const AccessConfiguration = () => {
-  const session = useSession()
+  const { data: session, update } = useSession()
   const { toast } = useToast()
 
   const [doctor, setDoctor] = useState({} as User)
-
   const [open, setOpen] = useState(false)
 
   const form = useForm<z.infer<typeof settingsSchema>>({
@@ -42,32 +40,48 @@ const AccessConfiguration = () => {
     },
   })
 
-  useEffect(() => {
-    async function searchingDoctor() {
-      const doctor = await api.get('doctor')
-      setDoctor(doctor.data)
-    }
-    searchingDoctor()
+  const fetchDoctorData = async () => {
+    try {
+      const response = await api.get('/doctor')
+      const doctorData = response.data
 
-    form.setValue('easy_scheduling', doctor?.easy_scheduling)
-    if (doctor?.message) form.setValue('message', doctor?.message)
-  }, [
-    session.data?.user.accessType,
-    session.data?.user.doctor_id,
-    doctor.message,
-    doctor?.easy_scheduling,
-    form,
-  ])
+      setDoctor(doctorData)
+      form.setValue('message', doctorData.message || '')
+      form.setValue('easy_scheduling', doctorData.easy_scheduling)
+    } catch (error) {
+      console.error('Failed to fetch doctor data:', error)
+    }
+  }
+
+  useEffect(() => {
+    fetchDoctorData()
+  }, [])
 
   const { isSubmitting } = form.formState
 
   const handleUpdateSettings = async (data: SettingsData) => {
     try {
       await api.put('/users', data)
+
       toast({
         title: 'Informação atualizada com sucesso!',
         variant: 'success',
       })
+
+      // Busque os dados atualizados do banco de dados
+      await fetchDoctorData()
+
+      // Atualiza a sessão do usuário para refletir as mudanças
+      if (session) {
+        await update({
+          ...session,
+          user: {
+            ...session.user,
+            message: data.message,
+            easy_scheduling: data.easy_scheduling,
+          },
+        })
+      }
     } catch (err) {
       if (err instanceof AxiosError && err?.response?.data?.message) {
         return
@@ -91,35 +105,8 @@ const AccessConfiguration = () => {
             Configurações
           </p>
           <div className="w-full h-[2px] mt-6 px-6 bg-gray-500" />
-          <div className="flex flex-col mt-6 gap-2">
-            <div className="flex justify-between">
-              <p className="text-white font-bold">
-                Agendamento de consulta facilitado
-              </p>
-              <FormField
-                control={form.control}
-                name="easy_scheduling"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Checkbox
-                        disabled={isSubmitting}
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <p>
-              Ao ativar o paciente pode agendar sua consulta ao acessar o
-              formulário. Ao final será perguntado o dia e a hora que deseja
-              realizar a consulta
-            </p>
-          </div>
 
-          <div className="flex flex-col mt-12 gap-2">
+          <div className="flex flex-col mt-6 gap-2">
             <div className="md:flex items-center gap-10 ">
               <p className="text-white font-bold">
                 Mensagem de finalização da consulta
@@ -145,9 +132,9 @@ const AccessConfiguration = () => {
             />
           </div>
 
-          {(session.data?.user.accessType === '' ||
-            session.data?.user.accessType === null ||
-            session.data?.user.accessType === undefined) && (
+          {((session && session.user.accessType === '') ||
+            (session && session.user.accessType === null) ||
+            (session && session.user.accessType === undefined)) && (
             <div className="flex flex-col mt-12 gap-2 ">
               <div className="md:flex gap-10">
                 <p className="text-white font-bold">Assinatura</p>
@@ -177,7 +164,10 @@ const AccessConfiguration = () => {
                           Realize aqui a sua nova assinatura
                         </p>
                         <div className="self-center w-[300px] h-[150px] ">
-                          <SignatureDoctor setOpen={setOpen} />
+                          <SignatureDoctor
+                            setOpen={setOpen}
+                            onSave={fetchDoctorData}
+                          />
                         </div>
                       </DialogContent>
                     </Dialog>
@@ -195,7 +185,10 @@ const AccessConfiguration = () => {
                     <DialogContent className="flex flex-col w-[400px] h-[300px] justify-start bg-gray-800 border-gray-600 text-gray-200">
                       <p className="font-bold">Realize aqui a sua assinatura</p>
                       <div className="self-center w-[300px] h-[150px] ">
-                        <SignatureDoctor setOpen={setOpen} />
+                        <SignatureDoctor
+                          setOpen={setOpen}
+                          onSave={fetchDoctorData}
+                        />
                       </div>
                     </DialogContent>
                   </Dialog>

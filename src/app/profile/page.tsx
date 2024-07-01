@@ -4,10 +4,9 @@ import { useSession } from 'next-auth/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { api } from '@/lib/axios'
 import { AxiosError } from 'axios'
 import {
@@ -63,19 +62,57 @@ const Profile = () => {
     string | null
   >(null)
 
+  // Função para buscar os dados do usuário quando a página é carregada
+  const fetchUserData = async () => {
+    try {
+      const response = await api.get('/doctor')
+      const userData = response.data
+
+      form.setValue('user_link', userData.user_link)
+      form.setValue('name', userData.name)
+      form.setValue('email', userData.email)
+      form.setValue('crm', userData.crm)
+      form.setValue('city', userData.city)
+      form.setValue('state', userData.state)
+    } catch (error) {
+      console.error('Failed to fetch user data:', error)
+    }
+  }
+
+  useEffect(() => {
+    fetchUserData()
+  }, [])
+
   const handleUpdateProfile = async (data: UpdateProfileData) => {
     try {
       await api.put('/users', data)
-      update()
+
+      // Busque os dados atualizados do banco de dados
+      await fetchUserData()
+
+      // Atualiza a sessão do usuário para refletir as mudanças
+      if (session) {
+        await update({
+          ...session,
+          user: {
+            ...session.user,
+            user_link: data.user_link,
+            name: data.name,
+            email: data.email,
+            crm: data.crm,
+            city: data.city,
+            state: data.state,
+          },
+        })
+      }
+
       toast({
         title: 'Perfil atualizado com sucesso!',
         variant: 'success',
       })
     } catch (err) {
       if (err instanceof AxiosError) {
-        setUserLinkAlredyTakenMessage(
-          () => 'Esse nome de usuário já está em uso.',
-        )
+        setUserLinkAlredyTakenMessage('Esse nome de usuário já está em uso.')
       }
       toast({
         title: 'Erro ao atualizar perfil!',
@@ -139,11 +176,7 @@ const Profile = () => {
                   <FormItem>
                     <FormLabel>Seu nome</FormLabel>
                     <FormControl>
-                      <Input
-                        // prefix="aneston.com/"
-                        disabled={isSubmitting}
-                        {...field}
-                      />
+                      <Input disabled={isSubmitting} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
