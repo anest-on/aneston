@@ -37,12 +37,12 @@ export const {
   callbacks: {
     async signIn({ account }) {
       if (account?.provider === 'google') {
-        if (
-          !account?.scope?.includes('https://www.googleapis.com/auth/calendar')
-        ) {
-          return '/register/?error=permissions'
-          // return false
-        }
+        // if (
+        //   !account?.scope?.includes('https://www.googleapis.com/auth/calendar')
+        // ) {
+        //   return '/register/?error=permissions'
+        //   // return false
+        // }
       }
       return true
     },
