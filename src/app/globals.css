@@ -3,6 +3,47 @@
 @tailwind utilities;
 
 @layer base {
+  @media print {
+    #no-print {
+      display: none;
+    }
+    #print-area {
+      display: block;
+      margin: 0;
+      padding: 0;
+      box-shadow: none; /* Remove shadow for the print area */
+    }
+  
+    body {
+      margin: 0;
+      padding: 0;
+      box-shadow: none;
+    }
+  
+    .avoid-page-break {
+      break-inside: avoid;
+    }
+    
+    @page {
+      margin: 20mm 10mm; /* Margins for the entire page */
+    }
+  }
+  @page:first {
+    size: auto;
+    margin-bottom:0mm;
+    margin-top: 0mm;
+    margin-left: 0mm;
+    margin-right: 0mm;
+}
+
+  @page {
+    size: auto;
+    margin-bottom:15mm;
+    margin-top: 15mm;
+    margin-left: 0mm;
+    margin-right: 0mm;
+  }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 224 71.4% 4.1%;

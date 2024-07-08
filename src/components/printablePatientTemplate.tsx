@@ -25,67 +25,110 @@ const PrintablePatientTemplate = React.forwardRef<HTMLDivElement, Props>(
         </style>
         <div ref={ref} className={`${roboto.className} "w-full"`}>
           <div className="p-0 w-full">
-            <div className="flex flex-col items-center mb-4">
+            <div className="flex flex-col items-center mb-8">
               <Image src={logoPDF} width={200} alt="AnestOn" />
             </div>
-            <div className="text-center text-xl font-bold mb-4">
+            <div className="text-center text-2xl font-bold mb-8">
               INFORMAÇÕES DO PACIENTE
             </div>
-            <p className="font-bold text-xl mb-2">Identificação do Paciente</p>
-            <div className="border border-gray-900 p-4 mb-4">
+            <p className="avoid-page-break font-bold text-2xl mb-2">
+              Identificação do Paciente
+            </p>
+            <div className="mb-8 text-lg">
               <div className="flex justify-between mb-2">
-                <p>Nome: {patient.pacient_name}</p>
-                <p>
-                  Data de Nascimento: {patient.pacient_birthdate} - (
+                <p className="avoid-page-break">
+                  <span className="underline">Nome</span>:{' '}
+                  {patient.pacient_name}
+                </p>
+                <p className="avoid-page-break">
+                  <span className="underline">Data de Nascimento</span>:{' '}
+                  {patient.pacient_birthdate} - (
                   {getAgeFromDate(patient.pacient_birthdate)})
                 </p>
               </div>
-              <p className="mb-2">Sexo: {patient.pacient_gender}</p>
+              <p className="avoid-page-break mb-2">
+                <span className="underline">Sexo</span>:{' '}
+                {patient.pacient_gender}
+              </p>
               <div className="flex justify-between mb-2">
-                <p>E-mail: {patient.pacient_email}</p>
-                <p>Número de Celular: {patient.pacient_number}</p>
+                <p className="avoid-page-break">
+                  <span className="underline">E-mail</span>:{' '}
+                  {patient.pacient_email}
+                </p>
+                <p className="avoid-page-break">
+                  <span className="underline">Número de Celular</span>:{' '}
+                  {patient.pacient_number}
+                </p>
               </div>
               <div className="flex justify-between">
-                <p>
-                  Plano de Saúde:{' '}
+                <p className="avoid-page-break">
+                  <span className="underline">Plano de Saúde</span>:{' '}
                   {patient.pacient_healthInsurance === 'Sim'
                     ? patient.pacient_healthInsuranceName
                     : 'Nenhum'}
                 </p>
-                <p>
-                  {patient.pacient_healthInsurance === 'Sim'
-                    ? 'Número de Matrícula: ' +
-                      patient.pacient_healthInsuranceId
-                    : ''}
+                <p className="avoid-page-break">
+                  {patient.pacient_healthInsurance === 'Sim' ? (
+                    <>
+                      <span className="underline">Número de Matrícula</span>:{' '}
+                      {patient.pacient_healthInsuranceId}
+                    </>
+                  ) : (
+                    ''
+                  )}
                 </p>
               </div>
             </div>
 
-            <p className="font-bold text-xl mb-2">
+            <p className="avoid-page-break font-bold text-2xl mb-2">
               Identificação do Familiar / Acompanhante
             </p>
-            <div className="border border-gray-900 p-4 mb-4">
-              <p className="mb-2">Nome: {patient.companion_name}</p>
-              <p className="mb-2">
-                Grau de Parentesco: {patient.companion_kinship}
+            <div className="mb-8 text-lg">
+              <p className="avoid-page-break mb-2">
+                <span className="underline">Nome</span>:{' '}
+                {patient.companion_name}
+              </p>
+              <p className="avoid-page-break mb-2">
+                <span className="underline">Grau de Parentesco</span>:{' '}
+                {patient.companion_kinship}
               </p>
               <div className="flex justify-between">
-                <p>E-mail: {patient.companion_email}</p>
-                <p>Número de Celular: {patient.companion_number}</p>
+                <p className="avoid-page-break">
+                  <span className="underline">E-mail</span>:{' '}
+                  {patient.companion_email}
+                </p>
+                <p className="avoid-page-break">
+                  <span className="underline">Número de Celular</span>:{' '}
+                  {patient.companion_number}
+                </p>
               </div>
             </div>
 
-            <p className="font-bold text-xl mb-2">Informações do Paciente</p>
-            <div className="border border-gray-900 p-4 mb-4">
+            <p className="avoid-page-break font-bold text-2xl mb-2">
+              Informações do Paciente
+            </p>
+            <div className="mb-8 text-lg">
               <div className="flex justify-between mb-2">
-                <p>Cirurgia: {patient.cirurgy_name}</p>
-                <p>Nome do Cirurgião: {patient.cirurgy_physician}</p>
+                <p className="avoid-page-break">
+                  <span className="underline">Cirurgia</span>:{' '}
+                  {patient.cirurgy_name}
+                </p>
+                <p className="avoid-page-break">
+                  <span className="underline">Nome do Cirurgião</span>:{' '}
+                  {patient.cirurgy_physician}
+                </p>
               </div>
               <div className="flex mb-2">
-                <p className="mr-12">Peso: {patient.pacient_weight}</p>
-                <p className="mr-12">Altura: {patient.pacient_height}</p>
-                <p>
-                  IMC:{' '}
+                <p className="avoid-page-break mr-12">
+                  <span className="underline">Peso</span>:{' '}
+                  {patient.pacient_weight}
+                </p>
+                <p className="avoid-page-break mr-12">
+                  <span className="underline">Altura</span>:{' '}
+                  {patient.pacient_height}
+                </p>
+                <p className="avoid-page-break">
+                  <span className="underline">IMC</span>::{' '}
                   {(
                     Number(patient.pacient_weight) /
                     (parseFloat(patient.pacient_height!.replace(',', '.')) *
@@ -93,49 +136,59 @@ const PrintablePatientTemplate = React.forwardRef<HTMLDivElement, Props>(
                   ).toFixed(2)}
                 </p>
               </div>
-              <p className="mb-2">
-                Alergias alimentares e/ou farmacológicas:{' '}
+              <p className="avoid-page-break mb-2">
+                <span className="underline">
+                  Alergias alimentares e/ou farmacológicas
+                </span>
+                :{' '}
                 {patient.pacient_allergy === 'Sim'
                   ? patient.pacient_allergy_names?.join(', ')
                   : 'Nenhuma'}
               </p>
-              <p>
-                Condições cardíacas:{' '}
+              <p className="avoid-page-break">
+                <span className="underline">Condições cardíacas</span>:{' '}
                 {patient.pacient_heart_conditions
                   ? patient.pacient_heart_conditions.join(', ')
                   : 'Nenhuma'}
               </p>
-              <p>
+              <p className="avoid-page-break">
                 {patient.pacient_heart_conditions
                   ? 'Descrição: ' + patient.pacient_heart_conditions_observation
                   : ''}
               </p>
-              <p className="mt-2 mb-2">
-                Outras Comorbidades:{' '}
+              <p className="avoid-page-break mt-2 mb-2">
+                <span className="underline">Outras Comorbidades</span>:{' '}
                 {patient.pacient_disease === 'Sim'
                   ? patient.pacient_disease_names?.join(', ')
                   : 'Nenhuma'}
               </p>
-              <p className="mb-2">
-                Medicamentos de uso contínuo: {CreateMedicinesString(patient)}
+              <p className="avoid-page-break mb-2">
+                <span className="underline">Medicamentos de uso contínuo</span>:{' '}
+                {CreateMedicinesString(patient)}
               </p>
-              <p className="mb-2">
-                Antibióticos usados nos últimos 6 meses:{' '}
+              <p className="avoid-page-break mb-2">
+                <span className="underline">
+                  Antibióticos usados nos últimos 6 meses
+                </span>
+                :{' '}
                 {patient.pacient_antibiotic
                   ? patient.pacient_antibiotics_names?.join(', ')
                   : 'Nenhum'}
               </p>
-              <p className="mb-2">
-                Cirurgias Prévias: {CreateCirurgiesString(patient)}
+              <p className="avoid-page-break mb-2">
+                <span className="underline">Cirurgias Prévias</span>:{' '}
+                {CreateCirurgiesString(patient)}
               </p>
-              <p className="mb-2">
-                Histórico de Tabagismo: {PatientSmokeString(patient)}
+              <p className="avoid-page-break mb-2">
+                <span className="underline">Histórico de Tabagismo</span>:{' '}
+                {PatientSmokeString(patient)}
               </p>
-              <p className="mb-2">
-                Atividade física: {CreatePhysicalActivitiesString(patient)}
+              <p className="avoid-page-break mb-2">
+                <span className="underline">Atividade física</span>:{' '}
+                {CreatePhysicalActivitiesString(patient)}
               </p>
-              <p>
-                Complicações anestésicas:{' '}
+              <p className="avoid-page-break">
+                <span className="underline">Complicações anestésicas</span>:{' '}
                 {patient.pacient_has_anesthetic_complication
                   ? patient.pacient_anesthetic_complications?.join(', ')
                   : 'Nenhuma'}
