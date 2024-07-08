@@ -23,6 +23,7 @@ import { AppointmentStatusEnum } from '@prisma/client'
 import dayjs from 'dayjs'
 import ptBr from 'dayjs/locale/pt-br'
 import { RangeDateFn, StatusFilterFn } from './filters'
+import PatientSignNowButton from '@/components/patientSignNowButton'
 
 export interface Patient
   extends pacientSubmitProps,
@@ -208,6 +209,12 @@ export const columns: ColumnDef<Patient>[] = [
                 <PatientSendEmailCertificateButton formId={patient.id}>
                   Enviar o certificado de consulta ao paciente
                 </PatientSendEmailCertificateButton>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem className="p-0">
+                <PatientSignNowButton formId={patient.id}>
+                  Assinar agora
+                </PatientSignNowButton>
               </DropdownMenuItem>
 
               <DropdownMenuItem className="p-0">
