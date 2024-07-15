@@ -203,7 +203,7 @@ export const columns: ColumnDef<Patient>[] = [
             <PopoverContent className="w-full align-end bg-gray-900 border-gray-600">
               <div className="p-0 hover:bg-gray-600 cursor-pointer rounded-md">
                 <PatientInfosPdfButton patient={patient}>
-                  Resposta do paciente
+                  Visualizar respostas do paciente
                 </PatientInfosPdfButton>
               </div>
 
@@ -227,19 +227,19 @@ export const columns: ColumnDef<Patient>[] = [
                     onClick={(e) => e.preventDefault()}
                   >
                     <FileSymlink className="w-4 h-4 hover:cursor-pointer" />
-                    Enviar o certificado de consulta ao paciente
+                    Compartilhar link de assinatura do comprovante
                   </Button>
                 </RWebShare>
               </div>
               <div className="p-0 hover:bg-gray-600 cursor-pointer rounded-md">
                 <PatientSignNowButton formId={patient.id}>
-                  Assinar agora
+                  Assinar comprovante
                 </PatientSignNowButton>
               </div>
 
               <div className="p-0 hover:bg-gray-600 cursor-pointer rounded-md">
                 <ConsultationCertificatePdfButton patient={patient}>
-                  Conferir o certificado
+                  Visualizar comprovante
                 </ConsultationCertificatePdfButton>
               </div>
             </PopoverContent>
