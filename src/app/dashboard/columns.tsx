@@ -3,7 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 
 import { Calendar, Clock, Phone } from '@phosphor-icons/react'
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import { ArrowUpDown, FileSymlink, MoreHorizontal } from 'lucide-react'
 
 import { EditPatientButton } from '@/components/EditPatientButton'
 import ConsultationCertificatePdfButton from '@/components/consultationCertificatePdfButton'
@@ -24,6 +24,12 @@ import dayjs from 'dayjs'
 import ptBr from 'dayjs/locale/pt-br'
 import { RangeDateFn, StatusFilterFn } from './filters'
 import PatientSignNowButton from '@/components/patientSignNowButton'
+import { RWebShare } from 'react-web-share'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 
 export interface Patient
   extends pacientSubmitProps,
@@ -187,46 +193,57 @@ export const columns: ColumnDef<Patient>[] = [
       return (
         <div className="flex flex-row items-center justify-end gap-4 justify-self-end">
           <EditPatientButton patient={patient}>Atualizar</EditPatientButton>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+
+          <Popover>
+            <PopoverTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-gray-900 border-gray-600"
-            >
-              <DropdownMenuItem className="p-0"></DropdownMenuItem>
-              <DropdownMenuItem className="p-0">
+            </PopoverTrigger>
+            <PopoverContent className="w-full align-end bg-gray-900 border-gray-600">
+              <div className="p-0 hover:bg-gray-600 cursor-pointer rounded-md">
                 <PatientInfosPdfButton patient={patient}>
                   Resposta do paciente
                 </PatientInfosPdfButton>
-              </DropdownMenuItem>
+              </div>
 
-              <DropdownMenuItem className="p-0">
-                <PatientSendEmailCertificateButton
+              <div className="p-0 hover:bg-gray-600 cursor-pointer rounded-md">
+                {/* <PatientSendEmailCertificateButton
                   formId={patient.id}
                   patientEmail={patient.pacient_email}
                 >
                   Enviar o certificado de consulta ao paciente
-                </PatientSendEmailCertificateButton>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem className="p-0">
+                </PatientSendEmailCertificateButton> */}
+                <RWebShare
+                  data={{
+                    text: 'Utilize o link abaixo para preencher seu formulário para consulta.',
+                    url: `https://aneston.vercel.app/consultation-certificate/${patient.id}`,
+                    title: 'Aneston - Formulário de Consulta',
+                  }}
+                >
+                  <Button
+                    variant={'ghost'}
+                    className="hover:text-gray-40 w-full h-full gap-1 flex fles-row justify-start p-2"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    <FileSymlink className="w-4 h-4 hover:cursor-pointer" />
+                    Enviar o certificado de consulta ao paciente
+                  </Button>
+                </RWebShare>
+              </div>
+              <div className="p-0 hover:bg-gray-600 cursor-pointer rounded-md">
                 <PatientSignNowButton formId={patient.id}>
                   Assinar agora
                 </PatientSignNowButton>
-              </DropdownMenuItem>
+              </div>
 
-              <DropdownMenuItem className="p-0">
+              <div className="p-0 hover:bg-gray-600 cursor-pointer rounded-md">
                 <ConsultationCertificatePdfButton patient={patient}>
                   Conferir o certificado
                 </ConsultationCertificatePdfButton>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       )
     },

@@ -24,12 +24,12 @@ export default function PatientInfosPdfButton({
   return (
     <Button
       variant={'ghost'}
-      className="hover:text-gray-40 w-full h-full gap-1 flex fles-row justify-start p-2"
+      className="w-full h-full gap-1 flex fles-row justify-start p-2"
       onClick={() => {
         handlePrint()
       }}
     >
-      <FileText className="w-4 h-4 hover:text-gray-400 hover:cursor-pointer" />
+      <FileText className="w-4 h-4 hover:cursor-pointer" />
       {children}
       <PrintablePatientTemplate ref={documentRef} patient={patient} />
     </Button>

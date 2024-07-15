@@ -93,6 +93,12 @@
     min-width: 0;
   }
 
+  .react-web-share-modal h1, 
+  .react-web-share-modal p, 
+  .react-web-share-modal button {
+    color: #000; /* Mude para a cor desejada */
+  }
+
   .dark {
     /* --background: 224 71.4% 4.1%; */
     --background: rgb(18 18 20 / var(--tw-bg-opacity));
