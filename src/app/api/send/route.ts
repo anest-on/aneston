@@ -29,23 +29,25 @@ export async function POST(req: Request) {
       return new NextResponse('This form does not exist', { status: 400 })
     }
 
-    const { data, error } = await resend.emails.send({
-      from: 'AnestOn <contato@matheusadorno.com>',
-      to: form.pacient_email,
-      subject: 'AnestOn - Certificado de Consulta',
-      html: '',
-      react: EmailTemplate({
-        firstName: form.pacient_name,
-        message: session.user.message,
-        consultationCertificate: `https://aneston.vercel.app/consultation-certificate/${form.id}`,
-      }),
-    })
+    if (form.pacient_email) {
+      const { data, error } = await resend.emails.send({
+        from: 'AnestOn <contato@matheusadorno.com>',
+        to: form.pacient_email,
+        subject: 'AnestOn - Certificado de Consulta',
+        html: '',
+        react: EmailTemplate({
+          firstName: form.pacient_name,
+          message: session.user.message,
+          consultationCertificate: `https://aneston.vercel.app/consultation-certificate/${form.id}`,
+        }),
+      })
 
-    if (error) {
-      return Response.json({ error }, { status: 500 })
+      if (error) {
+        return Response.json({ error }, { status: 500 })
+      }
+
+      return Response.json(data)
     }
-
-    return Response.json(data)
   } catch (error) {
     console.log(error)
     return Response.json({ error }, { status: 500 })
