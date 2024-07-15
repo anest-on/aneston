@@ -20,6 +20,7 @@ import { Input } from '@/components/ui/input'
 import { CalendarShadcn } from '@/components/ui/calendar-shadcn'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { useRouter } from 'next/navigation'
+import { RWebShare } from "react-web-share";
 
 const patientSchema = z.object({
   name: z
@@ -143,14 +144,23 @@ const DashboardPage = () => {
           <DataTable columns={columns} data={patients || []} />
         </div>
         <div className="w-full flex justify-center mt-6 gap-20">
-          <Button
-            variant={'outline'}
-            className="text-white border-white hover:bg-gray-600"
-            onClick={copyLinkToClipboard}
-          >
-            Link para Agendamentos
-            <Copy className="w-4 h-4 ml-2" />
-          </Button>
+          <div>
+            <RWebShare
+              data={{
+                text: "Utilize o link abaixo para preencher seu formulário para consulta.",
+                url: `https://aneston.vercel.app/form/${doctor.user_link}`,
+                title: "Aneston - Formulário de Consulta",
+              }}
+            >
+              <Button
+                variant={'outline'}
+                className="text-white border-white hover:bg-gray-600"
+              >
+                Link para Agendamentos
+                <Copy className="w-4 h-4 ml-2" />
+              </Button>
+            </RWebShare>
+          </div>
 
           <Dialog open={openCreateCertificate} onOpenChange={setOpenCreateCertificate}>
             <DialogTrigger asChild>
