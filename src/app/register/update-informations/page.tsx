@@ -22,13 +22,15 @@ import { ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
+import { nanoid } from 'nanoid'
 
 const updateProfileSchema = z.object({
   user_link: z
     .string()
     .min(3, { message: 'O link precisa ter pelo menos três letras.' })
-    .regex(/^([a-z\\-]+)$/i, {
-      message: 'O link precisa ter apenas letras e hifens.',
+    .regex(/^([a-zA-Z0-9\-_]+)$/, {
+      message:
+        'O código precisa conter apenas letras (maiúsculas e minúsculas), números, hífens e underscores.',
     })
     .transform((userLink) => userLink.toLowerCase()),
   name: z
@@ -54,7 +56,7 @@ const Register = () => {
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      user_link: session.data?.user.user_link || '',
+      user_link: session.data?.user.user_link || nanoid(),
       name: session.data?.user.name || '',
       email: session.data?.user.email || '',
       crm: session.data?.user.crm || '',
