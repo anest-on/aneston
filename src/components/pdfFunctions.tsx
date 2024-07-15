@@ -4,7 +4,11 @@ import { getAgeFromDate } from '@/utils/calculate-years'
 export function CreateMedicinesString(patient: Patient) {
   let medicines = ''
 
-  if (patient.pacient_medicines && patient.pacient_medicines[0].name === '') {
+  if (
+    patient.pacient_medicines &&
+    patient.pacient_medicines[0] &&
+    patient.pacient_medicines[0].name === ''
+  ) {
     medicines = 'Nenhum'
     return medicines
   }

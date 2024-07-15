@@ -127,14 +127,16 @@ const PrintablePatientTemplate = React.forwardRef<HTMLDivElement, Props>(
                   <span className="underline">Altura</span>:{' '}
                   {patient.pacient_height}
                 </p>
-                <p className="avoid-page-break">
-                  <span className="underline">IMC</span>::{' '}
-                  {(
-                    Number(patient.pacient_weight) /
-                    (parseFloat(patient.pacient_height!.replace(',', '.')) *
-                      parseFloat(patient.pacient_height!.replace(',', '.')))
-                  ).toFixed(2)}
-                </p>
+                {patient.pacient_height && (
+                  <p className="avoid-page-break">
+                    <span className="underline">IMC</span>::{' '}
+                    {(
+                      Number(patient.pacient_weight) /
+                      (parseFloat(patient.pacient_height!.replace(',', '.')) *
+                        parseFloat(patient.pacient_height!.replace(',', '.')))
+                    ).toFixed(2)}
+                  </p>
+                )}
               </div>
               <p className="avoid-page-break mb-2">
                 <span className="underline">

@@ -6,10 +6,12 @@ import { useToast } from './ui/use-toast'
 interface PatientSendEmailCertificateButtonProps {
   formId: string
   children?: React.ReactNode
+  patientEmail: string
 }
 
 export default function PatientSendEmailCertificateButton({
   formId,
+  patientEmail,
   children,
 }: PatientSendEmailCertificateButtonProps) {
   const { toast } = useToast()
@@ -33,6 +35,7 @@ export default function PatientSendEmailCertificateButton({
       onClick={() => {
         sendEmail(formId)
       }}
+      disabled={!patientEmail}
     >
       <FileSymlink className="w-4 h-4 hover:text-gray-400 hover:cursor-pointer" />
       {children}
