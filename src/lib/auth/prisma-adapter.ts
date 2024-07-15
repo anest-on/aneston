@@ -42,6 +42,8 @@ export function PrismaAdapter(): Adapter {
         message: user.message!,
         signature_url: user.signature_url!,
         easy_scheduling: user.easy_scheduling!,
+        created_at: prismaUser.created_at,
+        updated_at: prismaUser.updated_at,
       }
     },
 
@@ -73,6 +75,8 @@ export function PrismaAdapter(): Adapter {
         message: user.message!,
         signature_url: user.signature_url!,
         easy_scheduling: user.easy_scheduling!,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
       }
     },
 
@@ -104,6 +108,8 @@ export function PrismaAdapter(): Adapter {
         message: user.message!,
         signature_url: user.signature_url!,
         easy_scheduling: user.easy_scheduling!,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
       }
     },
     async getUserByAccount({ providerAccountId, provider }) {
@@ -142,6 +148,8 @@ export function PrismaAdapter(): Adapter {
         message: user.message!,
         signature_url: user.signature_url!,
         easy_scheduling: user.easy_scheduling!,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
       }
     },
 
@@ -185,6 +193,8 @@ export function PrismaAdapter(): Adapter {
         message: user.message!,
         signature_url: user.signature_url!,
         easy_scheduling: user.easy_scheduling!,
+        created_at: prismaUser.created_at,
+        updated_at: prismaUser.updated_at,
       }
     },
 
