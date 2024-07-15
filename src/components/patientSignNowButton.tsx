@@ -14,7 +14,8 @@ export default function PatientSignNowButton({
   const router = useRouter()
 
   const handleClick = () => {
-    router.push(`/consultation-certificate/${formId}`)
+    // router.push(`/consultation-certificate/${formId}`)
+    window.open(`/consultation-certificate/${formId}`, '_blank')
   }
 
   return (
