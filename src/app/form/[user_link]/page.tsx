@@ -34,6 +34,8 @@ const Form = async ({ params }: { params: { user_link: string } }) => {
         name: doctor && doctor.name ? doctor.name : '',
         state: doctor && doctor?.state ? doctor.state : '',
         user_link: params.user_link,
+        easy_scheduling:
+          doctor && doctor.easy_scheduling ? doctor.easy_scheduling : true,
       }}
     />
   )

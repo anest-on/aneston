@@ -71,17 +71,16 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
       setSummaryData(values)
       console.log(values)
     } else {
-      setStep(4)
+      setStep(doctor.easy_scheduling ? 3 : 4)
     }
   }
 
   useEffect(() => {
-    console.log(pacientData)
-    console.log(companionData)
-    console.log(cirurgyData)
-    console.log(summaryData)
-    console.log(scheduleData)
-
+    // console.log(pacientData)
+    // console.log(companionData)
+    // console.log(cirurgyData)
+    // console.log(summaryData)
+    // console.log(scheduleData)
     // pacientData && companionData
     //   ? setStep(3)
     //   : pacientData && !companionData
@@ -105,7 +104,7 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
             confidenciais e essenciais para um cuidado médico de alta qualidade.
           </p>
 
-          <MultiStep size={5} currentStep={step} />
+          <MultiStep size={doctor.easy_scheduling ? 4 : 5} currentStep={step} />
         </div>
 
         <div className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid gap-4 border-gray-600 mt-6">
@@ -116,7 +115,9 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
                   1: 'Identificação do paciente',
                   2: 'Identificação do acompanhante',
                   3: 'Informações da cirurgia',
-                  4: 'Agendamento da consulta',
+                  4: doctor.easy_scheduling
+                    ? 'Resumo das informações'
+                    : 'Agendamento da consulta',
                   5: 'Resumo das informações',
                 }[step]
               }
@@ -143,7 +144,19 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
                   setCirurgyData={cirurgyData}
                 />
               ),
-              4: (
+              4: doctor.easy_scheduling ? (
+                <SummaryPage
+                  doctor={doctor}
+                  cirurgyData={cirurgyData}
+                  companionData={companionData}
+                  pacientData={pacientData}
+                  scheduleData={scheduleData}
+                  setObservationsData={{
+                    observation: summaryData?.pacient_observations ?? '',
+                  }}
+                  getSummaryData={handleSummarySubmit}
+                />
+              ) : (
                 <div className="flex flex-col gap-4">
                   <CalendarPage
                     doctor={doctor}

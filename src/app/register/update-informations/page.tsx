@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { statesList } from '@/app/constants/constants'
 import { MultiStep } from '@/components/multiStep'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,13 +17,21 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useToast } from '@/components/ui/use-toast'
 import { api } from '@/lib/axios'
 import { AxiosError } from 'axios'
 import { ArrowRight } from 'lucide-react'
+import { nanoid } from 'nanoid'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { useToast } from '@/components/ui/use-toast'
-import { nanoid } from 'nanoid'
 
 const updateProfileSchema = z.object({
   user_link: z
@@ -30,7 +39,7 @@ const updateProfileSchema = z.object({
     .min(3, { message: 'O link precisa ter pelo menos três letras.' })
     .regex(/^([a-zA-Z0-9\-_]+)$/, {
       message:
-        'O código precisa conter apenas letras (maiúsculas e minúsculas), números, hífens e underscores.',
+        'O código link pode conter apenas letras (maiúsculas e minúsculas), números, hífens ou underscores.',
     })
     .transform((userLink) => userLink.toLowerCase()),
   name: z
@@ -108,30 +117,53 @@ const Register = () => {
           onSubmit={form.handleSubmit(handleUpdateProfile)}
           className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6 gap-4"
         >
-          <div className="flex flex-col w-full mr-4">
-            <FormField
-              control={form.control}
-              name="user_link"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Seu Link</FormLabel>
-                  <FormControl>
-                    <Input
-                      prefix="aneston.com/"
-                      disabled={isSubmitting}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {userLinkAlredyTakenMessage && (
-              <p className="text-sm text-[#F75A68] mb-4">
-                {userLinkAlredyTakenMessage}
-              </p>
-            )}
+          <div className="flex">
+            <div className="flex flex-col  w-full mr-4">
+              <FormField
+                control={form.control}
+                name="crm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Seu CRM</FormLabel>
+                    <FormControl>
+                      <Input disabled={isSubmitting} type="crm" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex flex-col w-[30%]">
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Estado:</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="bg-gray-900 border-none">
+                          <SelectValue placeholder="Estado" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-gray-800 border-[1px] border-gray-600">
+                        <SelectGroup>
+                          {statesList.map((state, index) => (
+                            <SelectItem value={state} key={index}>
+                              {state}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
 
           <div className="flex flex-col">
@@ -141,22 +173,6 @@ const Register = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Seu Nome</FormLabel>
-                  <FormControl>
-                    <Input disabled={isSubmitting} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <FormField
-              control={form.control}
-              name="crm"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Seu CRM</FormLabel>
                   <FormControl>
                     <Input disabled={isSubmitting} {...field} />
                   </FormControl>
@@ -188,37 +204,30 @@ const Register = () => {
             />
           </div>
 
-          <div className="flex">
-            <div className="flex flex-col w-full mr-4">
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Sua Cidade</FormLabel>
-                    <FormControl>
-                      <Input disabled={isSubmitting} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex flex-col w-full mr-4">
-              <FormField
-                control={form.control}
-                name="state"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Seu Estado</FormLabel>
-                    <FormControl>
-                      <Input disabled={isSubmitting} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+          <div className="flex flex-col w-full mr-4">
+            <FormField
+              control={form.control}
+              name="user_link"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Seu Link</FormLabel>
+                  <FormControl>
+                    <Input
+                      prefix="aneston.com/form/"
+                      disabled={isSubmitting}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {userLinkAlredyTakenMessage && (
+              <p className="text-sm text-[#F75A68] mb-4">
+                {userLinkAlredyTakenMessage}
+              </p>
+            )}
           </div>
 
           <Button disabled={isSubmitting}>

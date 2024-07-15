@@ -1,31 +1,26 @@
 'use client'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { TextFormItem } from '@/components/textFormItem'
 import { RadioFormItem } from '@/components/radioFormItem'
 import { SingleTextFormSubItem } from '@/components/singleTextFormSubItem'
+import { TextFormItem } from '@/components/textFormItem'
 import { Button } from '@/components/ui/button'
-import { SelectFormItem } from '../selectFormItem'
-import { TextListFormSubItem } from '../textListFormSubItem'
-import { CheckboxFormItem, resposnseCheckboxProps } from '../checkboxFormItem'
-import { TreeTextFieldsFormItem } from '../treeTextFieldsFormItem'
-import {
-  DoubleTextInputProps,
-  DoubleTextListFormSubItem,
-} from '../doubleTextListFormSubItem'
-import { RadioFormSubItem } from '../radioFormSubItem'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
+import { CheckboxFormItem } from '../checkboxFormItem'
+import { DoubleTextListFormSubItem } from '../doubleTextListFormSubItem'
+import { RadioFormSubItem } from '../radioFormSubItem'
+import { SelectFormItem } from '../selectFormItem'
+import { TextListFormSubItem } from '../textListFormSubItem'
+import { TreeTextFieldsFormItem } from '../treeTextFieldsFormItem'
 
 const cirurgySchema = z.object({
   name: z.string(),
@@ -217,7 +212,12 @@ export default function CirurgyPage({
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <TextFormItem {...field}>
+                <TextFormItem
+                  inputValue={(e) => {
+                    field.onChange(e)
+                  }}
+                  {...field}
+                >
                   Qual o nome do cirurgião que irá realizar a sua cirurgia?
                 </TextFormItem>
               </FormControl>
@@ -231,7 +231,12 @@ export default function CirurgyPage({
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <TextFormItem {...field}>
+                <TextFormItem
+                  inputValue={(e) => {
+                    field.onChange(e)
+                  }}
+                  {...field}
+                >
                   Qual o seu peso? (peso em kg)
                 </TextFormItem>
               </FormControl>
@@ -245,7 +250,12 @@ export default function CirurgyPage({
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <TextFormItem {...field}>
+                <TextFormItem
+                  inputValue={(e) => {
+                    field.onChange(e)
+                  }}
+                  {...field}
+                >
                   Qual a sua altura? (altura em m)
                 </TextFormItem>
               </FormControl>

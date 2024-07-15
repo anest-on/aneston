@@ -1,6 +1,10 @@
 /* eslint-disable @next/next/no-async-client-component */
 
 import { api } from '@/lib/axios'
+import {
+  getCleanPhoneNumber,
+  getFormatedPhoneNumber,
+} from '@/utils/get-formated-phone-number'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
 import ptBr from 'dayjs/locale/pt-br'
@@ -25,7 +29,7 @@ import { pacientSubmitProps } from './pacientPage'
 
 const summaryFormSchema = z.object({
   pacient_name: z.string(),
-  pacient_contact: z.string(),
+  pacient_contact: z.string().transform((arg) => getCleanPhoneNumber(arg)),
   pacient_observations: z.string().optional(),
 })
 
@@ -116,22 +120,24 @@ const SummaryContent = ({
 
   return (
     <div className="max-w-[572px] mb-20 mx-auto py-0 px-4">
-      <div className="flex flex-row items-center justify-center text-[0.8rem] gap-10 mt-8">
-        <div className="flex items-center">
-          <Calendar size={18} />
-          <p className="ml-1 text-gray-100">
-            {dayjs(scheduleData)
-              .locale(ptBr)
-              .format('DD[ de ] MMMM[ de ] YYYY')}
-          </p>
+      {scheduleData ? (
+        <div className="flex flex-row items-center justify-center text-[0.8rem] gap-10 mt-8">
+          <div className="flex items-center">
+            <Calendar size={18} />
+            <p className="ml-1 text-gray-100">
+              {dayjs(scheduleData)
+                .locale(ptBr)
+                .format('DD[ de ] MMMM[ de ] YYYY')}
+            </p>
+          </div>
+          <div className="flex items-center">
+            <Clock size={18} />{' '}
+            <p className="ml-1 text-gray-100">
+              {dayjs(scheduleData).locale(ptBr).format('HH[:]mm')}
+            </p>
+          </div>
         </div>
-        <div className="flex items-center">
-          <Clock size={18} />{' '}
-          <p className="ml-1 text-gray-100">
-            {dayjs(scheduleData).locale(ptBr).format('HH[:]mm')}
-          </p>
-        </div>
-      </div>
+      ) : null}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -161,7 +167,11 @@ const SummaryContent = ({
                 <FormItem>
                   <FormLabel>Contato</FormLabel>
                   <FormControl>
-                    <Input disabled={isSubmitting} {...field} />
+                    <Input
+                      disabled={isSubmitting}
+                      {...field}
+                      value={getFormatedPhoneNumber(field.value)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

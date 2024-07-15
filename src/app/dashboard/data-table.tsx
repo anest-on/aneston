@@ -116,7 +116,7 @@ export function DataTable<TData, TValue>({
           <div className="flex flex-row justify-center items-end gap-4">
             <Input
               type="date"
-              label="Data de início:"
+              label="Data inicial:"
               defaultValue={dayjs(new Date())
                 .locale(ptBr)
                 .format('YYYY[-]MM[-]DD')}
@@ -131,7 +131,7 @@ export function DataTable<TData, TValue>({
             />
             <Input
               type="date"
-              label="Data de início:"
+              label="Data final:"
               defaultValue={dayjs(finalDate)
                 .locale(ptBr)
                 .format('YYYY[-]MM[-]DD')}

@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, ChangeEvent, useEffect } from 'react'
 import { cn } from '@/lib/utils'
-import { RadioGroup, RadioGroupItem } from './ui/radio-group'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { FormControl, FormItem, FormLabel } from './ui/form'
+import { RadioGroup, RadioGroupItem } from './ui/radio-group'
 
 export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
