@@ -9,6 +9,7 @@ export interface doctorProps {
   state: string
   city: string
   user_link: string
+  easy_scheduling?: boolean
 }
 
 interface SummaryPageProps extends SummaryProps {
@@ -36,9 +37,7 @@ const SummaryPage = ({
           <div className="ml-2">
             <p className="mt-2 text-2xl font-bold text-white">{doctor?.name}</p>
             <div className="flex gap-1 justify-start">
-              <p className="text-gray-200">
-                Anestesista - {doctor?.city}/{doctor?.state}
-              </p>
+              <p className="text-gray-200">Anestesista</p>
             </div>
           </div>
         </div>

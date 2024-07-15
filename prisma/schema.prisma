@@ -63,7 +63,7 @@ model Form {
   pacient_has_anesthetic_complication  String?
   pacient_anesthetic_complications     String[]
   pacient_procedure_summary            String?
-  schedule_date                        String
+  schedule_date                        String?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

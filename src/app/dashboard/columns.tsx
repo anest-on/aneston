@@ -11,25 +11,18 @@ import { cirurgySubmitProps } from '@/components/page/cirurgyPage'
 import { companionSubmitProps } from '@/components/page/companionPage'
 import { pacientSubmitProps } from '@/components/page/pacientPage'
 import PatientInfosPdfButton from '@/components/patientInfosPdfButton'
-import PatientSendEmailCertificateButton from '@/components/patientSendEmailCertificateButton'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { AppointmentStatusEnum } from '@prisma/client'
-import dayjs from 'dayjs'
-import ptBr from 'dayjs/locale/pt-br'
-import { RangeDateFn, StatusFilterFn } from './filters'
 import PatientSignNowButton from '@/components/patientSignNowButton'
-import { RWebShare } from 'react-web-share'
+import { Button } from '@/components/ui/button'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { AppointmentStatusEnum } from '@prisma/client'
+import dayjs from 'dayjs'
+import ptBr from 'dayjs/locale/pt-br'
+import { RWebShare } from 'react-web-share'
+import { RangeDateFn, StatusFilterFn } from './filters'
 
 export interface Patient
   extends pacientSubmitProps,
@@ -162,7 +155,7 @@ export const columns: ColumnDef<Patient>[] = [
     cell: ({ row }) => {
       const patient = row.original
 
-      return (
+      return patient.schedule_date ? (
         <div className="grid lg:grid-cols-5 sm:grid-rows-3 grid-flow-row gap-1 justify-self-end font-medium ">
           <div className="flex gap-1 md:col-span-3 ">
             <span>
@@ -180,6 +173,11 @@ export const columns: ColumnDef<Patient>[] = [
             <Phone size={18} />
             {patient.pacient_number}
           </div>
+        </div>
+      ) : (
+        <div className="flex  md:col-span-5">
+          <Phone size={18} />
+          {patient.pacient_number}
         </div>
       )
     },

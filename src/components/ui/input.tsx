@@ -20,8 +20,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {!!prefix && <p className="text-gray-400 ">{prefix}</p>}
           <input
             className="font-light w-full outline-none border-none bg-gray-900 file:border-0 focus-visible:0 disabled:cursor-not-allowed disabled:opacity-50"
-            type={type}
+            type={type === 'crm' ? 'text' : type}
             ref={ref}
+            maxLength={type === 'crm' ? 9 : 100}
             {...props}
           />
         </div>

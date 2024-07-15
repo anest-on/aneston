@@ -1,24 +1,17 @@
 'use client'
-import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { TextFormItem } from '@/components/textFormItem'
 import { DateFormItem } from '@/components/DateFormItem'
 import { RadioFormItem } from '@/components/radioFormItem'
 import { SingleTextFormSubItem } from '@/components/singleTextFormSubItem'
+import { TextFormItem } from '@/components/textFormItem'
 import { Button } from '@/components/ui/button'
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
+import { getCleanCpf } from '@/utils/get-formated-cpf'
+import { getCleanPhoneNumber } from '@/utils/get-formated-phone-number'
 import { useState } from 'react'
 
 const formSchema = z.object({
@@ -26,10 +19,14 @@ const formSchema = z.object({
     message: 'user_link must be at least 2 characters.',
   }),
   pacient_birthdate: z.string(),
-  pacient_cpf: z.string(),
+  pacient_cpf: z.string().transform((arg) => {
+    return getCleanCpf(arg)
+  }),
   pacient_gender: z.string(),
   pacient_email: z.string().email(),
-  pacient_number: z.string(),
+  pacient_number: z.string().transform((arg) => {
+    return getCleanPhoneNumber(arg)
+  }),
   pacient_healthInsurance: z.string(),
   pacient_healthInsuranceName: z.string().optional(),
   pacient_healthInsuranceId: z.string().optional(),
@@ -101,7 +98,14 @@ export default function PacientPage({
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <TextFormItem {...field}>Qual seu nome?</TextFormItem>
+                <TextFormItem
+                  inputValue={(e) => {
+                    field.onChange(e)
+                  }}
+                  {...field}
+                >
+                  Qual seu nome?
+                </TextFormItem>
               </FormControl>
             </FormItem>
           )}
@@ -127,7 +131,15 @@ export default function PacientPage({
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <TextFormItem {...field}>Qual o seu CPF?</TextFormItem>
+                <TextFormItem
+                  type="cpf"
+                  inputValue={(e) => {
+                    field.onChange(e)
+                  }}
+                  {...field}
+                >
+                  Qual o seu CPF?
+                </TextFormItem>
               </FormControl>
             </FormItem>
           )}
@@ -164,7 +176,14 @@ export default function PacientPage({
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <TextFormItem {...field}>Qual seu e-mail?</TextFormItem>
+                <TextFormItem
+                  inputValue={(e) => {
+                    field.onChange(e)
+                  }}
+                  {...field}
+                >
+                  Qual seu e-mail?
+                </TextFormItem>
               </FormControl>
             </FormItem>
           )}
@@ -176,7 +195,13 @@ export default function PacientPage({
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <TextFormItem {...field}>
+                <TextFormItem
+                  type="phone"
+                  inputValue={(e) => {
+                    field.onChange(e)
+                  }}
+                  {...field}
+                >
                   Qual seu número de celular (WhatsApp)?
                 </TextFormItem>
               </FormControl>

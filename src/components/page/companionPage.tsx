@@ -1,23 +1,11 @@
 'use client'
-import { useRouter } from 'next/navigation'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 import { TextFormItem } from '@/components/textFormItem'
-import { DateFormItem } from '@/components/DateFormItem'
-import { RadioFormItem } from '@/components/radioFormItem'
-import { SingleTextFormSubItem } from '@/components/singleTextFormSubItem'
 import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 
 export const companionFormSchema = z.object({
   companion_name: z.string().min(2, {
@@ -68,7 +56,12 @@ export default function CompanionPage({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <TextFormItem {...field}>
+                  <TextFormItem
+                    inputValue={(e) => {
+                      field.onChange(e)
+                    }}
+                    {...field}
+                  >
                     Qual o nome do seu acompanhante/familiar?
                   </TextFormItem>
                 </FormControl>
@@ -82,7 +75,12 @@ export default function CompanionPage({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <TextFormItem {...field}>
+                  <TextFormItem
+                    inputValue={(e) => {
+                      field.onChange(e)
+                    }}
+                    {...field}
+                  >
                     Qual o seu parentesco com o paciente?
                   </TextFormItem>
                 </FormControl>
@@ -96,7 +94,12 @@ export default function CompanionPage({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <TextFormItem {...field}>
+                  <TextFormItem
+                    inputValue={(e) => {
+                      field.onChange(e)
+                    }}
+                    {...field}
+                  >
                     Qual o e-mail do acompanhante?
                   </TextFormItem>
                 </FormControl>
@@ -110,7 +113,13 @@ export default function CompanionPage({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <TextFormItem {...field}>
+                  <TextFormItem
+                    type="phone"
+                    inputValue={(e) => {
+                      field.onChange(e)
+                    }}
+                    {...field}
+                  >
                     Qual o numero de celular (WhatsApp) do acompanhante?
                   </TextFormItem>
                 </FormControl>
