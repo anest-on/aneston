@@ -21,22 +21,22 @@ model Form {
   id                          String  @id @default(uuid())
   doctor_id                   String
   pacient_name                String
-  pacient_birthdate           String
+  pacient_birthdate           String?
   pacient_cpf                 String
-  pacient_gender              String
-  pacient_email               String
-  pacient_number              String
-  pacient_healthInsurance     String
+  pacient_gender              String?
+  pacient_email               String?
+  pacient_number              String?
+  pacient_healthInsurance     String?
   pacient_healthInsuranceName String?
   pacient_healthInsuranceId   String?
   pacient_signature           String?
 
   appointment_status AppointmentStatusEnum @default(UNDONE)
 
-  companion_name    String
-  companion_kinship String
-  companion_email   String
-  companion_number  String
+  companion_name    String?
+  companion_kinship String?
+  companion_email   String?
+  companion_number  String?
 
   cirurgy_name                         String?
   cirurgy_physician                    String?

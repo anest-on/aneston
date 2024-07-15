@@ -206,7 +206,10 @@ export const columns: ColumnDef<Patient>[] = [
               </DropdownMenuItem>
 
               <DropdownMenuItem className="p-0">
-                <PatientSendEmailCertificateButton formId={patient.id}>
+                <PatientSendEmailCertificateButton
+                  formId={patient.id}
+                  patientEmail={patient.pacient_email}
+                >
                   Enviar o certificado de consulta ao paciente
                 </PatientSendEmailCertificateButton>
               </DropdownMenuItem>
