@@ -38,7 +38,7 @@ const createCertificateSchema = z.object({
   name: z
     .string()
     .min(3, { message: 'O nome precisa ter pelo menos três letras.' }),
-  cpf: z.string().optional(),
+  cpf: z.string().min(11, { message: 'Digite um CPF válido.' }),
   date: z.date({
     required_error: 'A data de realização da consulta é obrigatória.',
   }),
@@ -50,6 +50,7 @@ const DashboardPage = () => {
   const router = useRouter()
   const { toast } = useToast()
   const [doctor, setDoctor] = useState({} as User)
+  const [openCreateCertificate, setOpenCreateCertificate] = useState(false)
 
   useEffect(() => {
     async function searchingDoctor() {
@@ -95,21 +96,27 @@ const DashboardPage = () => {
       pacient_name: values.name,
       pacient_cpf: values.cpf,
       schedule_date: values.date,
+      appointment_status: 'CONCLUDED',
     };
   
     try {
       const response = await api.post('/form', payload);
       toast({
         title: 'Certificado gerado com sucesso!',
-        description: 'Os dados do paciente foram enviados.',
+        description: 'Agora o paciente já pode assinar o documento.',
       });
-      router.push(`/consultation-certificate/${response.data.id}`);
+      // router.push(`/consultation-certificate/${response.data.id}`);
+      setOpenCreateCertificate(false);
+      window.open(`/consultation-certificate/${response.data.id}`, '_blank');
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } catch (error) {
       console.error('Erro ao enviar o formulário:', error);
       toast({
         title: 'Erro ao gerar certificado',
         variant: 'destructive',
-        description: 'Ocorreu um erro ao enviar os dados do paciente.',
+        description: 'Ocorreu um erro criar o certificado de consulta.',
       });
     }
   };
@@ -145,7 +152,7 @@ const DashboardPage = () => {
             <Copy className="w-4 h-4 ml-2" />
           </Button>
 
-          <Dialog>
+          <Dialog open={openCreateCertificate} onOpenChange={setOpenCreateCertificate}>
             <DialogTrigger asChild>
               <Button>
                 Gerar Certificado

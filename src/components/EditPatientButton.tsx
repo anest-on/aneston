@@ -39,11 +39,9 @@ const updatePatientSchema = z.object({
   name: z
     .string()
     .min(3, { message: 'O nome precisa ter pelo menos três letras.' }),
-  surgery: z.string().min(3, { message: 'Digite uma cirurgia válida.' }),
-  appointmentStatus: z.enum(['CONCLUDED', 'UNDONE', 'CANCELED']),
-  cellNumber: z
-    .string()
-    .min(6, { message: 'Digite um número de telefone válido.' }),
+  surgery: z.string().optional(),
+  appointmentStatus: z.enum(['CONCLUDED', 'UNDONE', 'CANCELED']).optional(),
+  cellNumber: z.string().optional(),
   createdAt: z.string(),
   doctorId: z.string(),
 })
@@ -65,7 +63,8 @@ export function EditPatientButton({ patient, children }: ThirdPartyUserProps) {
     defaultValues: {
       name: patient.pacient_name,
       surgery: patient.cirurgy_name || '',
-      cellNumber: patient.pacient_number,
+      cellNumber: patient.pacient_number || '',
+      appointmentStatus: patient.appointment_status || 'UNDONE',
       createdAt: String(patient.created_at),
       doctorId: patient.doctor_id!,
     },
@@ -78,9 +77,13 @@ export function EditPatientButton({ patient, children }: ThirdPartyUserProps) {
       const newPatient = patient
       newPatient.pacient_name = values.name
       newPatient.cirurgy_name = values.surgery
-      newPatient.pacient_number = values.cellNumber
-      newPatient.appointment_status =
-        AppointmentStatusEnum[values.appointmentStatus]
+      if (values.cellNumber) {
+        newPatient.pacient_number = values.cellNumber
+      }
+      if (values.appointmentStatus) {
+        newPatient.appointment_status =
+          AppointmentStatusEnum[values.appointmentStatus]
+      }
 
       await api.put('/form', newPatient)
 
