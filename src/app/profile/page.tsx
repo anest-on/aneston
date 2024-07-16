@@ -1,14 +1,7 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Header } from '@/components/header'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useState, useEffect } from 'react'
-import { api } from '@/lib/axios'
-import { AxiosError } from 'axios'
 import {
   Form,
   FormControl,
@@ -17,9 +10,24 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Header } from '@/components/header'
-import Image from 'next/image'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { useToast } from '@/components/ui/use-toast'
+import { api } from '@/lib/axios'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { AxiosError } from 'axios'
+import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { statesList } from '../constants/constants'
 
 const updateProfileSchema = z.object({
   user_link: z
@@ -131,41 +139,53 @@ const Profile = () => {
             onSubmit={form.handleSubmit(handleUpdateProfile)}
             className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6 gap-4"
           >
-            <div className="flex flex-col w-full mr-4">
-              <div className="flex w-full justify-center mb-5">
-                {session?.user.avatar_url && (
-                  <Image
-                    src={session.user.avatar_url}
-                    alt=""
-                    width={88}
-                    height={88}
-                    className="rounded-full"
-                  />
-                )}
+            <div className="flex">
+              <div className="flex flex-col  w-full mr-4">
+                <FormField
+                  control={form.control}
+                  name="crm"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Seu CRM</FormLabel>
+                      <FormControl>
+                        <Input disabled={isSubmitting} type="crm" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <FormField
-                control={form.control}
-                name="user_link"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Seu Link</FormLabel>
-                    <FormControl>
-                      <Input
-                        prefix="aneston.com/"
-                        disabled={isSubmitting}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {userLinkAlredyTakenMessage && (
-                <p className="text-sm text-[#F75A68] mb-4">
-                  {userLinkAlredyTakenMessage}
-                </p>
-              )}
+              <div className="flex flex-col w-[30%]">
+                <FormField
+                  control={form.control}
+                  name="state"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Estado:</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-gray-900 border-none">
+                            <SelectValue placeholder="Estado" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-gray-800 border-[1px] border-gray-600">
+                          <SelectGroup>
+                            {statesList.map((state, index) => (
+                              <SelectItem value={state} key={index}>
+                                {state}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
 
             <div className="flex flex-col">
@@ -174,23 +194,7 @@ const Profile = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Seu nome</FormLabel>
-                    <FormControl>
-                      <Input disabled={isSubmitting} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <FormField
-                control={form.control}
-                name="crm"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Seu CRM</FormLabel>
+                    <FormLabel>Seu Nome</FormLabel>
                     <FormControl>
                       <Input disabled={isSubmitting} {...field} />
                     </FormControl>
@@ -222,37 +226,30 @@ const Profile = () => {
               />
             </div>
 
-            <div className="flex">
-              <div className="flex flex-col w-full mr-4">
-                <FormField
-                  control={form.control}
-                  name="city"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Sua Cidade</FormLabel>
-                      <FormControl>
-                        <Input disabled={isSubmitting} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="flex flex-col w-full mr-4">
-                <FormField
-                  control={form.control}
-                  name="state"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Seu Estado</FormLabel>
-                      <FormControl>
-                        <Input disabled={isSubmitting} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+            <div className="flex flex-col w-full mr-4">
+              <FormField
+                control={form.control}
+                name="user_link"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Seu Link</FormLabel>
+                    <FormControl>
+                      <Input
+                        prefix="aneston.com/form/"
+                        disabled={isSubmitting}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {userLinkAlredyTakenMessage && (
+                <p className="text-sm text-[#F75A68] mb-4">
+                  {userLinkAlredyTakenMessage}
+                </p>
+              )}
             </div>
 
             <Button disabled={isSubmitting}>Salvar</Button>
