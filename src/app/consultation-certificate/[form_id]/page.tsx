@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma'
 import { SignatureForm } from '@/components/signatureForm'
+import { prisma } from '@/lib/prisma'
 import Image from 'next/image'
 
 const consultationCertificate = async ({
@@ -19,17 +19,18 @@ const consultationCertificate = async ({
     },
   })
 
-  const scheduledData = form?.id
-    ? `${
-        new Date(form.schedule_date).getDate() < 10
-          ? '0' + new Date(form.schedule_date).getDate()
-          : new Date(form.schedule_date).getDate()
-      }/${
-        new Date(form.schedule_date).getMonth() + 1 < 10
-          ? '0' + (new Date(form.schedule_date).getMonth() + 1)
-          : new Date(form.schedule_date).getMonth() + 1
-      }/${new Date(form.schedule_date).getFullYear()}`
-    : ''
+  const scheduledData =
+    form?.id && form.schedule_date
+      ? `${
+          new Date(form.schedule_date).getDate() < 10
+            ? '0' + new Date(form.schedule_date).getDate()
+            : new Date(form.schedule_date).getDate()
+        }/${
+          new Date(form.schedule_date).getMonth() + 1 < 10
+            ? '0' + (new Date(form.schedule_date).getMonth() + 1)
+            : new Date(form.schedule_date).getMonth() + 1
+        }/${new Date(form.schedule_date).getFullYear()}`
+      : ''
 
   return (
     <>
