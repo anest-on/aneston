@@ -38,7 +38,7 @@ const consultationCertificate = async ({
         <main className="max-w-[1024px] h-full md:h-screen w-full items-center justify-center mt-4 mx-auto py-8 px-4 mb-10">
           <div className="flex flex-col justify-center gap-1">
             <strong className="text-2xl text-center text-white">
-              Certificação de Realização de Consulta
+              Comprovante de Realização de Consulta Pré-anestésica
             </strong>
 
             <p className="text-center">
@@ -47,7 +47,7 @@ const consultationCertificate = async ({
             </p>
             <div className="flex flex-col bg-white items-center justify-center border border-solid border-red-600 rounded-md p-10 text-gray-900 mt-4">
               <strong className="text-xl md:text-2xl text-center">
-                Certificação de Realização de Consulta
+                Comprovante de Realização de Consulta Pré-anestésica
               </strong>
               <div className="flex flex-col bg-white items-center justify-center border border-solid border-gray-400 rounded-md p-6 mt-4">
                 <p className="mb-8 md:mb-24">
