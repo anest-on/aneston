@@ -47,7 +47,7 @@ const PrintableConsultationCertificateTemplate = React.forwardRef<
       <div ref={ref} className={`${roboto.className} "w-full"`}>
         <div className="p-0 w-full">
           <div className="text-center text-xl font-bold mb-4">
-            Certificação de Realização de Consulta
+            Comprovante de Realização de Consulta Pré-anestésica
           </div>
           <div className="flex flex-col border-[1px] border-gray-900  p-4">
             <p className="mb-8 md:mb-24">

@@ -140,8 +140,8 @@ const AccessConfiguration = () => {
                 <p className="text-white font-bold">Assinatura</p>
               </div>
               <p>
-                Assinatura que ficará registrada na Certificação de Realização
-                de Consulta.
+                Assinatura que ficará registrada na Comprovante de Realização de
+                Consulta Pré-anestésica.
               </p>
 
               {doctor?.signature_url ? (
