@@ -23,7 +23,7 @@ import {
 import { HomeFooter } from '@/components/homeFooter'
 import { Header } from '@/components/header'
 import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 
 export default function Home() {
   const recomendations = [
@@ -80,6 +80,10 @@ export default function Home() {
 
   const session = useSession()
   const isSignedIn = session.status === 'authenticated'
+
+  async function handleConnectToGoogle() {
+    await signIn('google')
+  }
 
   useEffect(() => {
     if (isSignedIn) {
@@ -153,7 +157,7 @@ export default function Home() {
               </div>
               <Button
                 className="mt-[40px] w-[250px]"
-                onClick={() => router.push('/register')}
+                onClick={() => handleConnectToGoogle()}
               >
                 <b>Vamos lá!</b>
               </Button>
@@ -219,10 +223,7 @@ export default function Home() {
               >
                 {sessionTwoText}
               </p>
-              <Button
-                className="mt-[15px]"
-                onClick={() => router.push('/register')}
-              >
+              <Button className="mt-[15px]" onClick={handleConnectToGoogle}>
                 Começar a usar&nbsp;&nbsp;&nbsp;
                 <Image
                   src={rightArrow}
