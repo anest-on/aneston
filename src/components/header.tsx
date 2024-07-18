@@ -41,7 +41,7 @@ export function Header() {
 
   const isSignedIn = session.status === 'authenticated'
 
-  async function handleConnectCalendar() {
+  async function handleConnectToGoogle() {
     await signIn('google')
   }
 
@@ -276,7 +276,7 @@ export function Header() {
                   <Button
                     className="rounded-full border-none bg-gray-600 text-gray mt-10"
                     variant={'outline'}
-                    onClick={handleConnectCalendar}
+                    onClick={handleConnectToGoogle}
                   >
                     <Image
                       src={googleIcon}
@@ -439,7 +439,7 @@ export function Header() {
             <Button
               className="rounded-full border-none bg-gray-800 text-gray-100"
               variant={'outline'}
-              onClick={handleConnectCalendar}
+              onClick={handleConnectToGoogle}
             >
               <Image
                 src={googleIcon}

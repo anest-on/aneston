@@ -46,12 +46,9 @@ const updateProfileSchema = z.object({
     .string()
     .min(3, { message: 'O nome precisa ter pelo menos três letras.' }),
   email: z.string().email({ message: 'Digite um e-mail válido.' }),
-  crm: z.string().min(1, { message: 'O CRM é obrigatório.' }),
-  city: z.string().min(1, { message: 'A cidade é obrigatória.' }),
-  state: z
-    .string()
-    .min(1, { message: 'O estado é obrigatório.' })
-    .max(2, { message: 'Digite apenas a sigla do estado.' }),
+  crm: z.string(),
+  city: z.string(),
+  state: z.string().max(2, { message: 'Digite apenas a sigla do estado.' }),
 })
 
 type UpdateProfileData = z.infer<typeof updateProfileSchema>
@@ -83,11 +80,23 @@ const Register = () => {
   const handleUpdateProfile = async (data: UpdateProfileData) => {
     try {
       await api.put('/users', data)
-      router.push('/')
       toast({
         title: 'Cadastro realizado com sucesso!',
         variant: 'success',
       })
+      await session.update((session: any) => ({
+        ...session,
+        user: {
+          ...session.user,
+          user_link: data.user_link,
+          name: data.name,
+          email: data.email,
+          crm: data.crm,
+          city: data.city,
+          state: data.state,
+        },
+      }))
+      router.push('/')
     } catch (err) {
       if (err instanceof AxiosError && err?.response?.data?.message) {
         setUserLinkAlredyTakenMessage('Esse nome de usuário já está em uso.')
@@ -105,12 +114,10 @@ const Register = () => {
         </strong>
         <p className="mb-6">
           Já coletamos as informações essenciais para criar sua conta com base
-          nos dados fornecidos pela sua Conta Google. No entanto, se desejar
-          fazer alguma edição em qualquer um desses detalhes, você pode fazê-lo
-          imediatamente!
+          nos dados fornecidos pela sua Conta Google. No entanto necessitamos,
+          se desejar fazer alguma edição em qualquer um desses detalhes, você
+          pode fazê-lo imediatamente!
         </p>
-
-        <MultiStep size={2} currentStep={2} />
       </div>
       <Form {...form}>
         <form
@@ -230,7 +237,7 @@ const Register = () => {
             )}
           </div>
 
-          <Button disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting}>
             Próximo Passo <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </form>

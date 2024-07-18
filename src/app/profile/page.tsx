@@ -33,8 +33,9 @@ const updateProfileSchema = z.object({
   user_link: z
     .string()
     .min(3, { message: 'O link precisa ter pelo menos três letras.' })
-    .regex(/^([a-z\\-]+)$/i, {
-      message: 'O link precisa ter apenas letras e hifens.',
+    .regex(/^([a-zA-Z0-9\-_]+)$/, {
+      message:
+        'O código link pode conter apenas letras (maiúsculas e minúsculas), números, hífens ou underscores.',
     })
     .transform((userLink) => userLink.toLowerCase()),
   name: z
