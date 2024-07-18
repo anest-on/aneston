@@ -299,6 +299,7 @@ export async function PATCH(req: Request) {
       },
       data: {
         pacient_signature,
+        appointment_status: 'CONCLUDED',
       },
     })
 
