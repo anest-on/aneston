@@ -238,7 +238,7 @@ const Register = () => {
           </div>
 
           <Button type="submit" disabled={isSubmitting}>
-            Próximo Passo <ArrowRight className="ml-2 h-4 w-4" />
+            Finalizar Inscrição
           </Button>
         </form>
       </Form>

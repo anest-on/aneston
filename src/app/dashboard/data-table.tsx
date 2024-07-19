@@ -163,7 +163,7 @@ export function DataTable<TData, TValue>({
           }
         >
           <div className="h-4 w-4 bg-yellow-500 rounded-lg" />
-          Não realizada
+          Pendente
         </Button>
         <Button
           variant={`badge${appointmentFilter.canceled ? 'Active' : ''}`}
@@ -179,7 +179,7 @@ export function DataTable<TData, TValue>({
           }
         >
           <div className="h-4 w-4 bg-red-500 rounded-lg" />
-          Cancelada
+          Cancelado
         </Button>
         <Button
           variant={`badge${appointmentFilter.done ? 'Active' : ''}`}
@@ -195,7 +195,7 @@ export function DataTable<TData, TValue>({
           }
         >
           <div className="h-4 w-4 bg-green-500 rounded-lg" />
-          Concluída
+          Assinado
         </Button>
       </div>
 

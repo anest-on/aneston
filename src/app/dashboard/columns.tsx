@@ -63,7 +63,7 @@ export const columns: ColumnDef<Patient>[] = [
         return (
           <div className="flex items-center justify-center  justify-self-start">
             <div className="flex text-center px-2 font-normal bg-green-500 text-gray-800 rounded-sm justify-center items-center py-1">
-              <b>Concluída</b>
+              <b>Assinado</b>
             </div>
           </div>
         )
@@ -71,7 +71,7 @@ export const columns: ColumnDef<Patient>[] = [
         return (
           <div className="flex items-center justify-center justify-self-start ">
             <div className="flex text-center font-normal px-2 bg-yellow-500 text-gray-800 rounded-sm justify-center items-center py-1">
-              <b>Não realizada</b>
+              <b>Pendente</b>
             </div>
           </div>
         )
@@ -79,7 +79,7 @@ export const columns: ColumnDef<Patient>[] = [
         return (
           <div className="flex items-center justify-center  justify-self-start">
             <div className="flex text-center font-normal px-2 bg-red-500 text-gray-800 rounded-sm justify-center items-center py-1">
-              <b>Cancelada</b>
+              <b>Cancelado</b>
             </div>
           </div>
         )
