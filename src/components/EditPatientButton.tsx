@@ -185,7 +185,7 @@ export function EditPatientButton({ patient, children }: ThirdPartyUserProps) {
                             <SelectItem value={AppointmentStatusEnum.UNDONE}>
                               <span className="flex flex-row gap-2 items-center">
                                 <div className="h-4 w-4 bg-yellow-500 rounded-lg" />
-                                Não realizado
+                                Pendente
                               </span>
                             </SelectItem>
 

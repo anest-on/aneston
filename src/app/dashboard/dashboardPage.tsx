@@ -8,19 +8,16 @@ import { useToast } from '@/components/ui/use-toast'
 import { api } from '@/lib/axios'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { User } from '@prisma/client'
-import { Copy, FilePlus } from 'lucide-react'
+import { Copy } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useCallback, useEffect, useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
 import { z } from 'zod'
 import { Patient, columns } from './columns'
 import { DataTable } from './data-table'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { CalendarShadcn } from '@/components/ui/calendar-shadcn'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { useRouter } from 'next/navigation'
 import { RWebShare } from "react-web-share";
+import { CreateCertificateDialog } from '@/components/createCertificateDialog' // Importando o componente criado
+import { useForm } from 'react-hook-form'
 
 const patientSchema = z.object({
   name: z
@@ -32,7 +29,6 @@ const patientSchema = z.object({
     .min(6, { message: 'Digite um número de telefone válido.' }),
   createdAt: z.string(),
   doctorId: z.string(),
-  
 })
 
 const createCertificateSchema = z.object({
@@ -52,6 +48,12 @@ const DashboardPage = () => {
   const { toast } = useToast()
   const [doctor, setDoctor] = useState({} as User)
   const [openCreateCertificate, setOpenCreateCertificate] = useState(false)
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+
+  const openCreateCertificateModal = (patient: Patient) => {
+    setSelectedPatient(patient);
+    setOpenCreateCertificate(true);
+  };
 
   useEffect(() => {
     async function searchingDoctor() {
@@ -92,21 +94,21 @@ const DashboardPage = () => {
   }
 
   const createCertificate = async (values: z.infer<typeof createCertificateSchema>) => {
+    // Preencher as informações do paciente selecionado
     const payload = {
       doctor_url: session.data?.user.user_link,
-      pacient_name: values.name,
-      pacient_cpf: values.cpf,
-      schedule_date: values.date,
+      pacient_name: values.name || selectedPatient?.pacient_name,
+      pacient_cpf: values.cpf || selectedPatient?.pacient_cpf,
+      schedule_date: values.date || selectedPatient?.schedule_date,
       appointment_status: 'CONCLUDED',
     };
-  
+
     try {
       const response = await api.post('/form', payload);
       toast({
         title: 'Certificado gerado com sucesso!',
         description: 'Agora o paciente já pode assinar o documento.',
       });
-      // router.push(`/consultation-certificate/${response.data.id}`);
       setOpenCreateCertificate(false);
       window.open(`/consultation-certificate/${response.data.id}`, '_blank');
       setTimeout(() => {
@@ -162,75 +164,13 @@ const DashboardPage = () => {
             </RWebShare>
           </div>
 
-          <Dialog open={openCreateCertificate} onOpenChange={setOpenCreateCertificate}>
-            <DialogTrigger asChild>
-              <Button>
-                Gerar Certificado
-                <FilePlus className="w-4 h-4 ml-2" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] bg-gray-800 border border-solid border-gray-600">
-              <DialogHeader>
-                <DialogTitle>Gerar Certificado de Consulta</DialogTitle>
-                <DialogDescription>
-                  Preencha com as informações do paciente para que seja gerado seu certificado de realização de consulta.
-                </DialogDescription>
-              </DialogHeader>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(createCertificate)} className="flex flex-col gap-4">
-                  <FormField
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nome do paciente</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    name="cpf"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>CPF do paciente</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Controller
-                    name="date"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Data de realização da consulta</FormLabel>
-                        <FormControl>
-                          <div className="flex items-center justify-center">
-                            <CalendarShadcn
-                              mode="single"
-                              selected={field.value}
-                              onSelect={(date) => field.onChange(date)}
-                              className="rounded-md border bg-gray-900"
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <DialogFooter>
-                    <Button type="submit" disabled={isSubmitting}>
-                      {isSubmitting ? 'Gerando...' : 'Gerar Certificado'}
-                    </Button>
-                  </DialogFooter>
-                </form>
-              </Form>
-            </DialogContent>
-          </Dialog>
+          <CreateCertificateDialog 
+            open={openCreateCertificate}
+            setOpen={setOpenCreateCertificate}
+            createCertificate={createCertificate}
+            isSubmitting={isSubmitting}
+            initialData={selectedPatient}
+          />
         </div>
       </div>
     </main>
