@@ -28,6 +28,10 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { statesList } from '../constants/constants'
+import Image from 'next/image'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { SignatureDoctor } from '@/components/signatureDoctor'
+import { User } from '@prisma/client'
 
 const updateProfileSchema = z.object({
   user_link: z
@@ -53,6 +57,9 @@ const Profile = () => {
   const { toast } = useToast()
   const { data: session, update } = useSession()
 
+  const [open, setOpen] = useState(false)
+  const [doctor, setDoctor] = useState({} as User)
+
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
@@ -76,6 +83,8 @@ const Profile = () => {
     try {
       const response = await api.get('/doctor')
       const userData = response.data
+
+      setDoctor(userData)
 
       form.setValue('user_link', userData.user_link)
       form.setValue('name', userData.name)
@@ -253,7 +262,82 @@ const Profile = () => {
               )}
             </div>
 
-            <Button disabled={isSubmitting}>Salvar</Button>
+            {((session && session.user.accessType === '') ||
+              (session && session.user.accessType === null) ||
+              (session && session.user.accessType === undefined)) && (
+              <div className="flex flex-col my-4 gap-1 border rounded-md border-gray-600 p-2">
+                <div className="md:flex gap-10">
+                  <p className="text-white font-bold">Assinatura</p>
+                </div>
+                <p>
+                  Assinatura que ficará registrada no Comprovante de Realização
+                  de Consulta Pré-anestésica.
+                </p>
+
+                {doctor?.signature_url ? (
+                  <div className="flex flex-col md:flex-row items-center justify-between px-4 mt-4 gap-4">
+                    <div className="w-[300px] h-[150px] self-center md:self-start  bg-white flex border-gray-900 border-1">
+                      <Image
+                        src={doctor?.signature_url}
+                        alt="signature"
+                        width={300}
+                        height={150}
+                      />
+                    </div>
+                    <div className="mt-2 md:mt-0 md:mr-12">
+                      <Dialog open={open} onOpenChange={setOpen}>
+                        <DialogTrigger asChild>
+                          <Button variant={'outline'}>
+                            Alterar assinatura
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="flex flex-col w-[400px] h-[300px] justify-start bg-gray-800 border-gray-600 text-gray-200">
+                          <p className="font-bold">
+                            Realize aqui a sua nova assinatura
+                          </p>
+                          <div className="self-center w-[300px] h-[150px] ">
+                            <SignatureDoctor
+                              setOpen={setOpen}
+                              onSave={fetchUserData}
+                              navigateTo="/profile"
+                            />
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between px-4 mt-4 gap-4">
+                    <p className="text-center text-white font-bold">
+                      Você ainda não cadastrou uma assinatura!
+                    </p>
+                    <Dialog open={open} onOpenChange={setOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant={'outline'}>
+                          Cadastrar assinatura
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="flex flex-col w-[400px] h-[300px] justify-start bg-gray-800 border-gray-600 text-gray-200">
+                        <p className="font-bold">
+                          Realize aqui a sua assinatura
+                        </p>
+                        <div className="self-center w-[300px] h-[150px] ">
+                          <SignatureDoctor
+                            setOpen={setOpen}
+                            onSave={fetchUserData}
+                            navigateTo="/profile"
+                          />
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <Button disabled={isSubmitting || !doctor.signature_url}>
+              Salvar
+            </Button>
           </form>
         </Form>
       </main>

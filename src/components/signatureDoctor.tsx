@@ -10,6 +10,10 @@ import { useToast } from './ui/use-toast'
 interface SignatureDoctorProps {
   setOpen: (open: boolean) => void
   onSave: () => void
+  navigateTo: string
+  crm?: string
+  state?: string
+  userLink?: string
 }
 
 const getUrlExtension = (url: string) => {
@@ -30,7 +34,14 @@ const onImageEdit = async (imgUrl: string) => {
   return file
 }
 
-export function SignatureDoctor({ setOpen, onSave }: SignatureDoctorProps) {
+export function SignatureDoctor({
+  setOpen,
+  onSave,
+  navigateTo,
+  crm,
+  state,
+  userLink,
+}: SignatureDoctorProps) {
   const [isUploading, setIsUploading] = useState(false)
 
   const { toast } = useToast()
@@ -63,8 +74,13 @@ export function SignatureDoctor({ setOpen, onSave }: SignatureDoctorProps) {
     try {
       setIsUploading(true)
       const { data } = await api.post('/s3-upload', formData)
-      await api.put('/users', { signature_url: data.fileName })
-      router.push('/configuration')
+      await api.put('/users', {
+        signature_url: data.fileName,
+        crm,
+        state,
+        user_link: userLink,
+      })
+      router.push(navigateTo)
       toast({
         title: 'Assinatura cadastrada com sucesso!',
         variant: 'success',
