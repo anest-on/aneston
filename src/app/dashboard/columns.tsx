@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
@@ -23,6 +24,13 @@ import dayjs from 'dayjs'
 import ptBr from 'dayjs/locale/pt-br'
 import { RWebShare } from 'react-web-share'
 import { RangeDateFn, StatusFilterFn } from './filters'
+import { UpdateCertificateInfoDialog } from '@/components/updateCertificateInfoDilog'
+import { useState } from 'react'
+import { z } from 'zod'
+import { api } from '@/lib/axios'
+import { toast } from '@/components/ui/use-toast'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 export interface Patient
   extends pacientSubmitProps,
@@ -188,6 +196,66 @@ export const columns: ColumnDef<Patient>[] = [
     cell: ({ row }) => {
       const patient = row.original
 
+      const [openCreateCertificate, setOpenCreateCertificate] = useState(false)
+      const [selectedPatient, setSelectedPatient] = useState<Patient | null>(
+        patient,
+      )
+
+      const updateCertificateSchema = z.object({
+        name: z
+          .string()
+          .min(3, { message: 'O nome precisa ter pelo menos três letras.' }),
+        cpf: z.string().min(11, { message: 'Digite um CPF válido.' }),
+        date: z.date({
+          required_error: 'A data de realização da consulta é obrigatória.',
+        }),
+      })
+
+      const updateCertificate = async (
+        values: z.infer<typeof updateCertificateSchema>,
+      ) => {
+        // Preencher as informações do paciente selecionado
+        const payload = {
+          id: selectedPatient?.id,
+          pacient_name: values.name || selectedPatient?.pacient_name,
+          pacient_cpf: values.cpf || selectedPatient?.pacient_cpf,
+          schedule_date: values.date || selectedPatient?.schedule_date,
+          doctor_id: selectedPatient?.doctor_id,
+          appointment_status: selectedPatient?.appointment_status,
+        }
+
+        try {
+          const response = await api.put('/form', payload)
+          toast({
+            title: 'Certificado atualizado com sucesso!',
+            description: 'Agora o paciente já pode assinar o documento.',
+          })
+          setOpenCreateCertificate(false)
+          // window.open(`/consultation-certificate/${response.data.id}`, '_blank')
+          setTimeout(() => {
+            window.location.reload()
+          }, 500)
+        } catch (error) {
+          console.error('Erro ao enviar o formulário:', error)
+          toast({
+            title: 'Erro ao gerar certificado',
+            variant: 'destructive',
+            description: 'Ocorreu um erro criar o certificado de consulta.',
+          })
+        }
+      }
+
+      const form = useForm<z.infer<typeof updateCertificateSchema>>({
+        resolver: zodResolver(updateCertificateSchema),
+        defaultValues: {
+          name: patient.cirurgy_name || '',
+          cpf: patient.pacient_cpf || '',
+          date: new Date(patient.schedule_date) || new Date(),
+        },
+      })
+
+      const { isSubmitting } = form.formState
+
       return (
         <div className="flex flex-row items-center justify-end gap-4 justify-self-end">
           <EditPatientButton patient={patient}>Atualizar</EditPatientButton>
@@ -206,33 +274,59 @@ export const columns: ColumnDef<Patient>[] = [
               </div>
 
               <div className="p-0 hover:bg-gray-600 cursor-pointer rounded-md">
+                {!patient.pacient_name ||
+                !patient.pacient_cpf ||
+                !patient.schedule_date ? (
+                  <UpdateCertificateInfoDialog
+                    open={openCreateCertificate}
+                    setOpen={setOpenCreateCertificate}
+                    updateCertificate={updateCertificate}
+                    isSubmitting={isSubmitting}
+                    initialData={selectedPatient}
+                    buttonType="compartilhar"
+                  />
+                ) : (
+                  <RWebShare
+                    data={{
+                      text: 'Utilize o link abaixo para preencher seu formulário para consulta.',
+                      url: `https://aneston.vercel.app/consultation-certificate/${patient.id}`,
+                      title: 'Aneston - Formulário de Consulta',
+                    }}
+                  >
+                    <Button
+                      variant={'ghost'}
+                      className="hover:text-gray-40 w-full h-full gap-1 flex fles-row justify-start p-2"
+                      onClick={(e) => e.preventDefault()}
+                    >
+                      <FileSymlink className="w-4 h-4 hover:cursor-pointer" />
+                      Compartilhar link de assinatura do comprovante
+                    </Button>
+                  </RWebShare>
+                )}
                 {/* <PatientSendEmailCertificateButton
                   formId={patient.id}
                   patientEmail={patient.pacient_email}
                 >
                   Enviar o certificado de consulta ao paciente
                 </PatientSendEmailCertificateButton> */}
-                <RWebShare
-                  data={{
-                    text: 'Utilize o link abaixo para preencher seu formulário para consulta.',
-                    url: `https://aneston.vercel.app/consultation-certificate/${patient.id}`,
-                    title: 'Aneston - Formulário de Consulta',
-                  }}
-                >
-                  <Button
-                    variant={'ghost'}
-                    className="hover:text-gray-40 w-full h-full gap-1 flex fles-row justify-start p-2"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <FileSymlink className="w-4 h-4 hover:cursor-pointer" />
-                    Compartilhar link de assinatura do comprovante
-                  </Button>
-                </RWebShare>
               </div>
               <div className="p-0 hover:bg-gray-600 cursor-pointer rounded-md">
-                <PatientSignNowButton formId={patient.id}>
-                  Assinar comprovante
-                </PatientSignNowButton>
+                {!patient.pacient_name ||
+                !patient.pacient_cpf ||
+                !patient.schedule_date ? (
+                  <UpdateCertificateInfoDialog
+                    open={openCreateCertificate}
+                    setOpen={setOpenCreateCertificate}
+                    updateCertificate={updateCertificate}
+                    isSubmitting={isSubmitting}
+                    initialData={selectedPatient}
+                    buttonType="assinar"
+                  />
+                ) : (
+                  <PatientSignNowButton formId={patient.id}>
+                    Assinar comprovante
+                  </PatientSignNowButton>
+                )}
               </div>
 
               <div className="p-0 hover:bg-gray-600 cursor-pointer rounded-md">

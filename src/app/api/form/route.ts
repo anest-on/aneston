@@ -209,12 +209,13 @@ export async function PUT(req: Request) {
 
     const body = await req.json()
     const {
+      id,
       pacient_name,
       cirurgy_name,
       pacient_number,
-      doctor_id,
-      pacient_email,
       appointment_status,
+      schedule_date,
+      pacient_cpf,
     } = body
 
     const isNotDoctor = session.user.doctor_id !== undefined
@@ -227,8 +228,7 @@ export async function PUT(req: Request) {
 
       const patient = await prisma.form.findFirst({
         where: {
-          doctor_id,
-          pacient_email,
+          id,
         },
       })
 
@@ -244,6 +244,8 @@ export async function PUT(req: Request) {
           pacient_name,
           cirurgy_name,
           pacient_number,
+          pacient_cpf,
+          schedule_date,
           appointment_status,
         },
       })
@@ -252,8 +254,7 @@ export async function PUT(req: Request) {
 
     const patient = await prisma.form.findFirst({
       where: {
-        doctor_id,
-        pacient_email,
+        id,
       },
     })
 
@@ -269,6 +270,8 @@ export async function PUT(req: Request) {
         pacient_name,
         cirurgy_name,
         pacient_number,
+        pacient_cpf,
+        schedule_date,
         appointment_status,
       },
     })
