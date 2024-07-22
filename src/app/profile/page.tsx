@@ -46,9 +46,12 @@ const updateProfileSchema = z.object({
     .string()
     .min(3, { message: 'O nome precisa ter pelo menos três letras.' }),
   email: z.string().email({ message: 'Digite um e-mail válido.' }),
-  crm: z.string(),
+  crm: z.string().min(1, { message: 'Digite seu CRM.' }),
   city: z.string(),
-  state: z.string().max(2, { message: 'Digite apenas a sigla do estado.' }),
+  state: z
+    .string()
+    .max(2, { message: 'Digite apenas a sigla do estado.' })
+    .min(1, { message: 'Selecione um Estado' }),
 })
 
 type UpdateProfileData = z.infer<typeof updateProfileSchema>
