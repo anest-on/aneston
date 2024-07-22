@@ -8,7 +8,7 @@ import FormBody from './_components/formBody'
 
 // eslint-disable-next-line camelcase
 const Form = ({ params }: { params: { user_link: string } }) => {
-  const [doctor, setDoctor] = useState({} as User)
+  const [doctor, setDoctor] = useState<User>()
 
   // const doctor = await prisma.user.findFirst({
   //   where: {
@@ -18,7 +18,7 @@ const Form = ({ params }: { params: { user_link: string } }) => {
 
   useEffect(() => {
     const apiSearch = async () => {
-      const data = await api.get(`/doctor?user_link=${params.user_link}`)
+      const data = await api.get(`/doctor/${params.user_link}`)
       setDoctor(data.data)
     }
     apiSearch()
@@ -26,7 +26,7 @@ const Form = ({ params }: { params: { user_link: string } }) => {
 
   console.log(doctor)
 
-  if (doctor.name === '') {
+  if (!doctor) {
     return (
       <main className="max-w-[572px] w-full items-center justify-center mt-20 mx-auto py-20 px-10">
         <div className="flex flex-col justify-center gap-5">
