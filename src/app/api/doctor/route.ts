@@ -3,11 +3,24 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const session = await auth()
     if (!session) {
-      return new NextResponse('Unauthorized', { status: 401 })
+      // console.log(req)
+      // const body = await req.json()
+
+      // const { user_link } = body
+
+      // const doctor = await prisma.user.findFirst({
+      //   where: {
+      //     user_link,
+      //   },
+      // })
+
+      return new NextResponse('Internal Error', { status: 400 })
+
+      // return NextResponse.json(doctor)
     }
 
     const isNotDoctor = session.user.doctor_id !== undefined
