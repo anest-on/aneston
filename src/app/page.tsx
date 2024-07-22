@@ -21,9 +21,9 @@ import {
 } from '@/components/ui/carousel'
 
 import { HomeFooter } from '@/components/homeFooter'
-import { HomeHeader } from '@/components/homeHeader'
+import { Header } from '@/components/header'
 import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 
 export default function Home() {
   const recomendations = [
@@ -81,6 +81,10 @@ export default function Home() {
   const session = useSession()
   const isSignedIn = session.status === 'authenticated'
 
+  async function handleConnectToGoogle() {
+    await signIn('google')
+  }
+
   useEffect(() => {
     if (isSignedIn) {
       if (
@@ -90,7 +94,7 @@ export default function Home() {
       ) {
         router.push('/register/update-informations')
       } else {
-        router.push('/not-found')
+        // router.push('/not-found')
       }
     }
   })
@@ -121,7 +125,7 @@ export default function Home() {
 
   return (
     <>
-      <HomeHeader />
+      <Header />
       <main className=" h-full w-full justify-center flex flex-col bg-gray-900  text-base text-white">
         {/* PARTE 1 */}
 
@@ -142,16 +146,18 @@ export default function Home() {
                   </b>
                 </h1>
 
-                <p className="text-gray-100 lg:text-[1.2rem] max-lg:text[0.5rem] mt-5">
-                  Uma plataforma para ajudar você, anestesista, a melhor atender
-                  seus pacientes. Através de um formulário automatizado e um
-                  sistema de gestão de agenda vamos facilitar seu dia a dia de
-                  trabalho!
+                <p className="text-gray-100 lg:text-[1.2rem] max-w-[550px] max-lg:text[0.5rem] mt-5">
+                  Bem-vindo à AnestOn, onde a tecnologia encontra a medicina
+                  para aprimorar a experiência préanestésica. Com nossa
+                  plataforma intuitiva, você, anestesista, pode oferecer
+                  atendimento excepcional com a confiança de um sistema que
+                  organiza e simplifica a sua agenda e o preparo de seus
+                  pacientes.
                 </p>
               </div>
               <Button
                 className="mt-[40px] w-[250px]"
-                onClick={() => router.push('/register')}
+                onClick={() => handleConnectToGoogle()}
               >
                 <b>Vamos lá!</b>
               </Button>
@@ -179,8 +185,8 @@ export default function Home() {
               </span>
             </b>
           </h2>
-          <div className="pt-10 flex flex-row w-full items-center justify-center max-lg:flex-col">
-            <div className="flex w-full h-full justify-center max-lg:mb-[40px] ">
+          <div className="mt-10 flex flex-row w-full items-center justify-between gap-6 max-lg:flex-col ">
+            <div className="flex h-full justify-center max-lg:mb-[40px] ">
               <Button
                 variant={'outline'}
                 onClick={() => formActionButton()}
@@ -211,16 +217,13 @@ export default function Home() {
                 Agenda <br /> digital
               </Button>
             </div>
-            <div className="flex flex-col items-center ml-10 max-lg:ml-0 ">
+            <div className="flex flex-col items-center max-w-[600px] max-lg:ml-0 ">
               <p
-                className={`${roboto.className} max-lg:text-center text-gray-100`}
+                className={`${roboto.className} max-lg:text-center  text-gray-100`}
               >
                 {sessionTwoText}
               </p>
-              <Button
-                className="mt-[15px]"
-                onClick={() => router.push('/register')}
-              >
+              <Button className="mt-[15px]" onClick={handleConnectToGoogle}>
                 Começar a usar&nbsp;&nbsp;&nbsp;
                 <Image
                   src={rightArrow}

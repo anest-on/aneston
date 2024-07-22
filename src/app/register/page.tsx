@@ -4,7 +4,7 @@ import { MultiStep } from '@/components/multiStep'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Check } from 'lucide-react'
 import { signIn, useSession } from 'next-auth/react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 const Register = () => {
   const session = useSession()
@@ -29,7 +29,7 @@ const Register = () => {
           medida em que são agendados.
         </p>
 
-        <MultiStep size={4} currentStep={1} />
+        <MultiStep size={2} currentStep={1} />
       </div>
 
       <div className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6">

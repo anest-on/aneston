@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
+import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
@@ -11,9 +11,14 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-green-600 text-white hover:bg-green-600/90',
+        secondary: 'bg-gray-800 text-gray-300 hover:bg-gray-400/40',
         blocked: 'bg-gray-300 text-white cursor-not-allowed',
         outline:
           'border border-green-600 text-green-600 hover:bg-green-600 hover:text-white',
+        badge:
+          'border border-gray-200 rounded-full text-gray-200 hover:bg-gray-200 hover:text-gray-800',
+        badgeActive:
+          'border border-gray-400 bg-gray-200 rounded-full text-gray-900 hover:bg-gray-600 hover:border-gray-600 hover:text-gray-400',
         destructive: 'bg-red-500 text-white hover:bg-red-500/80',
         destructiveOutline:
           'border border-red-500 text-red-500 hover:bg-red-500 hover:text-white',

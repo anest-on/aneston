@@ -1,0 +1,376 @@
+/* eslint-disable camelcase */
+/* eslint-disable prettier/prettier */
+'use client'
+
+import IntervalItem from '@/components/intervalItem'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { api } from '@/lib/axios'
+import { convertTimeStringToMinutes } from '@/utils/convert-time-string-to-minutes'
+import { getWeekDays } from '@/utils/get-week-days'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useState } from 'react'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { useToast } from './ui/use-toast'
+import { User } from '@prisma/client'
+import { useSession } from 'next-auth/react'
+
+const daytimeIntervals = z.object({ start: z.string(), end: z.string() })
+
+const timeIntervalsFormSchema = z.object({
+  easy_scheduling: z.boolean(),
+  intervals: z
+    .array(
+      z.object({
+        weekDay: z.number().min(0).max(6),
+        enabled: z.boolean(),
+        startTime: z.string(),
+        endTime: z.string(),
+        daytimeIntervals: z.array(daytimeIntervals).transform((intervals) => {
+          return intervals.map((interval) => {
+            // console.log(interval)
+            return {
+              start: convertTimeStringToMinutes(interval.start),
+              end: convertTimeStringToMinutes(interval.end),
+            }
+          })
+        })
+          .refine(
+            (intervals) => {
+              return intervals.every((interval) => interval.end > interval.start)
+            },
+            {
+              message:
+                'O horário de início do intervalo deve ocorrer antes do horário de término.',
+            },
+          )
+      }),
+    )
+    .length(7)
+    .transform((intervals) => intervals.filter((interval) => interval.enabled))
+    .refine((intervals) => intervals.length > 0, {
+      message: 'Você precisa selecionar pelo menos um dia da semana.',
+    })
+    .transform((intervals) => {
+      return intervals.map((interval) => {
+        // console.log(interval)
+        return {
+          weekDay: interval.weekDay,
+          startTimeInMinutes: convertTimeStringToMinutes(interval.startTime),
+          endTimeInMinutes: convertTimeStringToMinutes(interval.endTime),
+          daytimeIntervals: interval.daytimeIntervals
+        }
+      })
+    })
+    .refine(
+      (intervals) => {
+        return intervals.every(
+          (interval) => interval.endTimeInMinutes > interval.startTimeInMinutes,
+        )
+      },
+      {
+        message:
+          'O horário de término para os agendamentos deve ocorrer após o horário de início.',
+      },
+    ).optional(),
+  appointmentTime: z
+    .string()
+    .transform((appointmentTime) => convertTimeStringToMinutes(appointmentTime))
+    .refine((appointmentTime) => appointmentTime > 0, {
+      message: 'O tempo de duração da consulta deve ser maior que 0 minutos.',
+    }),
+
+})
+
+type TimeIntervalsFormInput = z.input<typeof timeIntervalsFormSchema>
+type TimeIntervalsFormOutput = z.output<typeof timeIntervalsFormSchema>
+
+const TimeIntervals = () => {
+  const session = useSession()
+  const {toast} = useToast()
+
+  const [doctor, setDoctor] = useState({} as User)
+  const [easyScheduling, setEasyScheduling] = useState(false)
+
+  const form = useForm<TimeIntervalsFormInput>({
+    resolver: zodResolver(timeIntervalsFormSchema),
+    defaultValues: {
+      easy_scheduling: doctor?.easy_scheduling,
+      intervals: [
+        { weekDay: 0, enabled: false, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 1, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 2, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 3, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 4, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 5, enabled: true, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+        { weekDay: 6, enabled: false, startTime: '08:00', endTime: '18:00', daytimeIntervals: [] },
+      ],
+      appointmentTime: '00:30',
+
+    },
+  })
+
+  const fetchDoctorData = async () => {
+    try {
+      const response = await api.get('/doctor'); // Ajuste a rota conforme necessário
+      const doctorFromDB = response.data;
+  
+      console.log('Fetched doctor data:', doctorFromDB); // Log da resposta do servidor
+  
+      if (doctorFromDB && typeof doctorFromDB.easy_scheduling === 'boolean') {
+        form.setValue('easy_scheduling', doctorFromDB.easy_scheduling);
+  
+        setDoctor(doctorFromDB);
+        setEasyScheduling(doctorFromDB.easy_scheduling);
+      } else {
+        console.error('Invalid doctor data structure:', doctorFromDB);
+      }
+    } catch (error) {
+      console.error('Failed to fetch doctor data:', error);
+    }
+  };
+
+  // useEffect(() => {
+  //   const doctorFromDB = session.data?.user
+  //   if (doctorFromDB) {
+  //     setDoctor(doctorFromDB)
+
+  //     form.setValue('easy_scheduling', doctor.easy_scheduling)
+  //     setEasyScheduling(doctor?.easy_scheduling)
+  //   }
+  // }, [form, session.data?.user, doctor, ])
+
+  useEffect(() => {
+    if (session.data?.user) {
+      fetchDoctorData()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session.data?.user])
+
+  const { isSubmitting } = form.formState
+
+  const weekDays = getWeekDays()
+
+  const { fields } = useFieldArray({
+    control: form.control,
+    name: 'intervals',
+  })
+
+  const intervals = form.watch('intervals')
+
+  // const [selectedIntervals, setSelectedIntervals] = useState<Interval[]>([])
+
+  // const handleIntervalChange = (intervals: Interval[]) => {
+  //   console.log(intervals)
+  //   setSelectedIntervals(intervals)
+  // }
+
+  const [showIntervalForms, setShowIntervalForms] = useState<boolean[]>(
+    Array(7).fill(false),
+  )
+
+  const [showButtons, setShowButtons] = useState<boolean[]>(Array(7).fill(true))
+
+  const toggleIntervalForm = (dayIndex: number) => {
+    const updatedVisibility = [...showIntervalForms]
+    updatedVisibility[dayIndex] = !updatedVisibility[dayIndex]
+    setShowIntervalForms(updatedVisibility)
+
+    const updatedButtons = [...showButtons]
+    updatedButtons[dayIndex] = !updatedButtons[dayIndex]
+    setShowButtons(updatedButtons)
+  }
+  // const getDayOfWeek = (dayIndex: number): string => {
+  //   const daysOfWeek = [
+  //     'Domingo',
+  //     'Segunda-feira',
+  //     'Terça-feira',
+  //     'Quarta-feira',
+  //     'Quinta-feira',
+  //     'Sexta-feira',
+  //     'Sábado',
+  //   ]
+  //   return daysOfWeek[dayIndex]
+  // }
+
+  /*
+    Can`t use 'data: TimeIntervalsFormOutput' because of an error in Typescript
+    after an Zod or ReactHookForm update
+  */
+  async function handleSetTimeIntervals(data: unknown) {
+    try{
+      const { intervals, appointmentTime, easy_scheduling } = data as TimeIntervalsFormOutput
+      await api.post('/time-intervals', { intervals, appointmentTime })
+      await api.put('/users', { easy_scheduling })
+
+      toast({
+        title: 'Novos horários cadastrados com sucesso!',
+        variant: 'success',
+      })
+    } catch (error) {
+      toast({
+        title: 'Não foi possível salvar os horários!',
+        variant: 'destructive',
+      })
+    }
+
+  }
+  // console.log('easyScheduling' + easyScheduling)
+
+  return (
+    <main className="max-w-[572px] mx-auto py-0 px-4">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(handleSetTimeIntervals)}
+          className="flex flex-col p-6 rounded-md bg-gray-800 border border-solid border-gray-600 mt-6 gap-4 text-white"
+        >
+          <div className="flex flex-col mt-6 gap-2">
+            <div className="flex justify-between">
+              <p className="text-white font-bold">
+                Agendamento de consulta facilitado
+              </p>
+              <FormField
+                control={form.control}
+                name="easy_scheduling"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Checkbox
+                        disabled={isSubmitting}
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        onClick={() => setEasyScheduling(!field.value)}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <p>
+              Ao ativar o paciente pode agendar sua consulta ao acessar o
+              formulário. Ao final será perguntado o dia e a hora que deseja
+              realizar a consulta
+            </p>
+          </div>
+          <div className="w-full h-[2px] my-2 px-6 bg-gray-500" />
+          <div className="border border-solid border-gray-600 rounded-md mb-4">
+            {fields.map((field, index) => {
+              return (
+                <div key={index}>
+                  <div
+                    key={field.id}
+                    className="flex items-center justify-between py-3 px-4"
+                  >
+
+                    <div className="flex items-center gap-3">
+                      <Controller
+                        name={`intervals.${index}.enabled`}
+                        control={form.control}
+                        render={({ field }) => {
+                          return (
+                            <Checkbox
+                              onCheckedChange={(checked) =>
+                                field.onChange(checked === true)
+                              }
+                              checked={field.value}
+                              disabled={easyScheduling === false}
+                            />
+                          )
+                        }}
+                      />
+                      <p className="text-sm">{weekDays[field.weekDay]}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="time"
+                        step={60}
+                        disabled={intervals && intervals[index].enabled === false || easyScheduling === false}
+                        {...form.register(`intervals.${index}.startTime`)}
+                      />
+
+                      <Input
+                        type="time"
+                        step={60}
+                        disabled={intervals && intervals[index].enabled === false || easyScheduling === false}
+                        {...form.register(`intervals.${index}.endTime`)}
+                      />
+
+                      <Button
+                        type="button"
+                        variant={showButtons[index] ? undefined : 'destructive'}
+                        onClick={() => toggleIntervalForm(index)}
+                        disabled={easyScheduling === false}
+                      >
+                        <p className="text-xs">
+                          {showButtons[index] ? '+ Intervalo' : 'Cancelar'}
+                        </p>
+                      </Button>
+                    </div>
+                  </div>
+
+                  {showIntervalForms[index] && (
+                    <FormField
+                      control={form.control}
+                      name={`intervals.${index}.daytimeIntervals`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <IntervalItem
+                              // name={`intervals.${index}.daytimeIntervals`}
+                              ref={field.ref}
+                              // defaultValue={
+                              //   field.value
+                              //     ? field.value
+                              //     : [{ dose: '', name: '', pills: '' }]
+                              // }
+                              onChange={field.onChange}
+                            />
+
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                  {index < fields.length - 1 && (
+                    <div className="h-[1px] bg-gray-600" />
+                  )}
+                </div>
+              )
+            })}
+          </div>
+
+          {form.formState.errors.intervals && (
+            <p className="text-sm text-[#F75A68] mb-4">
+              {/* {form.formState.errors.intervals?.message} */}
+            </p>
+          )}
+
+          <div className="flex items-center justify-center border border-solid border-gray-600 gap-5 py-4 px-6 rounded-md mb-4">
+            <p className="text-sm">Tempo de duração da consulta</p>
+            <Input
+              className="w-100"
+              type="time"
+              step={60}
+              {...form.register('appointmentTime')}
+              disabled={easyScheduling === false}
+            />
+          </div>
+
+          {/* <div className="flex items-center justify-between border border-solid border-gray-600 py-4 px-6 rounded-md mb-4">
+            <p className="text-sm">Possui intervalos ao longo do dia?</p>
+            <Button variant="outline">Personalizar horários</Button>
+          </div> */}
+
+          <Button disabled={isSubmitting}>
+            Salvar
+          </Button>
+        </form>
+      </Form>
+    </main>
+  )
+}
+
+export default TimeIntervals
