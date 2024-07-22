@@ -140,7 +140,7 @@ const AccessConfiguration = () => {
                 <p className="text-white font-bold">Assinatura</p>
               </div>
               <p>
-                Assinatura que ficará registrada na Comprovante de Realização de
+                Assinatura que ficará registrada no Comprovante de Realização de
                 Consulta Pré-anestésica.
               </p>
 
@@ -167,6 +167,7 @@ const AccessConfiguration = () => {
                           <SignatureDoctor
                             setOpen={setOpen}
                             onSave={fetchDoctorData}
+                            navigateTo="/configuration"
                           />
                         </div>
                       </DialogContent>
@@ -188,6 +189,7 @@ const AccessConfiguration = () => {
                         <SignatureDoctor
                           setOpen={setOpen}
                           onSave={fetchDoctorData}
+                          navigateTo="/configuration"
                         />
                       </div>
                     </DialogContent>

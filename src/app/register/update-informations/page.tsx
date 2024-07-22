@@ -31,7 +31,11 @@ import { AxiosError } from 'axios'
 import { ArrowRight } from 'lucide-react'
 import { nanoid } from 'nanoid'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import Image from 'next/image'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { SignatureDoctor } from '@/components/signatureDoctor'
+import { User } from '@prisma/client'
 
 const updateProfileSchema = z.object({
   user_link: z
@@ -57,6 +61,9 @@ const Register = () => {
   const session = useSession()
   const router = useRouter()
 
+  const [open, setOpen] = useState(false)
+  const [doctor, setDoctor] = useState({} as User)
+
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
@@ -70,6 +77,27 @@ const Register = () => {
       state: session.data?.user.state || '',
     },
   })
+
+  const fetchUserData = async () => {
+    try {
+      const response = await api.get('/doctor')
+      const userData = response.data
+
+      setDoctor(userData)
+
+      form.setValue('name', userData.name)
+      form.setValue('email', userData.email)
+      form.setValue('crm', userData.crm)
+      form.setValue('city', userData.city)
+      form.setValue('state', userData.state)
+    } catch (error) {
+      console.error('Failed to fetch user data:', error)
+    }
+  }
+
+  useEffect(() => {
+    fetchUserData()
+  }, [])
 
   const { isSubmitting } = form.formState
 
@@ -237,7 +265,83 @@ const Register = () => {
             )}
           </div>
 
-          <Button type="submit" disabled={isSubmitting}>
+          {((session && session.data?.user.accessType === '') ||
+            (session && session.data?.user.accessType === null) ||
+            (session && session.data?.user.accessType === undefined)) && (
+            <div className="flex flex-col my-4 gap-1 border rounded-md border-gray-600 p-2">
+              <div className="md:flex gap-10">
+                <p className="text-white font-bold">Assinatura</p>
+              </div>
+              <p>
+                Assinatura que ficará registrada no Comprovante de Realização de
+                Consulta Pré-anestésica.
+              </p>
+
+              {doctor?.signature_url ? (
+                <div className="flex flex-col md:flex-row items-center justify-between px-4 mt-4 gap-4">
+                  <div className="w-[300px] h-[150px] self-center md:self-start  bg-white flex border-gray-900 border-1">
+                    <Image
+                      src={doctor?.signature_url}
+                      alt="signature"
+                      width={300}
+                      height={150}
+                    />
+                  </div>
+                  <div className="mt-2 md:mt-0 md:mr-12">
+                    <Dialog open={open} onOpenChange={setOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant={'outline'}>Alterar assinatura</Button>
+                      </DialogTrigger>
+                      <DialogContent className="flex flex-col w-[400px] h-[300px] justify-start bg-gray-800 border-gray-600 text-gray-200">
+                        <p className="font-bold">
+                          Realize aqui a sua nova assinatura
+                        </p>
+                        <div className="self-center w-[300px] h-[150px] ">
+                          <SignatureDoctor
+                            setOpen={setOpen}
+                            onSave={fetchUserData}
+                            navigateTo="/register/update-informations"
+                            crm={form.getValues('crm')}
+                            state={form.getValues('state')}
+                            userLink={form.getValues('user_link')}
+                          />
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between px-4 mt-4 gap-4">
+                  <p className="text-center text-white font-bold">
+                    Você ainda não cadastrou uma assinatura!
+                  </p>
+                  <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant={'outline'}>Cadastrar assinatura</Button>
+                    </DialogTrigger>
+                    <DialogContent className="flex flex-col w-[400px] h-[300px] justify-start bg-gray-800 border-gray-600 text-gray-200">
+                      <p className="font-bold">Realize aqui a sua assinatura</p>
+                      <div className="self-center w-[300px] h-[150px] ">
+                        <SignatureDoctor
+                          setOpen={setOpen}
+                          onSave={fetchUserData}
+                          navigateTo="/register/update-informations"
+                          crm={form.getValues('crm')}
+                          state={form.getValues('state')}
+                          userLink={form.getValues('user_link')}
+                        />
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              )}
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            disabled={isSubmitting || !session.data?.user.signature_url}
+          >
             Finalizar Inscrição
           </Button>
         </form>
