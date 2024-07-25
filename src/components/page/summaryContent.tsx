@@ -10,6 +10,7 @@ import dayjs from 'dayjs'
 import ptBr from 'dayjs/locale/pt-br'
 import { Calendar, Clock } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '../ui/button'
@@ -55,6 +56,7 @@ const SummaryContent = ({
   scheduleData,
 }: SummaryProps) => {
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
 
   const form = useForm<z.infer<typeof summaryFormSchema>>({
     resolver: zodResolver(summaryFormSchema),
@@ -69,53 +71,59 @@ const SummaryContent = ({
 
   const handleSubmit = async (data: summarySubmitProps) => {
     getSummaryData(data)
-    await api.post('/form', {
-      doctor_url: doctorLink,
-      pacient_name: data.pacient_name,
-      pacient_birthdate: pacientData?.pacient_birthdate,
-      pacient_gender: pacientData?.pacient_gender,
-      pacient_cpf: pacientData?.pacient_cpf,
-      pacient_email: pacientData?.pacient_email,
-      pacient_number: data.pacient_contact,
-      pacient_healthInsurance: pacientData?.pacient_healthInsurance,
-      pacient_healthInsuranceName: pacientData?.pacient_healthInsuranceName,
-      pacient_healthInsuranceId: pacientData?.pacient_healthInsuranceId,
-      companion_name: companionData?.companion_name,
-      companion_kinship: companionData?.companion_kinship,
-      companion_email: companionData?.companion_email,
-      companion_number: companionData?.companion_number,
-      cirurgy_name: cirurgyData?.cirurgy_name,
-      cirurgy_physician: cirurgyData?.cirurgy_physician,
-      pacient_weight: cirurgyData?.pacient_weight,
-      pacient_height: cirurgyData?.pacient_height,
-      pacient_allergy: cirurgyData?.pacient_allergy,
-      pacient_allergy_names: cirurgyData?.pacient_allergy_names,
-      pacient_heart_conditions: cirurgyData?.pacient_heart_conditions,
-      pacient_heart_conditions_observation:
-        cirurgyData?.pacient_heart_conditions_observation,
-      pacient_disease: cirurgyData?.pacient_disease,
-      pacient_disease_names: cirurgyData?.pacient_disease_names,
-      pacient_medicines: cirurgyData?.pacient_medicines,
-      pacient_antibiotic: cirurgyData?.pacient_antibiotic,
-      pacient_antibiotics_names: cirurgyData?.pacient_antibiotics_names,
-      pacient_did_cirurgy: cirurgyData?.pacient_did_cirurgy,
-      pacient_cirurgies: cirurgyData?.pacient_cirurgies,
-      pacient_smoke: cirurgyData?.pacient_smoke,
-      pacient_started_smoking: cirurgyData?.pacient_started_smoking,
-      pacient_stopped_smoking: cirurgyData?.pacient_stopped_smoking,
-      pacient_when_stop_smoking: cirurgyData?.pacient_when_stop_smoking,
-      pacient_pack_smoke: cirurgyData?.pacient_pack_smoke,
-      pacient_do_physical_activity: cirurgyData?.pacient_do_physical_activity,
-      pacient_physical_activity: cirurgyData?.pacient_physical_activity,
-      pacient_has_anesthetic_complication:
-        cirurgyData?.pacient_has_anesthetic_complication,
-      pacient_anesthetic_complications:
-        cirurgyData?.pacient_anesthetic_complications,
-      pacient_procedure_summary: cirurgyData?.pacient_procedure_summary,
-      schedule_date: scheduleData,
-    })
-
-    router.push(doctorLink + '/success')
+    setLoading(true)
+    await api
+      .post('/form', {
+        doctor_url: doctorLink,
+        pacient_name: data.pacient_name,
+        pacient_birthdate: pacientData?.pacient_birthdate,
+        pacient_gender: pacientData?.pacient_gender,
+        pacient_cpf: pacientData?.pacient_cpf,
+        pacient_email: pacientData?.pacient_email,
+        pacient_number: data.pacient_contact,
+        pacient_healthInsurance: pacientData?.pacient_healthInsurance,
+        pacient_healthInsuranceName: pacientData?.pacient_healthInsuranceName,
+        pacient_healthInsuranceId: pacientData?.pacient_healthInsuranceId,
+        companion_name: companionData?.companion_name,
+        companion_kinship: companionData?.companion_kinship,
+        companion_email: companionData?.companion_email,
+        companion_number: companionData?.companion_number,
+        cirurgy_name: cirurgyData?.cirurgy_name,
+        cirurgy_physician: cirurgyData?.cirurgy_physician,
+        pacient_weight: cirurgyData?.pacient_weight,
+        pacient_height: cirurgyData?.pacient_height,
+        pacient_allergy: cirurgyData?.pacient_allergy,
+        pacient_allergy_names: cirurgyData?.pacient_allergy_names,
+        pacient_heart_conditions: cirurgyData?.pacient_heart_conditions,
+        pacient_heart_conditions_observation:
+          cirurgyData?.pacient_heart_conditions_observation,
+        pacient_disease: cirurgyData?.pacient_disease,
+        pacient_disease_names: cirurgyData?.pacient_disease_names,
+        pacient_medicines: cirurgyData?.pacient_medicines,
+        pacient_antibiotic: cirurgyData?.pacient_antibiotic,
+        pacient_antibiotics_names: cirurgyData?.pacient_antibiotics_names,
+        pacient_did_cirurgy: cirurgyData?.pacient_did_cirurgy,
+        pacient_cirurgies: cirurgyData?.pacient_cirurgies,
+        pacient_smoke: cirurgyData?.pacient_smoke,
+        pacient_started_smoking: cirurgyData?.pacient_started_smoking,
+        pacient_stopped_smoking: cirurgyData?.pacient_stopped_smoking,
+        pacient_when_stop_smoking: cirurgyData?.pacient_when_stop_smoking,
+        pacient_pack_smoke: cirurgyData?.pacient_pack_smoke,
+        pacient_do_physical_activity: cirurgyData?.pacient_do_physical_activity,
+        pacient_physical_activity: cirurgyData?.pacient_physical_activity,
+        pacient_has_anesthetic_complication:
+          cirurgyData?.pacient_has_anesthetic_complication,
+        pacient_anesthetic_complications:
+          cirurgyData?.pacient_anesthetic_complications,
+        pacient_procedure_summary: cirurgyData?.pacient_procedure_summary,
+        schedule_date: scheduleData,
+      })
+      .then(() => {
+        router.push(doctorLink + '/success')
+      })
+      .catch(() => {
+        setLoading(false)
+      })
   }
 
   return (
@@ -203,8 +211,13 @@ const SummaryContent = ({
             >
               Voltar
             </Button>
-            <Button variant={'default'} className="w-[150px]" type="submit">
-              Continuar
+            <Button
+              variant={'default'}
+              className="w-[150px]"
+              type="submit"
+              disabled={loading}
+            >
+              Enviar
             </Button>
           </div>
         </form>
