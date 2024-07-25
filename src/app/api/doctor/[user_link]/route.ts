@@ -9,8 +9,6 @@ export async function GET(
   try {
     const user_link = params.user_link
 
-    console.log(user_link)
-
     if (user_link) {
       // const { user_link } = body
 
