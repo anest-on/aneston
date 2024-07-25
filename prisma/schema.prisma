@@ -65,6 +65,8 @@ model Form {
   pacient_procedure_summary            String?
   schedule_date                        String?
 
+  archived Boolean @default(false)
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 

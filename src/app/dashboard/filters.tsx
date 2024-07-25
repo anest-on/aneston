@@ -14,7 +14,6 @@ export const RangeDateFn: FilterFn<Patient> = (
 
   const [start, end] = filterValue
 
-  console.log(date, start, end)
   // If one filter defined and date is null filter it
   if ((start || end) && !isNaN(end) && !date) return false
   if (date)
@@ -41,13 +40,21 @@ export const StatusFilterFn: FilterFn<Patient> = (
 
   const status = patient.appointment_status
 
-  const { done, undone, canceled } = filterValue
+  const isArchived = patient.archived
 
-  if (done && status === AppointmentStatusEnum.CONCLUDED) {
+  const { done, undone, canceled, archived } = filterValue
+
+  if (done && status === AppointmentStatusEnum.CONCLUDED && !isArchived) {
     return true
-  } else if (undone && status === AppointmentStatusEnum.UNDONE) {
+  } else if (undone && status === AppointmentStatusEnum.UNDONE && !isArchived) {
     return true
-  } else if (canceled && status === AppointmentStatusEnum.CANCELED) {
+  } else if (
+    canceled &&
+    status === AppointmentStatusEnum.CANCELED &&
+    !isArchived
+  ) {
+    return true
+  } else if (archived && isArchived) {
     return true
   }
 

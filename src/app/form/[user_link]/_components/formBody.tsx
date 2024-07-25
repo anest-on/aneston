@@ -86,6 +86,7 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
     //   : pacientData && !companionData
     //     ? setStep(2)
     //     : setStep(1)
+    console.log(doctor)
   }, [cirurgyData, companionData, pacientData, summaryData, scheduleData])
 
   return (

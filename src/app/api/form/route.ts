@@ -216,6 +216,7 @@ export async function PUT(req: Request) {
       appointment_status,
       schedule_date,
       pacient_cpf,
+      archived,
     } = body
 
     const isNotDoctor = session.user.doctor_id !== undefined
@@ -247,6 +248,7 @@ export async function PUT(req: Request) {
           pacient_cpf,
           schedule_date,
           appointment_status,
+          archived,
         },
       })
       return NextResponse.json(patientUpdated)
@@ -273,6 +275,7 @@ export async function PUT(req: Request) {
         pacient_cpf,
         schedule_date,
         appointment_status,
+        archived,
       },
     })
     return NextResponse.json(patientUpdated)

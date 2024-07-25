@@ -1,12 +1,30 @@
-import { prisma } from '@/lib/prisma'
+'use client'
+import { api } from '@/lib/axios'
+// import { prisma } from '@/lib/prisma'
+
+import { User } from '@prisma/client'
+import { useEffect, useState } from 'react'
 import FormBody from './_components/formBody'
 
-const Form = async ({ params }: { params: { user_link: string } }) => {
-  const doctor = await prisma.user.findFirst({
-    where: {
-      user_link: params.user_link,
-    },
-  })
+// eslint-disable-next-line camelcase
+const Form = ({ params }: { params: { user_link: string } }) => {
+  const [doctor, setDoctor] = useState<User>()
+
+  // const doctor = await prisma.user.findFirst({
+  //   where: {
+  //     user_link: params.user_link,
+  //   },
+  // })
+
+  useEffect(() => {
+    const apiSearch = async () => {
+      const data = await api.get(`/doctor/${params.user_link}`)
+      setDoctor(data.data)
+    }
+    apiSearch()
+  }, [])
+
+  console.log(doctor)
 
   if (!doctor) {
     return (
@@ -34,8 +52,7 @@ const Form = async ({ params }: { params: { user_link: string } }) => {
         name: doctor && doctor.name ? doctor.name : '',
         state: doctor && doctor?.state ? doctor.state : '',
         user_link: params.user_link,
-        easy_scheduling:
-          doctor && doctor.easy_scheduling ? doctor.easy_scheduling : true,
+        easy_scheduling: doctor.easy_scheduling,
       }}
     />
   )
