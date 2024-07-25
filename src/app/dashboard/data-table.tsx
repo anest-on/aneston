@@ -62,9 +62,12 @@ export function DataTable<TData, TValue>({
       desc: false,
     },
   ])
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
   useEffect(() => {
+    console.log(table.getAllColumns().map((column) => column.id))
+
     table.getColumn('appointment_status')?.setFilterValue(appointmentFilter)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appointmentFilter])

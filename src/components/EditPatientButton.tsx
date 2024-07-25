@@ -57,6 +57,7 @@ export function EditPatientButton({ patient, children }: ThirdPartyUserProps) {
   const { toast } = useToast()
 
   const [openUpdatePatient, setOpenUpdatePatient] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const updateForm = useForm<z.infer<typeof updatePatientSchema>>({
     resolver: zodResolver(updatePatientSchema),
@@ -74,6 +75,7 @@ export function EditPatientButton({ patient, children }: ThirdPartyUserProps) {
 
   const onSubmit = async (values: z.infer<typeof updatePatientSchema>) => {
     try {
+      setLoading(true)
       const newPatient = patient
       newPatient.pacient_name = values.name
       newPatient.cirurgy_name = values.surgery
@@ -92,6 +94,39 @@ export function EditPatientButton({ patient, children }: ThirdPartyUserProps) {
         variant: 'success',
       })
 
+      setLoading(false)
+      setOpenUpdatePatient(false)
+    } catch (err) {
+      if (err instanceof AxiosError && err?.response?.data?.message) {
+        return
+      }
+      console.error(err)
+    }
+  }
+
+  const arquivePatient = async () => {
+    try {
+      setLoading(true)
+      const newPatient = patient
+      newPatient.archived = !patient.archived
+
+      await api.put('/form', newPatient)
+
+      if (newPatient.archived) {
+        toast({
+          title: 'Paciente arquivado com sucesso!',
+          variant: 'default',
+        })
+      } else {
+        toast({
+          title: 'Paciente desarquivado com sucesso!',
+          variant: 'default',
+        })
+      }
+
+      console.log(newPatient)
+
+      setLoading(false)
       setOpenUpdatePatient(false)
     } catch (err) {
       if (err instanceof AxiosError && err?.response?.data?.message) {
@@ -218,7 +253,21 @@ export function EditPatientButton({ patient, children }: ThirdPartyUserProps) {
                 />
               </div>
 
-              <div className="flex w-full px-12 justify-between">
+              <div className="px-5">
+                <Button
+                  className="w-full border-gray-500 text-gray-500 hover:bg-gray-500 hover:text-white"
+                  disabled={loading}
+                  variant={'outline'}
+                  onClick={arquivePatient}
+                  type="button"
+                >
+                  {patient.archived
+                    ? 'Desarquivar Paciente'
+                    : 'Arquivar Paciente'}
+                </Button>
+              </div>
+
+              <div className="flex w-full px-5 justify-between">
                 <DialogClose>
                   <Button
                     className="w-[150px] border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
@@ -228,7 +277,7 @@ export function EditPatientButton({ patient, children }: ThirdPartyUserProps) {
                     Cancelar
                   </Button>
                 </DialogClose>
-                <Button type="submit" className="w-[150px]">
+                <Button type="submit" className="w-[150px]" disabled={loading}>
                   Confirmar Alterações
                 </Button>
               </div>
