@@ -23,7 +23,6 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { user_link: string } },
 ) {
-  console.log('chegou')
   try {
     const user_link = String(params.user_link)
     const user = await prisma.user.findFirst({

@@ -41,6 +41,7 @@ interface appointmentFilterProps {
   done: boolean
   undone: boolean
   canceled: boolean
+  archived: boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -48,13 +49,12 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [filterDisplay, setFilterdisplay] = useState(false)
-  const [startDate, setStartDate] = useState<Date>()
-  const [finalDate, setFinalDate] = useState<Date | null>(null)
   const [appointmentFilter, setAppointmentFilter] =
     useState<appointmentFilterProps>({
-      done: true,
+      done: false,
       undone: true,
       canceled: false,
+      archived: false,
     })
   const [sorting, setSorting] = useState<SortingState>([
     {
@@ -66,8 +66,6 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
   useEffect(() => {
-    console.log(table.getAllColumns().map((column) => column.id))
-
     table.getColumn('appointment_status')?.setFilterValue(appointmentFilter)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appointmentFilter])
@@ -124,27 +122,43 @@ export function DataTable<TData, TValue>({
                 .locale(ptBr)
                 .format('YYYY[-]MM[-]DD')}
               onChange={(value) => {
-                table
-                  .getColumn('schedule_date')
-                  ?.setFilterValue((old: [Date, Date]) => [
-                    dayjs(value.target.value).toDate(),
-                    old?.[1],
-                  ])
+                if (value.target.value !== '')
+                  table
+                    .getColumn('schedule_date')
+                    ?.setFilterValue((old: [Date, Date]) => [
+                      dayjs(value.target.value).toDate(),
+                      old?.[1],
+                    ])
+                else
+                  table
+                    .getColumn('schedule_date')
+                    ?.setFilterValue((old: [Date, Date]) => [
+                      dayjs('0000-01-01').toDate(),
+                      old?.[1],
+                    ])
               }}
             />
             <Input
               type="date"
               label="Data final:"
-              defaultValue={dayjs(finalDate)
+              defaultValue={dayjs(new Date())
                 .locale(ptBr)
                 .format('YYYY[-]MM[-]DD')}
               onChange={(value) => {
-                table
-                  .getColumn('schedule_date')
-                  ?.setFilterValue((old: [Date, Date]) => [
-                    old?.[0],
-                    dayjs(value.target.value).add(1, 'day').toDate(),
-                  ])
+                if (value.target.value !== '')
+                  table
+                    .getColumn('schedule_date')
+                    ?.setFilterValue((old: [Date, Date]) => [
+                      old?.[0],
+                      dayjs(value.target.value).add(1, 'day').toDate(),
+                    ])
+                else
+                  table
+                    .getColumn('schedule_date')
+                    ?.setFilterValue((old: [Date, Date]) => [
+                      old?.[0],
+                      dayjs('9999-12-31').add(1, 'day').toDate(),
+                    ])
               }}
             />
           </div>
@@ -158,9 +172,10 @@ export function DataTable<TData, TValue>({
           onClick={() =>
             setAppointmentFilter((data) => {
               return {
-                done: data.done,
-                canceled: data.canceled,
+                done: false,
+                canceled: false,
                 undone: !data.undone,
+                archived: false,
               }
             })
           }
@@ -174,9 +189,10 @@ export function DataTable<TData, TValue>({
           onClick={() =>
             setAppointmentFilter((data) => {
               return {
-                done: data.done,
+                done: false,
                 canceled: !data.canceled,
-                undone: data.undone,
+                undone: false,
+                archived: false,
               }
             })
           }
@@ -191,14 +207,32 @@ export function DataTable<TData, TValue>({
             setAppointmentFilter((data) => {
               return {
                 done: !data.done,
-                canceled: data.canceled,
-                undone: data.undone,
+                canceled: false,
+                undone: false,
+                archived: false,
               }
             })
           }
         >
           <div className="h-4 w-4 bg-green-500 rounded-lg" />
           Assinado
+        </Button>
+        <Button
+          variant={`badge${appointmentFilter.archived ? 'Active' : ''}`}
+          className="gap-2 "
+          onClick={() =>
+            setAppointmentFilter((data) => {
+              return {
+                done: false,
+                canceled: false,
+                undone: false,
+                archived: !data.archived,
+              }
+            })
+          }
+        >
+          <div className="h-4 w-4 bg-gray-500 rounded-lg" />
+          Arquivados
         </Button>
       </div>
 

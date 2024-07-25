@@ -19,18 +19,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { toast } from '@/components/ui/use-toast'
+import { UpdateCertificateInfoDialog } from '@/components/updateCertificateInfoDilog'
+import { api } from '@/lib/axios'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { AppointmentStatusEnum } from '@prisma/client'
 import dayjs from 'dayjs'
 import ptBr from 'dayjs/locale/pt-br'
-import { RWebShare } from 'react-web-share'
-import { RangeDateFn, StatusFilterFn } from './filters'
-import { UpdateCertificateInfoDialog } from '@/components/updateCertificateInfoDilog'
 import { useState } from 'react'
-import { z } from 'zod'
-import { api } from '@/lib/axios'
-import { toast } from '@/components/ui/use-toast'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { RWebShare } from 'react-web-share'
+import { z } from 'zod'
+import { RangeDateFn, StatusFilterFn } from './filters'
 
 export interface Patient
   extends pacientSubmitProps,
