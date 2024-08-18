@@ -30,7 +30,7 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
 
   const [scheduleData, setScheduleData] = useState<Date | null>(null)
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
 
   function handleCirurgySubmit(values: cirurgySubmitProps | null) {
     if (values) {
@@ -60,7 +60,7 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
   function handleCalendarSubmit(values: Date | null) {
     if (values) {
       setScheduleData(values)
-      setStep(5)
+      // setStep(5)
     } else {
       setStep(3)
     }
@@ -145,29 +145,29 @@ const FormBody = ({ doctor }: { doctor: doctorProps }) => {
                   setCirurgyData={cirurgyData}
                 />
               ),
-              4: doctor.easy_scheduling ? (
-                <SummaryPage
-                  doctor={doctor}
-                  cirurgyData={cirurgyData}
-                  companionData={companionData}
-                  pacientData={pacientData}
-                  scheduleData={scheduleData}
-                  setObservationsData={{
-                    observation: summaryData?.pacient_observations ?? '',
-                  }}
-                  getSummaryData={handleSummarySubmit}
-                />
-              ) : (
-                <div className="flex flex-col gap-4">
-                  <CalendarPage
-                    doctor={doctor}
-                    getCalendarSchedule={handleCalendarSubmit}
-                  />
-                  {/* <Button onClick={() => setStep(3)}>Voltar</Button>
-                  <Button onClick={() => setStep(5)}>próximo</Button> */}
-                </div>
-              ),
-              5: (
+              // 4: doctor.easy_scheduling ? (
+              //   <SummaryPage
+              //     doctor={doctor}
+              //     cirurgyData={cirurgyData}
+              //     companionData={companionData}
+              //     pacientData={pacientData}
+              //     scheduleData={scheduleData}
+              //     setObservationsData={{
+              //       observation: summaryData?.pacient_observations ?? '',
+              //     }}
+              //     getSummaryData={handleSummarySubmit}
+              //   />
+              // ) : (
+              //   <div className="flex flex-col gap-4">
+              //     <CalendarPage
+              //       doctor={doctor}
+              //       getCalendarSchedule={handleCalendarSubmit}
+              //     />
+              //     {/* <Button onClick={() => setStep(3)}>Voltar</Button>
+              //     <Button onClick={() => setStep(5)}>próximo</Button> */}
+              //   </div>
+              // )
+              4: (
                 <SummaryPage
                   doctor={doctor}
                   cirurgyData={cirurgyData}
