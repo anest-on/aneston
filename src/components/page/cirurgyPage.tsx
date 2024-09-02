@@ -750,7 +750,7 @@ export default function CirurgyPage({
           </div>
         </div>
 
-        <FormField
+        {/* <FormField
           control={form.control}
           name="pacient_procedure_summary"
           render={({ field }) => (
@@ -770,7 +770,7 @@ export default function CirurgyPage({
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <div className="flex flex-row w-full justify-between px-5">
           <Button
