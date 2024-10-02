@@ -6,6 +6,8 @@ import { ColumnDef } from '@tanstack/react-table'
 import { Calendar, Clock, Phone } from '@phosphor-icons/react'
 import { ArrowUpDown, FileSymlink, MoreHorizontal } from 'lucide-react'
 
+import { useMediaQuery } from 'usehooks-ts'
+
 import { EditPatientButton } from '@/components/EditPatientButton'
 import ConsultationCertificatePdfButton from '@/components/consultationCertificatePdfButton'
 import { cirurgySubmitProps } from '@/components/page/cirurgyPage'
@@ -121,7 +123,6 @@ export const columns: ColumnDef<Patient>[] = [
       )
     },
   },
-
   {
     accessorKey: 'pacient_name',
     header: ({ column }) => {
@@ -151,6 +152,12 @@ export const columns: ColumnDef<Patient>[] = [
       return rowADate.getTime() - rowBDate.getTime()
     },
     header: ({ column }) => {
+      const isMobile = useMediaQuery('(max-width: 640px)')
+
+      // Retorna undefined para dispositivos móveis
+      if (isMobile) {
+        return undefined
+      }
       return (
         <Button
           variant="ghost"
@@ -162,29 +169,37 @@ export const columns: ColumnDef<Patient>[] = [
       )
     },
     cell: ({ row }) => {
+      // Detecta se o tamanho da tela é menor que 640px (padrão para celular)
+      const isMobile = useMediaQuery('(max-width: 640px)')
+
+      // Retorna undefined para dispositivos móveis
+      if (isMobile) {
+        return undefined
+      }
+
       const patient = row.original
 
       return patient.schedule_date ? (
-        <div className="grid lg:grid-cols-5 sm:grid-rows-3 grid-flow-row gap-1 justify-self-end font-medium ">
-          <div className="flex gap-1 md:col-span-3 ">
+        <div className="grid lg:grid-cols-5 sm:grid-rows-3 grid-flow-row gap-1 justify-self-end font-medium">
+          <div className="flex gap-1 md:col-span-3">
             <span>
               <Calendar size={18} />
             </span>
             {dayjs(patient.schedule_date).locale(ptBr).format('DD[/]MM[/]YYYY')}
           </div>
 
-          <div className="flex gap-1 md:col-span-2  md:justify-end">
+          <div className="flex gap-1 md:col-span-2 md:justify-end">
             <Clock size={18} />
             {dayjs(patient.schedule_date).locale(ptBr).format('HH[:]mm')}
           </div>
 
-          <div className="flex  md:col-span-5  ">
+          <div className="flex md:col-span-5">
             <Phone size={18} />
             {patient.pacient_number}
           </div>
         </div>
       ) : (
-        <div className="flex  md:col-span-5">
+        <div className="flex md:col-span-5">
           <Phone size={18} />
           {patient.pacient_number}
         </div>
