@@ -3,21 +3,21 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { useToast } from '@/components/ui/use-toast'
-import { api } from '@/lib/axios'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { User } from '@prisma/client'
-import { Copy } from 'lucide-react'
-import { useSession } from 'next-auth/react'
-import { useCallback, useEffect, useState } from 'react'
-import { z } from 'zod'
-import { Patient, columns } from './columns'
-import { DataTable } from './data-table'
-import { useRouter } from 'next/navigation'
+import { CreateCertificateDialog } from '@/components/createCertificateDialog'; // Importando o componente criado
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
+import { api } from '@/lib/axios';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { User } from '@prisma/client';
+import { Copy } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { RWebShare } from "react-web-share";
-import { CreateCertificateDialog } from '@/components/createCertificateDialog' // Importando o componente criado
-import { useForm } from 'react-hook-form'
+import { z } from 'zod';
+import { columns, Patient } from './columns';
+import { DataTable } from './data-table';
 
 const patientSchema = z.object({
   name: z
@@ -142,10 +142,10 @@ const DashboardPage = () => {
           Gestão de Consultas
         </p>
         <div className="w-full h-[2px] mt-6 px-6 bg-gray-500" />
-        <div className="flex flex-col rounded-md bg-gray-800 mt-6">
+        <div className="flex flex-wrap rounded-md bg-gray-800 mt-6">
           <DataTable columns={columns} data={patients || []} />
         </div>
-        <div className="w-full flex justify-center mt-6 gap-20">
+        <div className="w-full flex flex-wrap justify-center mt-6 sm:gap-20 gap-y-3">
           <div>
             <RWebShare
               data={{

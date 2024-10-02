@@ -6,8 +6,9 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { statesList } from '@/app/constants/constants'
-import { MultiStep } from '@/components/multiStep'
+import { SignatureDoctor } from '@/components/signatureDoctor'
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -27,15 +28,12 @@ import {
 } from '@/components/ui/select'
 import { useToast } from '@/components/ui/use-toast'
 import { api } from '@/lib/axios'
+import { User } from '@prisma/client'
 import { AxiosError } from 'axios'
-import { ArrowRight } from 'lucide-react'
 import { nanoid } from 'nanoid'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import { SignatureDoctor } from '@/components/signatureDoctor'
-import { User } from '@prisma/client'
 
 const updateProfileSchema = z.object({
   user_link: z
@@ -344,6 +342,7 @@ const Register = () => {
           <Button
             type="submit"
             disabled={isSubmitting || !session.data?.user.signature_url}
+            // disabled={isSubmitting}
           >
             Finalizar Inscrição
           </Button>

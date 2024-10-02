@@ -91,7 +91,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="">
-      <div className="flex items-center justify-center py-4 gap-3">
+      <div className="flex flex-wrap items-center justify-center py-4 gap-3">
         <Input
           placeholder="Buscar paciente"
           value={
@@ -113,7 +113,7 @@ export function DataTable<TData, TValue>({
       </div>
 
       {filterDisplay && (
-        <div className="flex flex-col px-2 mb-5 py-5 gap-4 items-center bg-gray-600 rounded-md">
+        <div className="flex flex-col px-2 mb-5 py-5 gap-4 items-center bg-gray-600 rounded-md ">
           <div className="flex flex-row justify-center items-end gap-4">
             <Input
               type="date"
@@ -165,7 +165,7 @@ export function DataTable<TData, TValue>({
         </div>
       )}
 
-      <div className="flex flex-row items-center justify-center gap-4 mb-2">
+      <div className="flex flex-wrap items-center justify-center gap-4 mb-2">
         <Button
           variant={`badge${appointmentFilter.undone ? 'Active' : ''}`}
           className="gap-2 "
