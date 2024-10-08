@@ -43,6 +43,7 @@ export interface Patient
   doctor_id: string
   doctor_url: string
   schedule_date: string
+  observations: string
   archived?: boolean
   created_at: string
   updated_at: string
