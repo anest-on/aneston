@@ -21,7 +21,7 @@ const SummaryPage = ({
   pacientData,
   companionData,
   cirurgyData,
-  setObservationsData,
+  observationsData,
   getSummaryData,
   scheduleData,
 }: SummaryPageProps) => {
@@ -47,7 +47,7 @@ const SummaryPage = ({
         cirurgyData={cirurgyData}
         companionData={companionData}
         pacientData={pacientData}
-        setObservationsData={setObservationsData}
+        observationsData={observationsData}
         getSummaryData={getSummaryData}
         scheduleData={scheduleData}
         doctorLink={doctor.user_link}
