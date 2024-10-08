@@ -31,7 +31,7 @@ import { pacientSubmitProps } from './pacientPage'
 const summaryFormSchema = z.object({
   pacient_name: z.string(),
   pacient_contact: z.string().transform((arg) => getCleanPhoneNumber(arg)),
-  pacient_observations: z.string().optional(),
+  observations: z.string().optional(),
 })
 
 export type summarySubmitProps = z.infer<typeof summaryFormSchema>
@@ -41,7 +41,7 @@ export interface SummaryProps {
   companionData: companionSubmitProps | null
   cirurgyData: cirurgySubmitProps | null
   scheduleData: Date | null
-  setObservationsData?: { observation: string } | null
+  observationsData: string | null
   getSummaryData: (value: summarySubmitProps | null) => void
   doctorLink?: string
 }
@@ -50,7 +50,7 @@ const SummaryContent = ({
   pacientData,
   companionData,
   cirurgyData,
-  setObservationsData,
+  observationsData,
   getSummaryData,
   doctorLink,
   scheduleData,
@@ -63,7 +63,7 @@ const SummaryContent = ({
     defaultValues: {
       pacient_name: pacientData?.pacient_name || '',
       pacient_contact: pacientData?.pacient_number || '',
-      pacient_observations: setObservationsData?.observation || '',
+      observations: observationsData || '', // Aqui usamos observationsData corretamente
     },
   })
 
@@ -116,6 +116,7 @@ const SummaryContent = ({
         pacient_anesthetic_complications:
           cirurgyData?.pacient_anesthetic_complications,
         pacient_procedure_summary: cirurgyData?.pacient_procedure_summary,
+        observations: data.observations, // Aqui estamos usando o campo correto do formulário
         schedule_date: scheduleData,
       })
       .then(() => {
@@ -190,7 +191,7 @@ const SummaryContent = ({
           <div className="flex flex-col min-w-[350px]">
             <FormField
               control={form.control}
-              name="pacient_observations"
+              name="observations"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Observações</FormLabel>

@@ -64,6 +64,7 @@ model Form {
   pacient_anesthetic_complications     String[]
   pacient_procedure_summary            String?
   schedule_date                        String?
+  observations                        String?
 
   archived Boolean @default(false)
 

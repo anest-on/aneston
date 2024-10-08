@@ -48,6 +48,7 @@ export async function POST(req: Request) {
     pacient_has_anesthetic_complication,
     pacient_anesthetic_complications,
     pacient_procedure_summary,
+    observations,
     schedule_date,
   } = body
 
@@ -108,6 +109,7 @@ export async function POST(req: Request) {
       pacient_has_anesthetic_complication,
       pacient_anesthetic_complications,
       pacient_procedure_summary,
+      observations,
       schedule_date,
     },
   })
