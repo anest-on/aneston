@@ -195,6 +195,10 @@ const PrintablePatientTemplate = React.forwardRef<HTMLDivElement, Props>(
                   ? patient.pacient_anesthetic_complications?.join(', ')
                   : 'Nenhuma'}
               </p>
+              <p className="avoid-page-break">
+                <span className="underline">Observações</span>:{' '}
+                {patient.observations ? patient.observations : 'Nenhuma'}
+              </p>
             </div>
           </div>
         </div>
